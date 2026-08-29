@@ -1,0 +1,41 @@
+---
+import "../../styles/hero.css";
+import HeroMap from "./HeroMap.astro";
+import HeroContent from "./HeroContent.astro";
+import HeroStats from "./HeroStats.astro";
+import HeroMockup from "./HeroMockup.astro";
+
+const stats = [
+  { value: "10,000+", label: "Paquetes entregados" },
+  { value: "99.8%", label: "Satisfacción" },
+  { value: "3", label: "Países conectados" },
+  { value: "24/7", label: "Soporte" },
+];
+
+const packages = [
+  { store: "Amazon.com", tracking: "RE-2026-0847", status: "En bodega Miami", color: "bg-status-bodega" },
+  { store: "Walmart", tracking: "RE-2026-0832", status: "En tránsito", color: "bg-status-embarcado" },
+  { store: "eBay", tracking: "RE-2026-0819", status: "En aduana", color: "bg-status-aduana" },
+];
+---
+
+<section class="relative min-h-screen bg-brand-900 overflow-hidden">
+  <HeroMap />
+
+  <!-- Gradient overlays -->
+  <div class="absolute inset-0 bg-gradient-to-br from-brand-950/50 via-transparent to-brand-900/30 pointer-events-none" />
+  <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-brand-950/70 to-transparent pointer-events-none" />
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-20">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <!-- Left: Content + Stats -->
+      <div>
+        <HeroContent />
+        <HeroStats stats={stats} />
+      </div>
+
+      <!-- Right: Product mockup -->
+      <HeroMockup packages={packages} />
+    </div>
+  </div>
+</section>
