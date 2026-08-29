@@ -1,3 +1,11 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+allowBuilds:
+  esbuild: true
+
+catalog:
+  eslint: ^9.39.5
+  prettier: ^3.9.6
+  typescript: ^5.9.3

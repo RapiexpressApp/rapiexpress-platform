@@ -9,5 +9,8 @@
     "./tsconfig/astro.json": "./tsconfig/astro.json",
     "./tsconfig/react.json": "./tsconfig/react.json"
   },
-  "files": ["theme.css", "tsconfig"]
+  "files": [
+    "theme.css",
+    "tsconfig"
+  ]
 }
