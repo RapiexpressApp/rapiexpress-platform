@@ -1,21 +1,87 @@
 ---
-import "../styles/globals.css";
+import '../styles/globals.css';
+
+import { Font } from 'astro:assets';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  // TODO: replace with a purpose-built 1200x630 social card.
+  ogImage = '/logo.webp',
+  noindex = false,
+} = Astro.props;
+
+const canonicalURL = new URL(canonical ?? Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Rapiexpress',
+  description,
+  url: canonicalURL.origin,
+  logo: new URL('/logo.webp', Astro.site).href,
+  areaServed: ['EC', 'US', 'CN'],
+};
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Rapiexpress — Tu dirección en Miami. Compras sin fronteras.</title>
-	</head>
-	<body class="font-sans antialiased">
-		<slot />
-	</body>
+<html lang="es" class="motion-safe:scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL.href} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <Font cssVariable="--font-inter" preload />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rapiexpress" />
+    <meta property="og:locale" content="es_EC" />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL.href} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL.href} />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(organizationSchema)}
+    />
+  </head>
+  <body class="font-sans antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-button focus:bg-accent-400 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-brand-950 focus:ring-2 focus:ring-brand-950 focus:ring-offset-2"
+    >
+      Saltar al contenido
+    </a>
+
+    <slot name="header" />
+
+    <main id="main">
+      <slot />
+    </main>
+  </body>
 </html>

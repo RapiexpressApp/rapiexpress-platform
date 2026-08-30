@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "@rapiexpress/eslint-config": "workspace:*",
-    "@rapiexpress/prettier-config": "workspace:*"
+    "@rapiexpress/prettier-config": "workspace:*",
+    "sharp": "^0.35.4"
   },
   "prettier": "@rapiexpress/prettier-config",
   "allowScripts": {
