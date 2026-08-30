@@ -1,23 +1,15 @@
 ---
-// Hero discipline: exactly three text elements — headline, subtext, CTAs —
-// plus the one permitted micro-trust line. No badge: it repeated the subtext
-// and cost the headline vertical space.
+// Lower-left of the fold: subtext, CTAs, and the single permitted micro-trust
+// line. Kept to a reading measure on purpose — wide display type over a narrow
+// body column is what creates the asymmetry, no decoration required.
 ---
 
-<div class="max-w-3xl">
-  <h1
-    id="hero-title"
-    class="hero-enter text-[clamp(2.75rem,7vw,5.25rem)] font-bold leading-[1.05] tracking-[-0.04em] text-white"
-  >
-    <span class="block">Tu dirección en Miami.</span>
-    <span class="block text-accent-400">Compras sin fronteras.</span>
-  </h1>
-
-  <p class="hero-enter hero-delay-1 mt-7 max-w-xl text-lg leading-relaxed text-brand-100/85">
+<div>
+  <p class="hero-enter hero-delay-1 max-w-md text-lg leading-relaxed text-brand-100/85">
     Recibe compras de tiendas en USA y China en tu casillero gratis y te las llevamos a Ecuador.
   </p>
 
-  <div class="hero-enter hero-delay-2 mt-9 flex flex-wrap items-center gap-3">
+  <div class="hero-enter hero-delay-2 mt-8 flex flex-wrap items-center gap-3">
     <a
       href="#"
       class="group inline-flex min-h-12 items-center gap-2 rounded-button bg-accent-400 px-6 text-base font-semibold text-brand-950 transition-[background-color,box-shadow,transform] duration-200 hover:bg-accent-300 hover:shadow-lg hover:shadow-accent-400/20 focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"

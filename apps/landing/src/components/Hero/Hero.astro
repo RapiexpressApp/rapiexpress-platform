@@ -2,7 +2,8 @@
 import '../../styles/hero.css';
 
 import HeroAddress from './HeroAddress.astro';
-import HeroContent from './HeroContent.astro';
+import HeroHeadline from './HeroHeadline.astro';
+import HeroPitch from './HeroPitch.astro';
 ---
 
 <section aria-labelledby="hero-title" class="relative overflow-hidden bg-brand-900">
@@ -17,13 +18,20 @@ import HeroContent from './HeroContent.astro';
   </div>
 
   <div
-    class="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col px-6 pt-[clamp(7.5rem,22vh,13rem)] pb-16"
+    class="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col px-6 pt-[clamp(6rem,20vh,10rem)] pb-16"
   >
-    <HeroContent />
+    <HeroHeadline />
 
-    <!-- mt-auto anchors the signature block to the fold baseline. -->
-    <div class="mt-auto pt-20">
-      <HeroAddress />
+    <!--
+      One hairline rule across the full fold separates the display type from the
+      working content, and the two columns beneath it fill the width the
+      headline established. mt-auto keeps that band on the fold baseline.
+    -->
+    <div
+      class="mt-auto grid gap-y-12 border-t border-white/12 pt-10 lg:grid-cols-12 lg:items-start lg:gap-x-8"
+    >
+      <div class="lg:col-span-6"><HeroPitch /></div>
+      <div class="lg:col-span-5 lg:col-start-8"><HeroAddress /></div>
     </div>
   </div>
 </section>

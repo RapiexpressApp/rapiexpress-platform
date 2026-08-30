@@ -1,0 +1,17 @@
+---
+// The headline spans the full container: in a type-led fold the type IS the
+// composition, so constraining it to a column leaves the other half dead.
+//
+// Sizing is bounded so each sentence fits one line at desktop. At 22 characters
+// and -0.04em tracking each line needs about 10.5em of width, so the 6.5rem
+// ceiling clears the 1232px content box with room to spare. Below ~500px the
+// lines wrap — that is expected, the two-line rule is a desktop constraint.
+---
+
+<h1
+  id="hero-title"
+  class="hero-enter text-[clamp(2.25rem,8vw,6.5rem)] font-bold leading-[1.02] tracking-[-0.04em] text-white"
+>
+  <span class="block">Tu dirección en Miami.</span>
+  <span class="block text-accent-400">Compras sin fronteras.</span>
+</h1>
