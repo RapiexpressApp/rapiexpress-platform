@@ -1,45 +1,29 @@
 ---
 import '../../styles/hero.css';
 
+import HeroAddress from './HeroAddress.astro';
 import HeroContent from './HeroContent.astro';
-import HeroMap from './HeroMap.astro';
-import HeroMockup, { type Package } from './HeroMockup.astro';
-import HeroStats, { type Stat } from './HeroStats.astro';
-
-const stats: Stat[] = [
-  { value: '10,000+', label: 'Paquetes entregados' },
-  { value: '99.8%', label: 'Satisfacción' },
-  { value: '3', label: 'Países conectados' },
-  { value: '24/7', label: 'Soporte' },
-];
-
-const packages: Package[] = [
-  { store: 'Amazon.com', tracking: 'RE-2026-0847', status: 'En bodega Miami', color: 'bg-status-bodega' },
-  { store: 'Walmart', tracking: 'RE-2026-0832', status: 'En tránsito', color: 'bg-status-embarcado' },
-  { store: 'eBay', tracking: 'RE-2026-0819', status: 'En aduana', color: 'bg-status-aduana' },
-];
 ---
 
-<section
-  aria-labelledby="hero-title"
-  class="relative min-h-screen bg-brand-900 overflow-hidden"
->
-  <HeroMap />
+<section aria-labelledby="hero-title" class="relative overflow-hidden bg-brand-900">
+  <!--
+    Restrained depth only: a single linear gradient between two adjacent brand
+    hues. No decorative blobs, no hand-drawn scene — the type carries the fold.
+  -->
+  <div
+    class="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand-950/40 via-transparent to-brand-950/60"
+    aria-hidden="true"
+  >
+  </div>
 
-  <!-- Gradient overlays -->
-  <div class="absolute inset-0 bg-gradient-to-br from-brand-950/50 via-transparent to-brand-900/30 pointer-events-none" />
-  <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-brand-950/70 to-transparent pointer-events-none" />
+  <div
+    class="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col px-6 pt-[clamp(7.5rem,22vh,13rem)] pb-16"
+  >
+    <HeroContent />
 
-  <div class="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-20">
-    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-      <!-- Left: Content + Stats -->
-      <div>
-        <HeroContent />
-        <HeroStats stats={stats} />
-      </div>
-
-      <!-- Right: Product mockup -->
-      <HeroMockup packages={packages} />
+    <!-- mt-auto anchors the signature block to the fold baseline. -->
+    <div class="mt-auto pt-20">
+      <HeroAddress />
     </div>
   </div>
 </section>

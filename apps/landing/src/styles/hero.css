@@ -1,8 +1,12 @@
-/* Hero entrance animations */
+/*
+  Hero entrance. One keyframe, compositor-only properties (opacity + transform).
+  Stagger is 60ms per step and the duration is 500ms, per the motion budget for
+  entrance animations. Anything longer reads as the page being slow.
+*/
 @keyframes hero-fade-up {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -10,77 +14,28 @@
   }
 }
 
-@keyframes hero-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes hero-scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes hero-pulse-ring {
-  0%, 100% {
-    opacity: 0.15;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.3;
-    transform: scale(1.1);
-  }
-}
-
-/* Animation classes */
-.hero-animate-fade-up {
+.hero-enter {
   opacity: 0;
-  animation: hero-fade-up 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: hero-fade-up 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.hero-animate-fade-in {
-  opacity: 0;
-  animation: hero-fade-in 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.hero-delay-1 {
+  animation-delay: 60ms;
+}
+.hero-delay-2 {
+  animation-delay: 120ms;
+}
+.hero-delay-3 {
+  animation-delay: 180ms;
+}
+.hero-delay-4 {
+  animation-delay: 240ms;
 }
 
-.hero-animate-scale-in {
-  opacity: 0;
-  animation: hero-scale-in 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-/* Stagger delays */
-.hero-delay-1 { animation-delay: 100ms; }
-.hero-delay-2 { animation-delay: 200ms; }
-.hero-delay-3 { animation-delay: 300ms; }
-.hero-delay-4 { animation-delay: 400ms; }
-.hero-delay-5 { animation-delay: 500ms; }
-.hero-delay-6 { animation-delay: 600ms; }
-
-/* Map pulse */
-.hero-pulse-ring {
-  animation: hero-pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.hero-pulse-ring-slow {
-  animation: hero-pulse-ring 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  animation-delay: 1s;
-}
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .hero-animate-fade-up,
-  .hero-animate-fade-in,
-  .hero-animate-scale-in {
+  .hero-enter {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     opacity: 1;
-  }
-  .hero-pulse-ring,
-  .hero-pulse-ring-slow {
-    animation: none;
   }
 }

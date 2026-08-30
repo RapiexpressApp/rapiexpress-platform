@@ -1,40 +1,47 @@
-<div class="max-w-xl">
-  <!-- Badge -->
-  <div class="hero-animate-fade-up hero-delay-1 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-400/25 bg-accent-400/5 mb-8">
-    <svg class="w-4 h-4 text-accent-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-    </svg>
-    <span class="text-xs font-semibold tracking-wide text-accent-400 uppercase">Envíos desde USA y China a Ecuador</span>
-  </div>
+---
+// Hero discipline: exactly three text elements — headline, subtext, CTAs —
+// plus the one permitted micro-trust line. No badge: it repeated the subtext
+// and cost the headline vertical space.
+---
 
-  <!-- Headline -->
-  <h1 id="hero-title" class="hero-animate-fade-up hero-delay-2 text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-[-0.02em] text-white mb-6">
-    Tu dirección en Miami.<br />
-    <span class="text-accent-400">Compras sin fronteras.</span>
+<div class="max-w-3xl">
+  <h1
+    id="hero-title"
+    class="hero-enter text-[clamp(2.75rem,7vw,5.25rem)] font-bold leading-[1.05] tracking-[-0.04em] text-white"
+  >
+    <span class="block">Tu dirección en Miami.</span>
+    <span class="block text-accent-400">Compras sin fronteras.</span>
   </h1>
 
-  <!-- Subtext -->
-  <p class="hero-animate-fade-up hero-delay-3 text-base md:text-lg text-brand-200/85 leading-relaxed mb-8 max-w-lg">
-    Recibe tus paquetes de tiendas en USA y China directo a Ecuador.
-    Abre tu casillero internacional gratis y empieza a comprar hoy.
+  <p class="hero-enter hero-delay-1 mt-7 max-w-xl text-lg leading-relaxed text-brand-100/85">
+    Recibe compras de tiendas en USA y China en tu casillero gratis y te las llevamos a Ecuador.
   </p>
 
-  <!-- CTAs -->
-  <div class="hero-animate-fade-up hero-delay-4 flex flex-wrap items-center gap-3 mb-10">
+  <div class="hero-enter hero-delay-2 mt-9 flex flex-wrap items-center gap-3">
     <a
       href="#"
-      class="group inline-flex items-center gap-2 px-6 py-3 bg-accent-400 hover:bg-accent-500 text-brand-950 font-semibold text-sm rounded-button transition-[background-color,box-shadow,transform] duration-200 hover:shadow-lg hover:shadow-accent-400/20 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+      class="group inline-flex min-h-12 items-center gap-2 rounded-button bg-accent-400 px-6 text-base font-semibold text-brand-950 transition-[background-color,box-shadow,transform] duration-200 hover:bg-accent-300 hover:shadow-lg hover:shadow-accent-400/20 focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
     >
-      Abrir cuenta gratis
-      <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      Abrir mi casillero
+      <svg
+        class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+        aria-hidden="true"
+        focusable="false"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
       </svg>
     </a>
     <a
       href="#como-funciona"
-      class="inline-flex items-center gap-2 px-6 py-3 border border-white/25 hover:border-white/50 hover:bg-white/5 text-white font-medium text-sm rounded-button transition-[background-color,border-color,transform] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+      class="inline-flex min-h-12 items-center rounded-button border border-white/25 px-6 text-base font-medium text-white transition-[background-color,border-color] duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
     >
       Cómo funciona
     </a>
   </div>
+
+  <p class="hero-enter hero-delay-3 mt-6 text-sm text-brand-200/85">Abrir el casillero es gratis.</p>
 </div>

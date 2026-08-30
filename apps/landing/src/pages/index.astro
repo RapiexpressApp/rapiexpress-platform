@@ -1,13 +1,15 @@
 ---
 import Hero from '../components/Hero/Hero.astro';
 import Navbar from '../components/Navbar.astro';
+import ProofStrip from '../components/ProofStrip.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout
   title="Rapiexpress — Tu dirección en Miami. Compras sin fronteras."
-  description="Recibe tus paquetes de tiendas en USA y China directo a Ecuador. Abre tu casillero internacional gratis y empieza a comprar hoy."
+  description="Recibe compras de tiendas en USA y China en tu casillero gratis y te las llevamos a Ecuador. Abre tu casillero internacional sin costo."
 >
   <Navbar slot="header" />
   <Hero />
+  <ProofStrip />
 </Layout>
