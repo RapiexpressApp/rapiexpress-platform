@@ -89,7 +89,9 @@ Follow this cascade in order. Do not skip a step.
 - **Tailwind v4 only.** Utilities removed in v4 fail silently — they produce
   no CSS and no warning. Never use `ring-opacity-*`, `bg-opacity-*`,
   `text-opacity-*`, `flex-shrink-0`. Use slash opacity (`ring-amber-400/20`)
-  and `shrink-0`.
+  and `shrink-0`. Renamed utilities still work as deprecated aliases, which
+  is worse than failing — write the v4 name: `bg-linear-to-b`, not
+  `bg-gradient-to-b`.
 - `transition-*` must cover **every** property that changes on `:hover` or
   `:focus`. `transition-colors` next to `hover:-translate-y-0.5` means the
   translation snaps instead of animating.
@@ -165,6 +167,9 @@ Concretely:
 - Always set explicit `width`/`height` (CLS). Below the fold:
   `loading="lazy"` + `decoding="async"`. For the LCP image:
   `loading="eager"` + `fetchpriority="high"`.
+- The few comments that survive the root comment rule go in the frontmatter
+  (`//`) or in `{/* */}`. Astro ships `<!-- -->` to the client on every page
+  load; the other two are stripped at build.
 
 ## Language
 
@@ -207,6 +212,13 @@ Before calling a task finished:
   `singleQuote: true` while much of the codebase uses double quotes, and the
   repo root has no `prettier` key, so non-landing files format with Prettier
   defaults.
+- **`pnpm format:check` cannot pass on Windows, repo-wide.** `core.autocrlf`
+  is `true`, so git writes CRLF on checkout, while the shared Prettier config
+  demands `endOfLine: "lf"` and there is no `.gitattributes` to settle it.
+  Every file fails the check, including ones nobody has edited. Running
+  `format --write` only flips the line endings back until the next checkout.
+  The fix is a root `.gitattributes` with `* text=auto eol=lf`, which
+  renormalises the whole tree in one commit.
 - **`globals.css` comments are in Spanish**, against the rule above.
 - The comment "Estados de paquete — compartidos con portal y backoffice" is
   no longer true: those tokens became app-local when

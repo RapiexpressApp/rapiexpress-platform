@@ -48,6 +48,23 @@
 - All user input crosses a Zod schema before reaching business logic.
 - No duplicated business logic across modules; shared logic gets extracted.
 
+## Comments (keep them rare)
+
+- **Default to zero.** A file with no comments is the normal case, not a gap.
+  Write the comment only after failing to make the code say it instead.
+- Comments explain **why**, never **what**. A comment that restates the code
+  gets deleted, not reworded.
+- Keep one only when: an innocent edit would break a non-obvious constraint,
+  a workaround needs its reason, or a magic number needs its derivation.
+- **Never narrate history or rejected alternatives** — "an earlier version
+  used X", "changed from Y", "this used to be Z". That is commit-message
+  content. It is already recorded there, it goes stale the moment someone
+  edits around it, and it makes the file read like a changelog.
+- No section-label comments (`// Logo`, `// CTAs`, `// Helpers`). The code
+  already says which block that is.
+- Prefer a one-line `TODO:` naming the open question over a paragraph of
+  rationale.
+
 ## Git workflow
 
 - `main` and `develop` are protected. Never commit directly to either one.
