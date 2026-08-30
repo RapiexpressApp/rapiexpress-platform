@@ -1,19 +1,37 @@
 ---
+import { Image } from 'astro:assets';
+
+import logo from '../assets/logo.webp';
+
 const navLinks = [
-  { label: "Nosotros", href: "#nosotros" },
-  { label: "Cómo funciona", href: "#como-funciona" },
-  { label: "Beneficios", href: "#beneficios" },
-  { label: "Cobertura", href: "#cobertura" },
-  { label: "Tiendas", href: "#tiendas" },
-  { label: "FAQ", href: "#faq" },
+  { label: 'Nosotros', href: '#nosotros' },
+  { label: 'Cómo funciona', href: '#como-funciona' },
+  { label: 'Beneficios', href: '#beneficios' },
+  { label: 'Cobertura', href: '#cobertura' },
+  { label: 'Tiendas', href: '#tiendas' },
+  { label: 'FAQ', href: '#faq' },
 ];
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200/60">
-  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200/60">
+  <nav
+    aria-label="Principal"
+    class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
+  >
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2.5 shrink-0">
-      <img src="/logo.webp" alt="Rapiexpress" width="36" height="36" class="w-9 h-9" />
+    <a
+      href="/"
+      class="flex items-center gap-2.5 shrink-0 rounded-button focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
+    >
+      <Image
+        src={logo}
+        alt="Rapiexpress"
+        width={36}
+        height={36}
+        class="w-9 h-9"
+        loading="eager"
+        fetchpriority="high"
+      />
       <span class="text-lg font-bold text-brand-900 tracking-tight hidden sm:inline">Rapiexpress</span>
     </a>
 
@@ -23,7 +41,7 @@ const navLinks = [
         <li>
           <a
             href={link.href}
-            class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-brand-900 transition-colors duration-150 rounded-md hover:bg-slate-50"
+            class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-brand-900 transition-colors duration-150 rounded-md hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
           >
             {link.label}
           </a>
@@ -35,16 +53,79 @@ const navLinks = [
     <div class="flex items-center gap-3">
       <a
         href="#"
-        class="hidden sm:inline-flex px-4 py-2 text-sm font-medium text-brand-900 hover:text-brand-700 transition-colors duration-150"
+        class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-brand-900 hover:text-brand-700 transition-colors duration-150 rounded-button focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
       >
         Iniciar sesión
       </a>
       <a
         href="#"
-        class="inline-flex px-4 py-2 bg-accent-400 hover:bg-accent-500 text-brand-950 font-semibold text-sm rounded-lg transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2"
+        class="inline-flex items-center px-4 py-2 bg-accent-400 hover:bg-accent-500 text-brand-950 font-semibold text-sm rounded-button transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2"
       >
         Registrarse
       </a>
+
+      <button
+        type="button"
+        popovertarget="mobile-nav"
+        aria-label="Abrir menú de navegación"
+        class="lg:hidden inline-flex h-11 w-11 items-center justify-center -mr-2 rounded-button text-slate-700 hover:bg-slate-100 transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
+      >
+        <svg
+          class="w-6 h-6"
+          aria-hidden="true"
+          focusable="false"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
     </div>
+  </nav>
+
+  <!--
+    Mobile navigation. Uses the native Popover API: Escape, light dismiss,
+    top-layer stacking and focus restoration come from the platform, so this
+    costs 0 KB of JavaScript.
+
+    Never add a display utility (block/flex/grid) to the [popover] element
+    itself — it would override the user-agent display:none and leave the
+    panel permanently open. Only `lg:hidden` is safe, because hiding it on
+    desktop is the intent.
+
+    The browser wires up the implicit aria-expanded relationship between the
+    invoker and the popover. That mapping is still inconsistent in
+    VoiceOver/Safari; if testing shows it is not announced, add explicit
+    aria-expanded/aria-controls, which then requires a small script to keep
+    the attribute in sync.
+  -->
+  <div
+    id="mobile-nav"
+    popover
+    class="lg:hidden fixed inset-x-4 top-20 bottom-auto m-0 w-auto max-w-none max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-card border border-slate-200 bg-white p-3 shadow-2xl shadow-black/10"
+  >
+    <ul class="divide-y divide-slate-100">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            popovertarget="mobile-nav"
+            popovertargetaction="hide"
+            class="flex items-center min-h-11 px-3 text-base font-medium text-slate-700 hover:text-brand-900 hover:bg-slate-50 rounded-button transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-inset"
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <a
+      href="#"
+      class="sm:hidden flex items-center justify-center min-h-11 mt-3 px-4 text-sm font-medium text-brand-900 border border-slate-200 rounded-button hover:bg-slate-50 transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
+    >
+      Iniciar sesión
+    </a>
   </div>
-</nav>
+</header>
