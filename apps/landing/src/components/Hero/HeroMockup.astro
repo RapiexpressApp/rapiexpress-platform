@@ -13,7 +13,13 @@ interface Props {
 const { packages } = Astro.props;
 ---
 
-<div class="relative hidden lg:block">
+<!--
+  Decorative product illustration built from placeholder data. Hidden from
+  assistive technology: announcing "Amazon.com RE-2026-0847" would read as
+  real shipment data. It contains no focusable elements, so aria-hidden is
+  safe here.
+-->
+<div class="relative hidden lg:block" aria-hidden="true">
   <div class="hero-animate-scale-in hero-delay-6 relative bg-white rounded-2xl shadow-2xl shadow-black/50 border border-white/10 overflow-hidden hover:shadow-2xl hover:shadow-black/60 transition-shadow duration-300">
     <!-- Mockup header bar -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
@@ -31,12 +37,12 @@ const { packages } = Astro.props;
     <!-- Package list -->
     <div class="divide-y divide-slate-100">
       {packages.map((pkg, idx) => (
-        <div class={`flex items-center justify-between px-6 py-5 hover:bg-slate-50/80 transition-transform duration-150 hover:translate-x-1 ${idx === 0 ? 'bg-accent-50/30' : ''}`}>
+        <div class={`flex items-center justify-between px-6 py-5 hover:bg-slate-50/80 transition-[background-color,transform] duration-150 hover:translate-x-1 ${idx === 0 ? 'bg-accent-50/30' : ''}`}>
           <div class="flex items-center gap-4 min-w-0">
-            <div class={`w-3 h-3 rounded-full ${pkg.color} shrink-0 ring-4 ring-opacity-20 ${pkg.color === 'bg-status-bodega' ? 'ring-amber-400' : pkg.color === 'bg-status-embarcado' ? 'ring-blue-400' : 'ring-indigo-400'}`} />
+            <div class={`w-3 h-3 rounded-full ${pkg.color} shrink-0 ring-4 ${pkg.color === 'bg-status-bodega' ? 'ring-amber-400/20' : pkg.color === 'bg-status-embarcado' ? 'ring-blue-400/20' : 'ring-indigo-400/20'}`} />
             <div class="min-w-0">
               <p class="text-sm font-semibold text-slate-900 truncate">{pkg.store}</p>
-              <p class="text-xs text-slate-400 font-mono mt-1">{pkg.tracking}</p>
+              <p class="text-xs text-slate-500 font-mono mt-1">{pkg.tracking}</p>
             </div>
           </div>
           <div class="flex items-center gap-3 ml-4">
@@ -71,7 +77,7 @@ const { packages } = Astro.props;
   </div>
 
   <!-- Floating stat card -->
-  <div class="hero-animate-fade-up hero-delay-6 absolute -bottom-8 -left-8 bg-white rounded-2xl shadow-2xl shadow-black/20 border border-slate-100 p-5 w-64 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1 transition-shadow duration-200">
+  <div class="hero-animate-fade-up hero-delay-6 absolute -bottom-8 -left-8 bg-white rounded-2xl shadow-2xl shadow-black/20 border border-slate-100 p-5 w-64 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1 transition-[box-shadow,transform] duration-200">
     <div class="flex items-start gap-4 mb-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-400 to-accent-500 flex items-center justify-center shadow-lg shadow-accent-400/30">
         <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -84,8 +90,8 @@ const { packages } = Astro.props;
       </div>
     </div>
     <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-      <div class="h-full bg-gradient-to-r from-accent-400 to-accent-500 rounded-full" style="width: 78%" />
+      <div class="h-full w-[78%] bg-gradient-to-r from-accent-400 to-accent-500 rounded-full" />
     </div>
-    <p class="text-xs text-slate-400 mt-2">98% de entregas a tiempo</p>
+    <p class="text-xs text-slate-500 mt-2">98% de entregas a tiempo</p>
   </div>
 </div>
