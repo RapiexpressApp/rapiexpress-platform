@@ -212,6 +212,13 @@ Before calling a task finished:
   `singleQuote: true` while much of the codebase uses double quotes, and the
   repo root has no `prettier` key, so non-landing files format with Prettier
   defaults.
+- **`pnpm format:check` cannot pass on Windows, repo-wide.** `core.autocrlf`
+  is `true`, so git writes CRLF on checkout, while the shared Prettier config
+  demands `endOfLine: "lf"` and there is no `.gitattributes` to settle it.
+  Every file fails the check, including ones nobody has edited. Running
+  `format --write` only flips the line endings back until the next checkout.
+  The fix is a root `.gitattributes` with `* text=auto eol=lf`, which
+  renormalises the whole tree in one commit.
 - **`globals.css` comments are in Spanish**, against the rule above.
 - The comment "Estados de paquete — compartidos con portal y backoffice" is
   no longer true: those tokens became app-local when
