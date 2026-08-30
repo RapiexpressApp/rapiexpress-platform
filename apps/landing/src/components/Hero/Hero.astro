@@ -7,28 +7,32 @@ import HeroPitch from './HeroPitch.astro';
 ---
 
 <section aria-labelledby="hero-title" class="relative overflow-hidden bg-brand-900">
-  <!--
+  {/*
     Restrained depth only: a single linear gradient between two adjacent brand
     hues. No decorative blobs, no hand-drawn scene — the type carries the fold.
-  -->
+  */}
   <div
     class="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand-950/40 via-transparent to-brand-950/60"
     aria-hidden="true"
   >
   </div>
 
+  {/*
+    Every vertical gap is stated, none is leftover. An earlier version anchored
+    the lower band with mt-auto against a 100svh floor, which collected all the
+    slack into one hole between the headline and the rule. Trailing space reads
+    as padding; interior space reads as a mistake.
+
+    The section is deliberately shorter than the viewport so the section below
+    breaks the fold line — that is the scroll cue, instead of a label saying so.
+  */}
   <div
-    class="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col px-6 pt-[clamp(6rem,20vh,10rem)] pb-16"
+    class="relative mx-auto flex min-h-[72svh] max-w-7xl flex-col px-6 pt-[clamp(5.5rem,18vh,9rem)] pb-[clamp(3.5rem,7vh,5rem)]"
   >
     <HeroHeadline />
 
-    <!--
-      One hairline rule across the full fold separates the display type from the
-      working content, and the two columns beneath it fill the width the
-      headline established. mt-auto keeps that band on the fold baseline.
-    -->
     <div
-      class="mt-auto grid gap-y-12 border-t border-white/12 pt-10 lg:grid-cols-12 lg:items-start lg:gap-x-8"
+      class="mt-[clamp(2.5rem,9vh,5.5rem)] grid gap-y-10 border-t border-white/12 pt-9 lg:grid-cols-12 lg:items-start lg:gap-x-8"
     >
       <div class="lg:col-span-6"><HeroPitch /></div>
       <div class="lg:col-span-5 lg:col-start-8"><HeroAddress /></div>

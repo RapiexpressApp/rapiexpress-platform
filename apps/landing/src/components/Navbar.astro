@@ -18,7 +18,7 @@ const navLinks = [
     aria-label="Principal"
     class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
   >
-    <!-- Logo -->
+    {/* Logo */}
     <a
       href="/"
       class="flex items-center gap-2.5 shrink-0 rounded-button focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
@@ -35,7 +35,7 @@ const navLinks = [
       <span class="text-lg font-bold text-brand-900 tracking-tight hidden sm:inline">Rapiexpress</span>
     </a>
 
-    <!-- Desktop nav links -->
+    {/* Desktop nav links */}
     <ul class="hidden lg:flex items-center gap-1">
       {navLinks.map((link) => (
         <li>
@@ -49,7 +49,7 @@ const navLinks = [
       ))}
     </ul>
 
-    <!-- CTAs -->
+    {/* CTAs */}
     <div class="flex items-center gap-3">
       <a
         href="#"
@@ -85,7 +85,7 @@ const navLinks = [
     </div>
   </nav>
 
-  <!--
+  {/*
     Mobile navigation. Uses the native Popover API: Escape, light dismiss,
     top-layer stacking and focus restoration come from the platform, so this
     costs 0 KB of JavaScript.
@@ -100,7 +100,7 @@ const navLinks = [
     VoiceOver/Safari; if testing shows it is not announced, add explicit
     aria-expanded/aria-controls, which then requires a small script to keep
     the attribute in sync.
-  -->
+  */}
   <div
     id="mobile-nav"
     popover
