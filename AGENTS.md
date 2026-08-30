@@ -47,5 +47,17 @@
   and how each is handled or why it's out of scope.
 - All user input crosses a Zod schema before reaching business logic.
 - No duplicated business logic across modules; shared logic gets extracted.
+
+## Git workflow
+
+- `main` and `develop` are protected. Never commit directly to either one.
+- Every change goes on its own branch, created from `develop` — not from
+  `main`. Check the base before starting: `git merge-base HEAD develop`
+  should be the tip of `develop`.
+- Branch naming: `type/short-description`, using the same type as the
+  Conventional Commit (`feat/`, `fix/`, `chore/`, `docs/`, `refactor/`).
+- Branches merge into `develop`. `main` only receives releases from
+  `develop`.
 - Commits: Conventional Commits (`type(scope): description`). Small, atomic
   commits — one logical change each. Never mix refactors with features.
+- Never push without being asked.
