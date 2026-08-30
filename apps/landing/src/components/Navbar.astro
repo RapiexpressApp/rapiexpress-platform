@@ -18,7 +18,6 @@ const navLinks = [
     aria-label="Principal"
     class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
   >
-    {/* Logo */}
     <a
       href="/"
       class="flex items-center gap-2.5 shrink-0 rounded-button focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
@@ -35,7 +34,6 @@ const navLinks = [
       <span class="text-lg font-bold text-brand-900 tracking-tight hidden sm:inline">Rapiexpress</span>
     </a>
 
-    {/* Desktop nav links */}
     <ul class="hidden lg:flex items-center gap-1">
       {navLinks.map((link) => (
         <li>
@@ -49,7 +47,6 @@ const navLinks = [
       ))}
     </ul>
 
-    {/* CTAs */}
     <div class="flex items-center gap-3">
       <a
         href="#"
@@ -85,22 +82,9 @@ const navLinks = [
     </div>
   </nav>
 
-  {/*
-    Mobile navigation. Uses the native Popover API: Escape, light dismiss,
-    top-layer stacking and focus restoration come from the platform, so this
-    costs 0 KB of JavaScript.
-
-    Never add a display utility (block/flex/grid) to the [popover] element
-    itself — it would override the user-agent display:none and leave the
-    panel permanently open. Only `lg:hidden` is safe, because hiding it on
-    desktop is the intent.
-
-    The browser wires up the implicit aria-expanded relationship between the
-    invoker and the popover. That mapping is still inconsistent in
-    VoiceOver/Safari; if testing shows it is not announced, add explicit
-    aria-expanded/aria-controls, which then requires a small script to keep
-    the attribute in sync.
-  */}
+  {/* Never add a display utility to [popover]: it overrides the user-agent
+      display:none and pins the panel open. lg:hidden is the exception.
+      TODO: verify the implicit aria-expanded is announced in VoiceOver. */}
   <div
     id="mobile-nav"
     popover

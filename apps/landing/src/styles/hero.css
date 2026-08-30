@@ -1,8 +1,3 @@
-/*
-  Hero entrance. One keyframe, compositor-only properties (opacity + transform).
-  Stagger is 60ms per step and the duration is 500ms, per the motion budget for
-  entrance animations. Anything longer reads as the page being slow.
-*/
 @keyframes hero-fade-up {
   from {
     opacity: 0;
