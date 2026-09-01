@@ -1,0 +1,101 @@
+---
+interface FaqEntry {
+  question: string;
+  answer: string;
+}
+
+const faqs: FaqEntry[] = [
+  {
+    question: '¿Cuánto tarda en llegar mi paquete?',
+    answer:
+      'Depende del vuelo y del procesamiento en aduana. Te avisamos por WhatsApp en cada etapa, desde que llega a Miami hasta la entrega en tu puerta.',
+  },
+  {
+    question: '¿Cómo se calcula el costo del envío?',
+    answer:
+      'Por el peso de tu paquete en libras. La tarifa vigente te la confirmamos al abrir tu casillero, y siempre conoces el costo antes de recibir la factura final.',
+  },
+  {
+    question: '¿Abrir un casillero tiene costo?',
+    answer: 'No. Crear tu casillero es gratis y no requiere suscripción.',
+  },
+  {
+    question: '¿Qué es la Categoría C?',
+    answer:
+      'Es el régimen aduanero bajo el que ingresan los envíos courier en Ecuador. Lo conocemos a fondo y te guiamos con la documentación para que tu paquete no se detenga.',
+  },
+  {
+    question: '¿Puedo comprar en cualquier tienda?',
+    answer:
+      'Sí. Tu casillero recibe de cualquier tienda que despache a Miami: Amazon, Shein, Temu, Walmart y muchas más.',
+  },
+  {
+    question: '¿Hay productos que no puedo enviar?',
+    answer:
+      'La aduana ecuatoriana restringe ciertos productos, como líquidos, cosméticos y artículos con baterías. Escríbenos antes de comprar y te confirmamos si tu producto puede ingresar.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+---
+
+<section id="faq" aria-labelledby="faq-title" class="bg-slate-50">
+  <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="section-reveal lg:col-span-4">
+        <h2 id="faq-title" class="text-3xl font-bold tracking-tight text-brand-950 md:text-4xl">
+          Preguntas frecuentes
+        </h2>
+        <p class="mt-6 text-lg leading-relaxed text-slate-600">
+          ¿No encuentras tu respuesta?
+          <a
+            href="https://wa.me/593963986148"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors duration-150 hover:text-brand-900 hover:decoration-brand-500 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
+          >
+            Escríbenos por WhatsApp
+          </a>
+        </p>
+      </div>
+
+      <div class="section-reveal lg:col-span-8">
+        <div class="divide-y divide-slate-200 border-y border-slate-200">
+          {
+            faqs.map((faq) => (
+              <details class="group">
+                <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-6 py-5 text-left text-lg font-semibold text-brand-950 transition-colors duration-150 hover:text-brand-700 rounded-button focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
+                  {faq.question}
+                  <svg
+                    class="h-5 w-5 shrink-0 text-slate-500 transition-transform duration-200 group-open:rotate-180"
+                    aria-hidden="true"
+                    focusable="false"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+                  </svg>
+                </summary>
+                <p class="max-w-2xl pb-6 pr-12 leading-relaxed text-slate-600">
+                  {faq.answer}
+                </p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
