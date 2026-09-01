@@ -22,7 +22,7 @@ import { stores } from '../../data/stores';
           <li>
             <a
               href={store.href}
-              class="group flex min-h-24 items-center justify-center rounded-card border border-slate-200 bg-white p-6 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md hover:shadow-brand-900/5 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
+              class="group flex min-h-24 items-center justify-center rounded-card border border-slate-200 bg-white p-6 transition-[border-color,box-shadow,transform] duration-200 ease-out motion-safe:hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md hover:shadow-brand-900/5 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
             >
               <Image
                 src={store.logo}
@@ -30,7 +30,7 @@ import { stores } from '../../data/stores';
                 width={180}
                 loading="lazy"
                 decoding="async"
-                class="h-auto w-full max-w-36"
+                class="h-auto w-full max-w-36 transition-transform duration-200 ease-out motion-safe:group-hover:scale-[1.04]"
               />
             </a>
           </li>

@@ -16,6 +16,11 @@ const { states } = Astro.props;
     aria-hidden="true"
   >
   </div>
+  <div
+    class="coverage-progress absolute bottom-2 left-[7px] top-2 w-px bg-linear-to-b from-status-bodega via-status-aduana to-status-entregado md:bottom-auto md:left-0 md:right-0 md:top-[7px] md:h-px md:w-auto md:bg-linear-to-r"
+    aria-hidden="true"
+  >
+  </div>
   {
     states.map((state) => (
       <li class="relative flex items-center gap-4 md:flex-col md:items-start md:gap-5">

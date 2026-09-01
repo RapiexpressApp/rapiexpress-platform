@@ -1,0 +1,49 @@
+/* Scroll-linked fill of the Miami -> Ecuador route line. Outside support
+   for animation-timeline the line renders complete: no JS fallback needed. */
+.coverage-progress {
+  transform-origin: top;
+}
+
+@media (min-width: 768px) {
+  .coverage-progress {
+    transform-origin: left;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .coverage-progress {
+    animation: coverage-fill-y linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 85%;
+  }
+
+  @media (min-width: 768px) {
+    .coverage-progress {
+      animation-name: coverage-fill-x;
+    }
+  }
+}
+
+@keyframes coverage-fill-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes coverage-fill-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coverage-progress {
+    animation: none;
+  }
+}

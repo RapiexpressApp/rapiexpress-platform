@@ -1,4 +1,6 @@
 ---
+import '../../styles/faq.css';
+
 interface FaqEntry {
   question: string;
   answer: string;
@@ -86,7 +88,7 @@ const faqSchema = {
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
                   </svg>
                 </summary>
-                <p class="max-w-2xl pb-6 pr-12 leading-relaxed text-slate-600">
+                <p class="faq-answer max-w-2xl pb-6 pr-12 leading-relaxed text-slate-600">
                   {faq.answer}
                 </p>
               </details>
