@@ -57,3 +57,30 @@
     text-wrap: pretty;
   }
 }
+
+/* Scroll-linked reveal: without support for animation-timeline the class
+   matches nothing and content stays visible, so no JS fallback is needed. */
+@supports (animation-timeline: view()) {
+  .section-reveal {
+    animation: section-fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 70%;
+  }
+}
+
+@keyframes section-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal {
+    animation: none;
+  }
+}
