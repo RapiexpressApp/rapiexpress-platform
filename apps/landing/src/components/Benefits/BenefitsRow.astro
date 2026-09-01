@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  text: string;
+  reversed?: boolean;
+}
+
+const { title, text, reversed = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    'section-reveal grid items-center gap-10 lg:grid-cols-12 lg:gap-16',
+  ]}
+>
+  <div
+    class:list={[
+      'max-w-xl',
+      reversed ? 'lg:col-span-5 lg:col-start-8 lg:order-2' : 'lg:col-span-5',
+    ]}
+  >
+    <h3 class="text-2xl font-bold tracking-tight text-brand-950 md:text-3xl">
+      {title}
+    </h3>
+    <p class="mt-4 text-lg leading-relaxed text-slate-600">{text}</p>
+  </div>
+
+  <div
+    class:list={[
+      'flex min-h-52 items-center justify-center rounded-card border border-slate-200 bg-slate-50 p-8 md:min-h-64 md:p-10',
+      reversed ? 'lg:col-span-6 lg:col-start-1 lg:order-1' : 'lg:col-span-6 lg:col-start-7',
+    ]}
+  >
+    <slot name="visual" />
+  </div>
+</div>

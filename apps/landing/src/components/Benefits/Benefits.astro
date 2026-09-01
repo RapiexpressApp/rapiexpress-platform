@@ -1,0 +1,62 @@
+---
+import BenefitsRow from './BenefitsRow.astro';
+---
+
+<section id="beneficios" aria-labelledby="beneficios-title" class="bg-white">
+  <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
+    <div class="section-reveal max-w-xl">
+      <h2 id="beneficios-title" class="text-3xl font-bold tracking-tight text-brand-950 md:text-4xl">
+        Menos costo, cero sorpresas
+      </h2>
+    </div>
+
+    <div class="mt-14 space-y-20 md:mt-16 md:space-y-24">
+      <BenefitsRow
+        title="Paga por un solo envío, no por cada compra"
+        text="Consolidamos todas tus compras en un solo paquete antes de volarlo a Ecuador. Una sola aduana, un solo costo final."
+      >
+        <svg
+          slot="visual"
+          class="h-auto w-full max-w-md text-slate-400"
+          aria-hidden="true"
+          focusable="false"
+          fill="none"
+          viewBox="0 0 320 160"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="20" y="20" width="48" height="36" rx="4"></rect>
+          <rect x="20" y="72" width="48" height="36" rx="4"></rect>
+          <rect x="20" y="124" width="48" height="36" rx="4"></rect>
+          <path d="M68 38 C 130 38, 160 74, 200 80 M68 90 L 200 90 M68 142 C 130 142, 160 106, 200 100" stroke-linecap="round"></path>
+          <rect x="200" y="62" width="70" height="56" rx="6" class="text-brand-500" stroke="currentColor"></rect>
+          <path d="M270 90 L 306 90 M298 82 L 306 90 L 298 98" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500" stroke="currentColor"></path>
+        </svg>
+      </BenefitsRow>
+
+      <BenefitsRow
+        reversed
+        title="Aduana sin sobresaltos"
+        text="Conocemos el régimen courier de Ecuador (Categoría C) por dentro. Te guiamos con la documentación para que tu paquete no se detenga."
+      >
+        <svg
+          slot="visual"
+          class="h-auto w-full max-w-md text-slate-400"
+          aria-hidden="true"
+          focusable="false"
+          fill="none"
+          viewBox="0 0 320 160"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M100 16 L 180 16 L 220 56 L 220 144 L 100 144 Z" stroke-linejoin="round"></path>
+          <path d="M180 16 L 180 56 L 220 56" stroke-linejoin="round"></path>
+          <path d="M124 84 L 134 94 L 152 74" stroke-linecap="round" stroke-linejoin="round" class="text-status-entregado" stroke="currentColor"></path>
+          <path d="M170 84 L 196 84" stroke-linecap="round"></path>
+          <path d="M124 116 L 134 126 L 152 106" stroke-linecap="round" stroke-linejoin="round" class="text-status-entregado" stroke="currentColor"></path>
+          <path d="M170 116 L 196 116" stroke-linecap="round"></path>
+        </svg>
+      </BenefitsRow>
+    </div>
+  </div>
+</section>
