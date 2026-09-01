@@ -1,7 +1,15 @@
 ---
+import About from '../components/About/About.astro';
+import Benefits from '../components/Benefits/Benefits.astro';
+import Coverage from '../components/Coverage/Coverage.astro';
+import Faq from '../components/Faq/Faq.astro';
+import FinalCta from '../components/FinalCta/FinalCta.astro';
+import Footer from '../components/Footer/Footer.astro';
 import Hero from '../components/Hero/Hero.astro';
+import HowItWorks from '../components/HowItWorks/HowItWorks.astro';
 import Navbar from '../components/Navbar.astro';
 import ProofStrip from '../components/ProofStrip.astro';
+import Stores from '../components/Stores/Stores.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 
@@ -12,4 +20,12 @@ import Layout from '../layouts/Layout.astro';
   <Navbar slot="header" />
   <Hero />
   <ProofStrip />
+  <About />
+  <HowItWorks />
+  <Benefits />
+  <Coverage />
+  <Stores />
+  <Faq />
+  <FinalCta />
+  <Footer />
 </Layout>

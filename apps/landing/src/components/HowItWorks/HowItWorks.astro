@@ -1,0 +1,52 @@
+---
+interface Step {
+  title: string;
+  text: string;
+}
+
+const steps: Step[] = [
+  {
+    title: 'Crea tu casillero gratis',
+    text: 'Regístrate y recibe al instante tu dirección de casillero en Miami.',
+  },
+  {
+    title: 'Compra en tus tiendas favoritas',
+    text: 'Usa tu dirección Miami al pagar en cualquier tienda que despache desde USA o China.',
+  },
+  {
+    title: 'Recíbelo en tu puerta',
+    text: 'Rastreamos tu paquete, lo pasamos por aduana y te lo entregamos en Ecuador.',
+  },
+];
+---
+
+<section id="como-funciona" aria-labelledby="como-funciona-title" class="bg-slate-50">
+  <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
+    <div class="section-reveal max-w-xl">
+      <h2 id="como-funciona-title" class="text-3xl font-bold tracking-tight text-brand-950 md:text-4xl">
+        Tres pasos entre tu carrito y tu puerta
+      </h2>
+    </div>
+
+    <ol class="mt-14 space-y-12 md:mt-16 md:space-y-16">
+      {
+        steps.map((step, index) => (
+          <li class="section-reveal grid items-baseline gap-4 md:grid-cols-[auto_1fr] md:gap-10">
+            <span
+              class="text-5xl font-bold tabular-nums leading-none tracking-tight text-brand-400 md:text-6xl"
+              aria-hidden="true"
+            >
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div class="max-w-xl">
+              <h3 class="text-xl font-semibold tracking-tight text-brand-950 md:text-2xl">
+                {step.title}
+              </h3>
+              <p class="mt-2 text-lg leading-relaxed text-slate-600">{step.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
