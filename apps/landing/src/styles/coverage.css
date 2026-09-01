@@ -1,5 +1,12 @@
-/* Scroll-linked fill of the Miami -> Ecuador route line. Outside support
-   for animation-timeline the line renders complete: no JS fallback needed. */
+/* Scroll-linked journey: the route line fills and each state dot arrives as
+   the user scrolls through the route block. The timeline source is the route
+   list itself (--ruta), so the fill spans its whole pass through the
+   viewport. Outside support for animation-timeline the line renders
+   complete: no JS fallback needed. */
+.coverage-route {
+  view-timeline-name: --ruta;
+}
+
 .coverage-progress {
   transform-origin: top;
 }
@@ -13,14 +20,35 @@
 @supports (animation-timeline: view()) {
   .coverage-progress {
     animation: coverage-fill-y linear both;
-    animation-timeline: view();
-    animation-range: entry 10% entry 85%;
+    animation-timeline: --ruta();
+    animation-range: cover 5% cover 50%;
   }
 
   @media (min-width: 768px) {
     .coverage-progress {
       animation-name: coverage-fill-x;
     }
+  }
+
+  .coverage-dot {
+    animation: coverage-dot-arrive linear both;
+    animation-timeline: --ruta();
+  }
+
+  .coverage-route li:nth-child(1) .coverage-dot {
+    animation-range: cover 8% cover 15%;
+  }
+  .coverage-route li:nth-child(2) .coverage-dot {
+    animation-range: cover 17% cover 24%;
+  }
+  .coverage-route li:nth-child(3) .coverage-dot {
+    animation-range: cover 26% cover 33%;
+  }
+  .coverage-route li:nth-child(4) .coverage-dot {
+    animation-range: cover 35% cover 42%;
+  }
+  .coverage-route li:nth-child(5) .coverage-dot {
+    animation-range: cover 44% cover 51%;
   }
 }
 
@@ -42,8 +70,20 @@
   }
 }
 
+@keyframes coverage-dot-arrive {
+  from {
+    opacity: 0.25;
+    transform: scale(0.55);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .coverage-progress {
+  .coverage-progress,
+  .coverage-dot {
     animation: none;
   }
 }

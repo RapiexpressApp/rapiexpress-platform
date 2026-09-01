@@ -9,7 +9,7 @@ const { states } = Astro.props;
 ---
 
 <ol
-  class="relative mt-14 grid gap-8 md:grid-cols-5 md:gap-6"
+  class="coverage-route relative mt-14 grid gap-8 md:grid-cols-5 md:gap-6"
 >
   <div
     class="absolute bottom-2 left-[7px] top-2 w-px bg-white/15 md:bottom-auto md:left-0 md:right-0 md:top-[7px] md:h-px md:w-auto"
@@ -26,7 +26,7 @@ const { states } = Astro.props;
       <li class="relative flex items-center gap-4 md:flex-col md:items-start md:gap-5">
         <span
           class:list={[
-            'h-[15px] w-[15px] shrink-0 rounded-full ring-4 ring-brand-950',
+            'coverage-dot h-[15px] w-[15px] shrink-0 rounded-full ring-4 ring-brand-950',
             state.dotClass,
           ]}
         />
