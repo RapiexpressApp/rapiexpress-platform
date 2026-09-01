@@ -31,6 +31,19 @@ const organizationSchema = {
   url: canonicalURL.origin,
   logo: new URL('/logo.webp', Astro.site).href,
   areaServed: ['EC', 'US', 'CN'],
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: '+593-96-398-6148',
+      contactType: 'customer service',
+      availableLanguage: ['es'],
+    },
+  ],
+  sameAs: [
+    'https://www.instagram.com/rapiexpress.ec/',
+    'https://www.tiktok.com/@rapiexpress.ec',
+    'https://www.facebook.com/profile.php?id=100077301332135',
+  ],
 };
 ---
 

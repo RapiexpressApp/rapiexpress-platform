@@ -11,20 +11,20 @@
 
 .hero-enter {
   opacity: 0;
-  animation: hero-fade-up 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: hero-fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .hero-delay-1 {
-  animation-delay: 60ms;
-}
-.hero-delay-2 {
   animation-delay: 120ms;
 }
+.hero-delay-2 {
+  animation-delay: 240ms;
+}
 .hero-delay-3 {
-  animation-delay: 180ms;
+  animation-delay: 360ms;
 }
 .hero-delay-4 {
-  animation-delay: 240ms;
+  animation-delay: 480ms;
 }
 
 @media (prefers-reduced-motion: reduce) {

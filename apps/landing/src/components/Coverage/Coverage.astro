@@ -1,0 +1,57 @@
+---
+// TODO: add real destination cities and transit times once operations
+// confirms them; copy is intentionally generic until then.
+import '../../styles/coverage.css';
+
+import CoverageRoute from './CoverageRoute.astro';
+
+export interface RouteState {
+  label: string;
+  detail: string;
+  dotClass: string;
+}
+
+const states: RouteState[] = [
+  {
+    label: 'Bodega Miami',
+    detail: 'Tu paquete llega a tu casillero',
+    dotClass: 'bg-status-bodega',
+  },
+  {
+    label: 'Embarcado',
+    detail: 'Vuela hacia Ecuador',
+    dotClass: 'bg-status-embarcado',
+  },
+  {
+    label: 'En aduana',
+    detail: 'Procesamiento Categoría C',
+    dotClass: 'bg-status-aduana',
+  },
+  {
+    label: 'Agencia',
+    detail: 'Última milla en tu ciudad',
+    dotClass: 'bg-status-agencia',
+  },
+  {
+    label: 'Entregado',
+    detail: 'En tu puerta',
+    dotClass: 'bg-status-entregado',
+  },
+];
+---
+
+<section id="cobertura" aria-labelledby="cobertura-title" class="bg-brand-950">
+  <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
+    <div class="section-reveal max-w-2xl">
+      <h2 id="cobertura-title" class="text-3xl font-bold tracking-tight text-white md:text-4xl">
+        De Miami a tu puerta, con control en cada etapa
+      </h2>
+      <p class="mt-6 text-lg leading-relaxed text-brand-100/85">
+        Cada paquete sigue la misma ruta. Te avisamos por WhatsApp en cuanto
+        avanza, sin que tengas que preguntar.
+      </p>
+    </div>
+
+    <CoverageRoute states={states} />
+  </div>
+</section>

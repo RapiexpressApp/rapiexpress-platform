@@ -1,0 +1,40 @@
+---
+import type { RouteState } from './Coverage.astro';
+
+interface Props {
+  states: RouteState[];
+}
+
+const { states } = Astro.props;
+---
+
+<ol
+  class="coverage-route relative mt-14 grid gap-8 md:grid-cols-5 md:gap-6"
+>
+  <div
+    class="absolute bottom-2 left-[7px] top-2 w-px bg-white/15 md:bottom-auto md:left-0 md:right-0 md:top-[7px] md:h-px md:w-auto"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="coverage-progress absolute bottom-2 left-[7px] top-2 w-px bg-linear-to-b from-status-bodega via-status-aduana to-status-entregado md:bottom-auto md:left-0 md:right-0 md:top-[7px] md:h-px md:w-auto md:bg-linear-to-r"
+    aria-hidden="true"
+  >
+  </div>
+  {
+    states.map((state) => (
+      <li class="relative flex items-center gap-4 md:flex-col md:items-start md:gap-5">
+        <span
+          class:list={[
+            'coverage-dot h-[15px] w-[15px] shrink-0 rounded-full ring-4 ring-brand-950',
+            state.dotClass,
+          ]}
+        />
+        <div>
+          <p class="font-semibold text-white">{state.label}</p>
+          <p class="text-sm text-brand-200/85">{state.detail}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
