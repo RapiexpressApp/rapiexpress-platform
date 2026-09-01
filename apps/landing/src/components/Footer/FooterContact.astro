@@ -1,0 +1,31 @@
+---
+interface ContactItem {
+  label: string;
+  href: string;
+  value: string;
+}
+
+interface Props {
+  items: ContactItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="space-y-3">
+  {
+    items.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          target={item.href.startsWith('http') ? '_blank' : undefined}
+          rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          class="inline-flex min-h-11 items-center gap-3 rounded-button text-slate-600 transition-colors duration-150 hover:text-brand-900 focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
+        >
+          <span class="font-semibold text-brand-950">{item.label}</span>
+          <span class="tabular-nums">{item.value}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
