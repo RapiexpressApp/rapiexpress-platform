@@ -1,0 +1,51 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const lines = [78, 96, 114];
+---
+
+<svg
+  class={`benefits-customs ${className}`}
+  aria-hidden="true"
+  focusable="false"
+  fill="none"
+  viewBox="0 0 320 160"
+>
+  <g class="text-slate-500" stroke="currentColor" stroke-width="2" fill="none">
+    <path d="M 96 14 H 176 L 214 52 V 146 H 96 Z" stroke-linejoin="round" />
+    <path d="M 176 14 V 52 H 214" stroke-linejoin="round" />
+  </g>
+
+  <g class="text-brand-600" stroke="currentColor" stroke-width="2.5" fill="none">
+    <path d="M 114 40 H 156" stroke-linecap="round" />
+    <path d="M 114 56 H 142" stroke-linecap="round" />
+  </g>
+
+  {
+    lines.map((y) => (
+      <path
+        class="text-slate-300"
+        d={`M 114 ${y} H 196`}
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    ))
+  }
+
+  <g class="benefits-stamp text-accent-500" stroke="currentColor" fill="none">
+    <circle cx="212" cy="112" r="30" stroke-width="3" />
+    <circle cx="212" cy="112" r="23" stroke-width="1.5" opacity="0.6" />
+    <path
+      d="M 200 112 L 208 120 L 225 103"
+      stroke-width="3.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>

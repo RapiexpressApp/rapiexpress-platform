@@ -1,12 +1,15 @@
 ---
+import ScribbleOval from './ScribbleOval.astro';
+
 export interface Stat {
   value: string;
   label: string;
+  highlight?: boolean;
 }
 
 const stats: Stat[] = [
   { value: '10.000+', label: 'Paquetes entregados' },
-  { value: '99,8%', label: 'Satisfacción' },
+  { value: '99,8%', label: 'Satisfacción', highlight: true },
   { value: '3', label: 'Países conectados' },
   { value: '24/7', label: 'Soporte' },
 ];
@@ -16,13 +19,18 @@ const stats: Stat[] = [
   <h2 id="proof-title" class="sr-only">Rapiexpress en números</h2>
 
   <div class="mx-auto max-w-7xl px-6 py-20 md:py-24">
-    <dl class="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4">
+    <dl class="reveal-stagger grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4">
       {
         stats.map((stat) => (
-          <div class="flex flex-col-reverse gap-1">
+          <div class="flex flex-col-reverse gap-5">
             <dt class="text-sm text-brand-200/85">{stat.label}</dt>
             <dd class="text-3xl font-bold tracking-tight text-white tabular-nums md:text-4xl">
-              {stat.value}
+              <span class="relative inline-block">
+                {stat.value}
+                {stat.highlight && (
+                  <ScribbleOval class="draw-on-scroll pointer-events-none absolute -inset-x-10 -inset-y-5 text-accent-400" />
+                )}
+              </span>
             </dd>
           </div>
         ))

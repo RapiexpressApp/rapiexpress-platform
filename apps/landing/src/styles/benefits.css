@@ -1,0 +1,110 @@
+/* Keep the animation-* longhands. Written as the `animation` shorthand, the
+   minifier folds animation-timeline into it, and the timeline is reset-only
+   in that shorthand, so the whole declaration is dropped. */
+.benefits-consolidation,
+.benefits-customs {
+  view-timeline-name: --benefits-visual;
+}
+
+.benefits-feed {
+  stroke-dasharray: 1;
+}
+
+.benefits-stamp,
+.benefits-parcel {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@supports (animation-timeline: view()) {
+  .benefits-parcel {
+    animation-name: benefits-parcel-in;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --benefits-visual;
+  }
+
+  .benefits-parcel-1 {
+    animation-range: entry 15% entry 45%;
+  }
+  .benefits-parcel-2 {
+    animation-range: entry 21% entry 51%;
+  }
+  .benefits-parcel-3 {
+    animation-range: entry 27% entry 57%;
+  }
+
+  .benefits-feed {
+    animation-name: benefits-feed-draw;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --benefits-visual;
+  }
+
+  .benefits-feed-1 {
+    animation-range: entry 40% entry 78%;
+  }
+  .benefits-feed-2 {
+    animation-range: entry 46% entry 84%;
+  }
+  .benefits-feed-3 {
+    animation-range: entry 52% entry 90%;
+  }
+
+  /* The stamp lands after the document lines have read as a form, so the
+     range starts late on purpose. */
+  .benefits-stamp {
+    animation-name: benefits-stamp-land;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --benefits-visual;
+    animation-range: entry 45% entry 85%;
+  }
+}
+
+@keyframes benefits-parcel-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes benefits-feed-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes benefits-stamp-land {
+  from {
+    opacity: 0;
+    transform: scale(1.6) rotate(-14deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .benefits-parcel,
+  .benefits-feed,
+  .benefits-stamp {
+    animation: none;
+  }
+
+  .benefits-feed {
+    stroke-dasharray: none;
+  }
+
+  .benefits-stamp {
+    transform: rotate(-8deg);
+  }
+}

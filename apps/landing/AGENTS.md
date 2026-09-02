@@ -167,6 +167,19 @@ Concretely:
 - Always set explicit `width`/`height` (CLS). Below the fold:
   `loading="lazy"` + `decoding="async"`. For the LCP image:
   `loading="eager"` + `fetchpriority="high"`.
+- **Lazy has a floor: skip it when a whole section's images weigh under
+  ~50 KB.** Deferring costs a visible flash of `alt` text — the box is
+  reserved by `width`/`height`, and the browser fills it with the alt string
+  until the fetch it deliberately delayed comes back. Below the floor there is
+  nothing worth deferring, so the flash buys nothing. Use `loading="eager"` +
+  `fetchpriority="low"`: the images ride the initial load behind the font and
+  the LCP, and are decoded before the reader scrolls to them. The store logo
+  wall in `Stores.astro` is the case this rule came from — 13 logos, 26 KB
+  total. Weigh the built output (`dist/_astro/*.webp`), not the source files.
+- **`<Image>` defaults to `loading="lazy"`.** Deleting the prop does not make
+  it eager, it falls back to the default and the emitted HTML is unchanged.
+  Write `loading="eager"` explicitly and confirm in `dist/index.html` — this
+  one fails silently in exactly the way a diff makes look correct.
 - The few comments that survive the root comment rule go in the frontmatter
   (`//`) or in `{/* */}`. Astro ships `<!-- -->` to the client on every page
   load; the other two are stripped at build.
@@ -191,6 +204,9 @@ Before calling a task finished:
 - [ ] New decorative SVG is `aria-hidden`.
 - [ ] Any new animation has a `prefers-reduced-motion` escape, verified with
       DevTools > Rendering > Emulate CSS media feature.
+- [ ] Every new `<Image>` was checked in `dist/index.html`, not in the source:
+      `grep -o '<img[^>]*>' dist/index.html`. The `loading` attribute is the
+      one you intended, and no scroll-in section flashes `alt` text.
 - [ ] No new client-side JS, or a written reason why it was unavoidable.
 - [ ] Edge cases and race conditions listed, per the root rules.
 
