@@ -1,4 +1,6 @@
 ---
+import HowItWorksConnector from './HowItWorksConnector.astro';
+
 interface Step {
   title: string;
   text: string;
@@ -31,13 +33,18 @@ const steps: Step[] = [
     <ol class="mt-14 space-y-12 md:mt-16 md:space-y-16">
       {
         steps.map((step, index) => (
-          <li class="section-reveal grid items-baseline gap-4 md:grid-cols-[auto_1fr] md:gap-10">
-            <span
-              class="text-5xl font-bold tabular-nums leading-none tracking-tight text-brand-400 md:text-6xl"
-              aria-hidden="true"
-            >
-              {String(index + 1).padStart(2, '0')}
-            </span>
+          <li class="section-reveal grid gap-4 md:grid-cols-[4.5rem_1fr] md:gap-10">
+            <div class="relative flex items-start">
+              <span
+                class="text-5xl font-bold tabular-nums leading-none tracking-tight text-brand-400 md:text-6xl"
+                aria-hidden="true"
+              >
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              {index < steps.length - 1 && (
+                <HowItWorksConnector class="pointer-events-none absolute left-6 top-20 hidden h-24 w-6 text-brand-300 md:block" />
+              )}
+            </div>
             <div class="max-w-xl">
               <h3 class="text-xl font-semibold tracking-tight text-brand-950 md:text-2xl">
                 {step.title}

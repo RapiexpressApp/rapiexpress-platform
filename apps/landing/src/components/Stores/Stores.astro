@@ -28,8 +28,9 @@ import { stores } from '../../data/stores';
                 src={store.logo}
                 alt={`Comprar en ${store.name}`}
                 width={180}
-                loading="lazy"
+                loading="eager"
                 decoding="async"
+                fetchpriority="low"
                 class="h-auto w-full max-w-36 transition-transform duration-200 ease-out motion-safe:group-hover:scale-[1.04]"
               />
             </a>

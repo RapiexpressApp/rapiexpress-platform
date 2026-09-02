@@ -1,0 +1,73 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+// Must stay identical to --about-route-line in styles/about.css: the trail,
+// the traced line and the plane's offset-path share this curve, and the plane
+// drifts off the route the moment they diverge.
+const ROUTE = 'M 92 158 C 178 52, 306 60, 392 196';
+---
+
+<svg
+  class={`about-route ${className}`}
+  aria-hidden="true"
+  focusable="false"
+  fill="none"
+  viewBox="0 0 480 320"
+>
+  <g class="text-slate-200" stroke="currentColor" stroke-width="1.5" fill="none">
+    <path d="M40 96 C 140 78, 340 78, 440 96" opacity="0.7" />
+    <path d="M40 160 C 140 142, 340 142, 440 160" opacity="0.5" />
+    <path d="M40 224 C 140 206, 340 206, 440 224" opacity="0.35" />
+  </g>
+
+  <path
+    class="text-slate-300"
+    d={ROUTE}
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-dasharray="1 10"
+  />
+
+  <path
+    class="about-route-line draw-on-scroll text-brand-500"
+    d={ROUTE}
+    pathLength="1"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+
+  <g class="text-brand-600" fill="none" stroke="currentColor">
+    <path
+      d="M92 130 C 78 130 68 141 68 154 C 68 172 92 196 92 196 C 92 196 116 172 116 154 C 116 141 106 130 92 130 Z"
+      stroke-width="2.5"
+      stroke-linejoin="round"
+    />
+    <circle cx="92" cy="153" r="7" fill="currentColor" stroke="none" />
+  </g>
+
+  <g class="text-accent-500" fill="none" stroke="currentColor">
+    <path
+      d="M392 168 C 378 168 368 179 368 192 C 368 210 392 234 392 234 C 392 234 416 210 416 192 C 416 179 406 168 392 168 Z"
+      stroke-width="2.5"
+      stroke-linejoin="round"
+    />
+    <circle cx="392" cy="191" r="7" fill="currentColor" stroke="none" />
+  </g>
+
+  <g class="about-route-plane text-brand-600">
+    <path d="M11 0 L -7 7 L -3 0 L -7 -7 Z" fill="currentColor" stroke="none" />
+  </g>
+
+  <g class="text-brand-950" fill="currentColor" font-size="15" font-weight="600">
+    <text x="92" y="222" text-anchor="middle">Miami, FL</text>
+    <text x="392" y="260" text-anchor="middle">Guayaquil, EC</text>
+  </g>
+</svg>

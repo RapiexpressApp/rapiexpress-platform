@@ -2,7 +2,11 @@
    the user scrolls through the route block. The timeline source is the route
    list itself (--ruta), so the fill spans its whole pass through the
    viewport. Outside support for animation-timeline the line renders
-   complete: no JS fallback needed. */
+   complete: no JS fallback needed.
+
+   Keep the animation-* longhands. Written as the `animation` shorthand, the
+   minifier folds animation-timeline into it, and the timeline is reset-only
+   in that shorthand, so the whole declaration is dropped. */
 .coverage-route {
   view-timeline-name: --ruta;
 }
@@ -19,8 +23,10 @@
 
 @supports (animation-timeline: view()) {
   .coverage-progress {
-    animation: coverage-fill-y linear both;
-    animation-timeline: --ruta();
+    animation-name: coverage-fill-y;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --ruta;
     animation-range: cover 5% cover 50%;
   }
 
@@ -31,8 +37,10 @@
   }
 
   .coverage-dot {
-    animation: coverage-dot-arrive linear both;
-    animation-timeline: --ruta();
+    animation-name: coverage-dot-arrive;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --ruta;
   }
 
   .coverage-route li:nth-child(1) .coverage-dot {
@@ -72,8 +80,8 @@
 
 @keyframes coverage-dot-arrive {
   from {
-    opacity: 0.25;
-    transform: scale(0.55);
+    opacity: 0.3;
+    transform: scale(0.5);
   }
   to {
     opacity: 1;

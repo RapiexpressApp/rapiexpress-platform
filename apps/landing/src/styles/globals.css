@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-    --color-brand-50: #f0f4f8;
-    --color-brand-100: #dce4ed;
-    --color-brand-200: #b8c9db;
-    --color-brand-300: #8fa8c4;
-    --color-brand-400: #6b87ad;
-    --color-brand-500: #4a6996;
-    --color-brand-600: #3a5480;
-    --color-brand-700: #2d4268;
-    --color-brand-800: #243554;
-    --color-brand-900: #1e3a5f;
-    --color-brand-950: #152842;
+    --color-brand-50: #f3f5fc;
+    --color-brand-100: #dde4f8;
+    --color-brand-200: #bac9f2;
+    --color-brand-300: #8aa4ea;
+    --color-brand-400: #567de6;
+    --color-brand-500: #2a5ce5;
+    --color-brand-600: #164ada;
+    --color-brand-700: #1041c6;
+    --color-brand-800: #0937b3;
+    --color-brand-900: #062e9d;
+    --color-brand-950: #031f6d;
 
     --color-accent-50: #fefce8;
     --color-accent-100: #fef9c3;
@@ -40,6 +40,21 @@
     --radius-card: 0.75rem;
     --radius-modal: 1rem;
     --radius-full: 9999px;
+
+}
+
+/* `static` because Tailwind drops @theme values that no utility references,
+   and the per-section stylesheets read these at runtime. */
+@theme static {
+    --motion-fast: 120ms;
+    --motion-base: 200ms;
+    --motion-medium: 280ms;
+    --motion-slow: 400ms;
+    --motion-slower: 600ms;
+
+    --ease-entrance: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+    --ease-settle: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @layer base {
@@ -47,6 +62,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-synthesis: none;
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -59,12 +81,48 @@
 }
 
 /* Scroll-linked reveal: without support for animation-timeline the class
-   matches nothing and content stays visible, so no JS fallback is needed. */
+   matches nothing and content stays visible, so no JS fallback is needed.
+   Keep the animation-* longhands here. Written as the `animation` shorthand,
+   the minifier folds animation-timeline into it, and the timeline is
+   reset-only in that shorthand, so the whole declaration is dropped. */
 @supports (animation-timeline: view()) {
   .section-reveal {
-    animation: section-fade-up linear both;
+    animation-name: section-fade-up;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
     animation-timeline: view();
     animation-range: entry 0% entry 70%;
+  }
+
+  /* Children arrive in sequence by shifting each one's slice of the scroll
+     range; animation-delay is a no-op against a scroll timeline. */
+  .reveal-stagger > * {
+    animation-name: section-fade-up;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+  }
+
+  .reveal-stagger > *:nth-child(1) { animation-range: entry 0% entry 55%; }
+  .reveal-stagger > *:nth-child(2) { animation-range: entry 6% entry 61%; }
+  .reveal-stagger > *:nth-child(3) { animation-range: entry 12% entry 67%; }
+  .reveal-stagger > *:nth-child(4) { animation-range: entry 18% entry 73%; }
+  .reveal-stagger > *:nth-child(5) { animation-range: entry 24% entry 79%; }
+
+  /* Paths carry pathLength="1", so one dashoffset unit is the whole stroke
+     regardless of geometry.
+
+     The range stays inside the entry phase on purpose. A range reaching into
+     cover needs the element to travel the full viewport, which the last
+     section before the footer never does, and its stroke would freeze
+     half-drawn. */
+  .draw-on-scroll {
+    stroke-dasharray: 1;
+    animation-name: stroke-draw;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 15% entry 90%;
   }
 }
 
@@ -79,8 +137,85 @@
   }
 }
 
+@keyframes stroke-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes doodle-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+.doodle-float,
+.doodle-float-slow {
+  will-change: transform;
+}
+
+.doodle-float {
+  animation: doodle-float 6s ease-in-out infinite;
+}
+
+.doodle-float-slow {
+  animation: doodle-float 9s ease-in-out infinite;
+}
+
+@keyframes doodle-draw {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.doodle-draw {
+  transform-origin: left center;
+  will-change: transform, opacity;
+  animation: doodle-draw 900ms var(--ease-entrance) 400ms both;
+}
+
+/* Shared hover contract: transform, shadow and border move on one clock so a
+   card never reads as three separate reactions. */
+.lift {
+  transition:
+    transform var(--motion-base) var(--ease-entrance),
+    box-shadow var(--motion-base) var(--ease-entrance),
+    border-color var(--motion-base) var(--ease-entrance);
+}
+
+@media (hover: hover) {
+  .lift:hover {
+    transform: translateY(-3px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .section-reveal {
+  .section-reveal,
+  .reveal-stagger > *,
+  .draw-on-scroll,
+  .doodle-float,
+  .doodle-float-slow,
+  .doodle-draw {
     animation: none;
+  }
+
+  .lift {
+    transition: none;
+  }
+
+  .lift:hover {
+    transform: none;
   }
 }

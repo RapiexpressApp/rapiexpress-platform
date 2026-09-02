@@ -1,11 +1,13 @@
 ---
-import AboutPlaceholder from './AboutPlaceholder.astro';
+import '../../styles/about.css';
+
+import AboutRoute from './AboutRoute.astro';
 ---
 
 <section id="nosotros" aria-labelledby="nosotros-title" class="bg-white">
   <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
     <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-      <div class="section-reveal lg:col-span-6">
+      <div class="reveal-stagger lg:col-span-5">
         <h2
           id="nosotros-title"
           class="text-3xl font-bold tracking-tight text-brand-950 md:text-4xl"
@@ -24,8 +26,8 @@ import AboutPlaceholder from './AboutPlaceholder.astro';
         </p>
       </div>
 
-      <div class="section-reveal lg:col-span-6">
-        <AboutPlaceholder />
+      <div class="section-reveal lg:col-span-6 lg:col-start-7">
+        <AboutRoute class="mx-auto h-auto w-full max-w-xl" />
       </div>
     </div>
   </div>

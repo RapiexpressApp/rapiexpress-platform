@@ -8,11 +8,7 @@ interface Props {
 const { title, text, reversed = false } = Astro.props;
 ---
 
-<div
-  class:list={[
-    'section-reveal grid items-center gap-10 lg:grid-cols-12 lg:gap-16',
-  ]}
->
+<div class="section-reveal grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
   <div
     class:list={[
       'max-w-xl',
@@ -27,7 +23,7 @@ const { title, text, reversed = false } = Astro.props;
 
   <div
     class:list={[
-      'flex min-h-52 items-center justify-center rounded-card border border-slate-200 bg-slate-50 p-8 md:min-h-64 md:p-10',
+      'lift flex min-h-52 items-center justify-center rounded-card border border-slate-200 bg-slate-50 p-8 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-900/5 md:min-h-64 md:p-10',
       reversed ? 'lg:col-span-6 lg:col-start-1 lg:order-1' : 'lg:col-span-6 lg:col-start-7',
     ]}
   >

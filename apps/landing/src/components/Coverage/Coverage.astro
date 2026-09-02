@@ -8,41 +8,20 @@ import CoverageRoute from './CoverageRoute.astro';
 export interface RouteState {
   label: string;
   detail: string;
-  dotClass: string;
 }
 
 const states: RouteState[] = [
-  {
-    label: 'Bodega Miami',
-    detail: 'Tu paquete llega a tu casillero',
-    dotClass: 'bg-status-bodega',
-  },
-  {
-    label: 'Embarcado',
-    detail: 'Vuela hacia Ecuador',
-    dotClass: 'bg-status-embarcado',
-  },
-  {
-    label: 'En aduana',
-    detail: 'Procesamiento Categoría C',
-    dotClass: 'bg-status-aduana',
-  },
-  {
-    label: 'Agencia',
-    detail: 'Última milla en tu ciudad',
-    dotClass: 'bg-status-agencia',
-  },
-  {
-    label: 'Entregado',
-    detail: 'En tu puerta',
-    dotClass: 'bg-status-entregado',
-  },
+  { label: 'Bodega Miami', detail: 'Tu paquete llega a tu casillero' },
+  { label: 'Embarcado', detail: 'Vuela hacia Ecuador' },
+  { label: 'En aduana', detail: 'Procesamiento Categoría C' },
+  { label: 'Agencia', detail: 'Última milla en tu ciudad' },
+  { label: 'Entregado', detail: 'En tu puerta' },
 ];
 ---
 
 <section id="cobertura" aria-labelledby="cobertura-title" class="bg-brand-950">
   <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
-    <div class="section-reveal max-w-2xl">
+    <div class="reveal-stagger max-w-2xl">
       <h2 id="cobertura-title" class="text-3xl font-bold tracking-tight text-white md:text-4xl">
         De Miami a tu puerta, con control en cada etapa
       </h2>
