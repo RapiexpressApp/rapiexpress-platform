@@ -1,0 +1,53 @@
+/* Keep in sync with the ROUTE constant in components/About/AboutRoute.astro:
+   the plane rides this curve while the SVG draws it. */
+.about-route {
+  --about-route-line: path('M 92 158 C 178 52, 306 60, 392 196');
+}
+
+/* Without offset-path the plane has no position to ride and would render at
+   the SVG origin, so it is absent rather than misplaced. */
+.about-route-plane {
+  display: none;
+}
+
+@supports (offset-path: path('M 0 0 L 1 1')) {
+  .about-route-plane {
+    display: inline;
+    offset-path: var(--about-route-line);
+    offset-rotate: auto;
+    offset-distance: 0%;
+  }
+
+  .about-route-plane {
+    will-change: offset-distance;
+    animation: about-route-fly 7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+}
+
+/* Fading at both ends keeps the loop restart from reading as the plane
+   snapping back across the map. */
+@keyframes about-route-fly {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* Parked mid-route rather than hidden: the plane is the one element that
+   tells the reader which direction the map is read in. */
+@media (prefers-reduced-motion: reduce) {
+  .about-route-plane {
+    animation: none;
+    offset-distance: 62%;
+  }
+}

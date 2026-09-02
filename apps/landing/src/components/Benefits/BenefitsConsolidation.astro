@@ -1,0 +1,70 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const sources = [
+  { y: 14, feed: 'M 78 33 C 132 33, 150 62, 198 74' },
+  { y: 61, feed: 'M 78 80 L 198 80' },
+  { y: 108, feed: 'M 78 127 C 132 127, 150 98, 198 86' },
+];
+---
+
+<svg
+  class={`benefits-consolidation ${className}`}
+  aria-hidden="true"
+  focusable="false"
+  fill="none"
+  viewBox="0 0 320 160"
+>
+  {
+    sources.map((source, index) => (
+      <g
+        class:list={['benefits-parcel text-slate-500', `benefits-parcel-${index + 1}`]}
+        stroke="currentColor"
+        stroke-width="2"
+        fill="none"
+      >
+        <rect x="26" y={source.y} width="52" height="38" rx="3" />
+        <path d={`M 26 ${source.y + 12} H 78`} />
+        <path d={`M 46 ${source.y} V ${source.y + 12}`} />
+        <rect x="34" y={source.y + 20} width="18" height="10" rx="1.5" />
+      </g>
+    ))
+  }
+
+  {
+    sources.map((source, index) => (
+      <path
+        class:list={[
+          'benefits-feed text-slate-500',
+          `benefits-feed-${index + 1}`,
+        ]}
+        d={source.feed}
+        pathLength="1"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    ))
+  }
+
+  <g class="benefits-consolidated text-brand-600" stroke="currentColor" fill="none">
+    <rect x="198" y="46" width="84" height="68" rx="4" stroke-width="2.5" />
+    <path d="M 198 66 H 282" stroke-width="2.5" />
+    <path d="M 232 46 V 66" stroke-width="2.5" />
+    <rect
+      x="210"
+      y="78"
+      width="34"
+      height="20"
+      rx="2"
+      class="text-accent-500"
+      stroke="currentColor"
+      stroke-width="2"
+    />
+  </g>
+</svg>

@@ -1,7 +1,16 @@
+---
+import MarkerUnderline from '../MarkerUnderline.astro';
+---
+
 <h1
   id="hero-title"
   class="hero-enter text-center lg:text-left text-[clamp(3rem,10vw,6.5rem)] font-bold leading-[1.02] tracking-[-0.04em] text-white"
 >
   <span class="block">Tu dirección en Miami.</span>
-  <span class="block text-accent-400">Compras sin fronteras.</span>
+  <span class="block text-accent-400">
+    <span class="relative inline-block">
+      Compras sin fronteras.
+      <MarkerUnderline class="doodle-draw pointer-events-none absolute inset-x-0 -bottom-[0.1em] h-[0.1em] w-full text-accent-400" />
+    </span>
+  </span>
 </h1>

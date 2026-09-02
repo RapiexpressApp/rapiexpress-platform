@@ -1,6 +1,8 @@
 ---
 import '../../styles/hero.css';
 
+import Sparkle from '../Sparkle.astro';
+
 import HeroAddress from './HeroAddress.astro';
 import HeroHeadline from './HeroHeadline.astro';
 import HeroPitch from './HeroPitch.astro';
@@ -12,6 +14,10 @@ import HeroPitch from './HeroPitch.astro';
     aria-hidden="true"
   >
   </div>
+
+  <Sparkle class="doodle-float pointer-events-none absolute right-[10%] top-32 h-5 w-5 text-accent-400/60" />
+  <Sparkle class="doodle-float-slow pointer-events-none absolute left-[6%] top-[45%] h-4 w-4 text-white/25" />
+  <Sparkle class="doodle-float pointer-events-none absolute bottom-24 right-[28%] hidden h-3.5 w-3.5 text-white/20 md:block" />
 
   <div
     class="relative mx-auto flex min-h-[100svh] lg:min-h-[72svh] max-w-7xl flex-col items-center lg:items-start justify-center px-6 pt-[clamp(5.5rem,18vh,9rem)] pb-[clamp(3.5rem,7vh,5rem)]"

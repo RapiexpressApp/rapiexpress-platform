@@ -1,12 +1,10 @@
 ---
-import '../../styles/testimonials.css';
+import Sparkle from '../Sparkle.astro';
 
 import TestimonialCard from './TestimonialCard.astro';
 import type { Props as CardProps } from './TestimonialCard.astro';
 
-interface Testimonial extends Omit<CardProps, 'delay'> {
-  // extends CardProps without delay, which is assigned by index
-}
+type Testimonial = CardProps;
 
 const testimonials: Testimonial[] = [
   {
@@ -36,7 +34,10 @@ const testimonials: Testimonial[] = [
 <section id="resenas" aria-labelledby="resenas-title" class="bg-slate-50">
   <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
     <div class="section-reveal text-center">
-      <p class="text-sm font-semibold uppercase tracking-widest text-brand-600">Reseñas</p>
+      <p class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-brand-600">
+        <Sparkle class="h-4 w-4 text-accent-500" />
+        Reseñas
+      </p>
       <h2
         id="resenas-title"
         class="mt-3 text-3xl font-bold tracking-tight text-brand-950 md:text-4xl"
@@ -66,9 +67,9 @@ const testimonials: Testimonial[] = [
       </div>
     </div>
 
-    <div class="section-reveal mt-14 grid gap-6 md:grid-cols-3 md:gap-8">
-      {testimonials.map((t, i) => (
-        <TestimonialCard {...t} delay={i + 1} />
+    <div class="mt-14 grid gap-6 md:grid-cols-3 md:gap-8">
+      {testimonials.map((t) => (
+        <TestimonialCard {...t} />
       ))}
     </div>
   </div>
