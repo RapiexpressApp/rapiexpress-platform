@@ -13,15 +13,13 @@ import HeroPitch from './HeroPitch.astro';
   >
   </div>
 
-  {/* Shorter than the viewport on purpose: the next section breaking the
-      fold line is the scroll cue. Do not raise this to 100svh. */}
   <div
-    class="relative mx-auto flex min-h-[72svh] max-w-7xl flex-col px-6 pt-[clamp(5.5rem,18vh,9rem)] pb-[clamp(3.5rem,7vh,5rem)]"
+    class="relative mx-auto flex min-h-[100svh] lg:min-h-[72svh] max-w-7xl flex-col items-center lg:items-start justify-center px-6 pt-[clamp(5.5rem,18vh,9rem)] pb-[clamp(3.5rem,7vh,5rem)]"
   >
     <HeroHeadline />
 
     <div
-      class="mt-[clamp(2.5rem,9vh,5.5rem)] grid gap-y-10 border-t border-white/12 pt-9 lg:grid-cols-12 lg:items-start lg:gap-x-8"
+      class="mt-[clamp(2.5rem,9vh,5.5rem)] grid w-full gap-y-10 border-t border-white/12 pt-9 text-center lg:text-left lg:grid-cols-12 lg:items-start lg:gap-x-8"
     >
       <div class="lg:col-span-7"><HeroPitch /></div>
       <div class="lg:col-span-4 lg:col-start-9 lg:pt-1"><HeroAddress /></div>
