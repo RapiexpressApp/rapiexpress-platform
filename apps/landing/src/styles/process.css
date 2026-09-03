@@ -1,0 +1,123 @@
+/* The page fights flatness with depth devices rather than imagery: oversized
+   ghost numerals behind content, offset panels under cards, and a spine that
+   stays put while its steps scroll past. */
+
+.process-numeral {
+  font-variant-numeric: tabular-nums;
+  line-height: 0.75;
+  letter-spacing: -0.05em;
+}
+
+/* An offset panel behind a card reads as two physical layers, which a border
+   never does. The rotation is what sells it — square to the card it just
+   looks like a thicker border. */
+.process-stack::before {
+  content: '';
+  position: absolute;
+  inset: -0.75rem;
+  border-radius: var(--radius-modal);
+  background: var(--color-brand-50);
+  transform: rotate(-1.5deg);
+  z-index: -1;
+}
+
+.process-stack-dark::before {
+  background: color-mix(in oklab, var(--color-brand-400) 22%, transparent);
+  transform: rotate(1.5deg);
+}
+
+@media (min-width: 1024px) {
+  .process-spine {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+.process-track {
+  view-timeline-name: --process-track;
+}
+
+.process-progress {
+  transform-origin: top;
+}
+
+/* Keep the animation-* longhands. Written as the `animation` shorthand, the
+   minifier folds animation-timeline into it, and the timeline is reset-only
+   in that shorthand, so the whole declaration is dropped. */
+@supports (animation-timeline: view()) {
+  .process-progress {
+    animation-name: process-fill;
+    animation-timing-function: linear;
+    animation-duration: auto;
+    animation-fill-mode: both;
+    animation-timeline: --process-track;
+    animation-range: cover 0% cover 62%;
+  }
+
+  .process-node {
+    animation-name: process-node-arrive;
+    animation-timing-function: linear;
+    animation-duration: auto;
+    animation-fill-mode: both;
+    animation-timeline: --process-track;
+  }
+
+  .process-track li:nth-child(1) .process-node { animation-range: cover 4% cover 12%; }
+  .process-track li:nth-child(2) .process-node { animation-range: cover 16% cover 24%; }
+  .process-track li:nth-child(3) .process-node { animation-range: cover 28% cover 36%; }
+  .process-track li:nth-child(4) .process-node { animation-range: cover 40% cover 48%; }
+  .process-track li:nth-child(5) .process-node { animation-range: cover 52% cover 60%; }
+}
+
+@keyframes process-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes process-node-arrive {
+  from {
+    opacity: 0.3;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Observer-driven fallback for engines without scroll timelines. See the
+   html.js-reveal note in globals.css. */
+@supports not (animation-timeline: view()) {
+  html.js-reveal .process-progress {
+    transform: scaleY(0);
+    transition: transform var(--motion-slower) var(--ease-entrance);
+  }
+
+  html.js-reveal .process-progress.is-revealed {
+    transform: scaleY(1);
+  }
+
+  html.js-reveal .process-node {
+    opacity: 0.3;
+    transform: scale(0.5);
+    transition:
+      opacity var(--motion-medium) var(--ease-entrance),
+      transform var(--motion-medium) var(--ease-entrance);
+  }
+
+  html.js-reveal .process-node.is-revealed {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-progress,
+  .process-node {
+    animation: none;
+  }
+}

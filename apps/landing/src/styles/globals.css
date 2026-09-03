@@ -57,6 +57,12 @@
     --ease-settle: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* Cross-document transitions, no router and no JS: the browser cross-fades
+   between pages on its own. Unsupported engines navigate as they always did. */
+@view-transition {
+  navigation: auto;
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -82,6 +88,15 @@
 
 /* Scroll-linked reveal: without support for animation-timeline the class
    matches nothing and content stays visible, so no JS fallback is needed.
+
+   Every range is measured in the `cover` phase, never `entry`. The entry
+   phase is exactly as long as the element is tall, so on a 45px heading the
+   whole reveal burns through in ~30px of scrolling and reads as no animation
+   at all. The cover phase spans the element's full pass across the viewport,
+   so its length is set by the viewport and stays consistent whatever the
+   element measures. Keep the end below ~60%: an element near the bottom of
+   the document can never finish crossing, and anything past that freezes.
+
    Keep the animation-* longhands here. Written as the `animation` shorthand,
    the minifier folds animation-timeline into it, and the timeline is
    reset-only in that shorthand, so the whole declaration is dropped. */
@@ -89,9 +104,10 @@
   .section-reveal {
     animation-name: section-fade-up;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: view();
-    animation-range: entry 0% entry 70%;
+    animation-range: cover 5% cover 40%;
   }
 
   /* Children arrive in sequence by shifting each one's slice of the scroll
@@ -99,41 +115,123 @@
   .reveal-stagger > * {
     animation-name: section-fade-up;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: view();
   }
 
-  .reveal-stagger > *:nth-child(1) { animation-range: entry 0% entry 55%; }
-  .reveal-stagger > *:nth-child(2) { animation-range: entry 6% entry 61%; }
-  .reveal-stagger > *:nth-child(3) { animation-range: entry 12% entry 67%; }
-  .reveal-stagger > *:nth-child(4) { animation-range: entry 18% entry 73%; }
-  .reveal-stagger > *:nth-child(5) { animation-range: entry 24% entry 79%; }
+  .reveal-stagger > *:nth-child(1) { animation-range: cover 5% cover 38%; }
+  .reveal-stagger > *:nth-child(2) { animation-range: cover 8% cover 41%; }
+  .reveal-stagger > *:nth-child(3) { animation-range: cover 11% cover 44%; }
+  .reveal-stagger > *:nth-child(4) { animation-range: cover 14% cover 47%; }
+  .reveal-stagger > *:nth-child(5) { animation-range: cover 17% cover 50%; }
 
   /* Paths carry pathLength="1", so one dashoffset unit is the whole stroke
-     regardless of geometry.
-
-     The range stays inside the entry phase on purpose. A range reaching into
-     cover needs the element to travel the full viewport, which the last
-     section before the footer never does, and its stroke would freeze
-     half-drawn. */
+     regardless of geometry. */
   .draw-on-scroll {
     stroke-dasharray: 1;
     animation-name: stroke-draw;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: view();
-    animation-range: entry 15% entry 90%;
+    animation-range: cover 10% cover 48%;
+  }
+
+  /* Depth from differential rates: an element drifting against the scroll
+     reads as sitting on another plane. Range is the whole cover phase so the
+     drift lasts the element's entire pass, not just its entrance. */
+  .parallax-drift {
+    animation-name: parallax-drift;
+    animation-timing-function: linear;
+    animation-duration: auto;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+
+  .scroll-progress {
+    display: block;
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation-name: scroll-progress;
+    animation-timing-function: linear;
+    animation-duration: auto;
+    animation-fill-mode: both;
+    animation-timeline: scroll();
   }
 }
 
+/* A progress bar needs scroll position, and only a scroll timeline supplies it
+   here. Without one the element would paint at full width, since the scaleX(0)
+   that empties it lives in the block above. */
+@supports not (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: none;
+  }
+}
+
+/* Firefox still has no scroll-driven animations, so every reveal above is
+   inert there. The observer in Layout.astro adds .is-revealed instead. The
+   html.js-reveal scope is what keeps this safe: without the script nothing is
+   ever hidden, so a failed or blocked bundle cannot blank the page. */
+@supports not (animation-timeline: view()) {
+  html.js-reveal .section-reveal,
+  html.js-reveal .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(2rem) scale(0.985);
+    transition:
+      opacity var(--motion-slower) var(--ease-entrance),
+      transform var(--motion-slower) var(--ease-entrance);
+  }
+
+  html.js-reveal .section-reveal.is-revealed,
+  html.js-reveal .reveal-stagger > .is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js-reveal .reveal-stagger > *:nth-child(2) { transition-delay: 80ms; }
+  html.js-reveal .reveal-stagger > *:nth-child(3) { transition-delay: 160ms; }
+  html.js-reveal .reveal-stagger > *:nth-child(4) { transition-delay: 240ms; }
+  html.js-reveal .reveal-stagger > *:nth-child(5) { transition-delay: 320ms; }
+
+  html.js-reveal .draw-on-scroll {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset var(--motion-slower) var(--ease-entrance);
+  }
+
+  html.js-reveal .draw-on-scroll.is-revealed {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes parallax-drift {
+  from {
+    transform: translateY(2rem);
+  }
+  to {
+    transform: translateY(-2rem);
+  }
+}
+
+@keyframes scroll-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* 16px read as nothing at scroll speed. The scale is what makes it land as
+   an arrival rather than a fade. */
 @keyframes section-fade-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(2rem) scale(0.985);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -205,10 +303,17 @@
   .section-reveal,
   .reveal-stagger > *,
   .draw-on-scroll,
+  .parallax-drift,
+  .scroll-progress,
   .doodle-float,
   .doodle-float-slow,
   .doodle-draw {
     animation: none;
+  }
+
+  /* The bar is meaningless frozen at zero width, so it goes away entirely. */
+  .scroll-progress {
+    display: none;
   }
 
   .lift {

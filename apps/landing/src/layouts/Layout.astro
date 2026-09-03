@@ -82,8 +82,61 @@ const organizationSchema = {
       is:inline
       set:html={JSON.stringify(organizationSchema)}
     />
+
+    {/* Reveal fallback for engines without scroll-driven animations, Firefox
+        today. Inline and in the head on purpose: deferred, the class would
+        land after first paint and the page would flash visible then hide.
+        Every bail-out leaves the markup untouched and fully visible, so the
+        failure mode is a static page, never a blank one. */}
+    <script is:inline>
+      (() => {
+        const hasTimelines =
+          typeof CSS !== 'undefined' &&
+          typeof CSS.supports === 'function' &&
+          CSS.supports('animation-timeline', 'view()');
+        const stillPreferred = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (hasTimelines || stillPreferred || !('IntersectionObserver' in window)) return;
+
+        document.documentElement.classList.add('js-reveal');
+
+        addEventListener('DOMContentLoaded', () => {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+              }
+            },
+            { rootMargin: '0px 0px -10% 0px' },
+          );
+
+          const selector = [
+            '.section-reveal',
+            '.reveal-stagger > *',
+            '.draw-on-scroll',
+            '.coverage-progress',
+            '.coverage-dot',
+            '.process-progress',
+            '.process-node',
+            '.benefits-parcel',
+            '.benefits-feed',
+            '.benefits-stamp',
+          ].join(',');
+
+          for (const el of document.querySelectorAll(selector)) observer.observe(el);
+        });
+      })();
+    </script>
   </head>
   <body class="font-sans antialiased">
+    <div
+      class="scroll-progress pointer-events-none fixed inset-x-0 top-0 z-[60] h-1 bg-accent-400"
+      aria-hidden="true"
+    >
+    </div>
+
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-button focus:bg-accent-400 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-brand-950 focus:ring-2 focus:ring-brand-950 focus:ring-offset-2"

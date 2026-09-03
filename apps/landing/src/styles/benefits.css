@@ -20,35 +20,37 @@
   .benefits-parcel {
     animation-name: benefits-parcel-in;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: --benefits-visual;
   }
 
   .benefits-parcel-1 {
-    animation-range: entry 15% entry 45%;
+    animation-range: cover 8% cover 32%;
   }
   .benefits-parcel-2 {
-    animation-range: entry 21% entry 51%;
+    animation-range: cover 12% cover 36%;
   }
   .benefits-parcel-3 {
-    animation-range: entry 27% entry 57%;
+    animation-range: cover 16% cover 40%;
   }
 
   .benefits-feed {
     animation-name: benefits-feed-draw;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: --benefits-visual;
   }
 
   .benefits-feed-1 {
-    animation-range: entry 40% entry 78%;
+    animation-range: cover 26% cover 52%;
   }
   .benefits-feed-2 {
-    animation-range: entry 46% entry 84%;
+    animation-range: cover 30% cover 56%;
   }
   .benefits-feed-3 {
-    animation-range: entry 52% entry 90%;
+    animation-range: cover 34% cover 60%;
   }
 
   /* The stamp lands after the document lines have read as a form, so the
@@ -56,9 +58,10 @@
   .benefits-stamp {
     animation-name: benefits-stamp-land;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: --benefits-visual;
-    animation-range: entry 45% entry 85%;
+    animation-range: cover 32% cover 58%;
   }
 }
 
@@ -88,6 +91,45 @@
     transform: scale(1.6) rotate(-14deg);
   }
   to {
+    opacity: 1;
+    transform: scale(1) rotate(-8deg);
+  }
+}
+
+/* Observer-driven fallback for engines without scroll timelines. See the
+   html.js-reveal note in globals.css. */
+@supports not (animation-timeline: view()) {
+  html.js-reveal .benefits-parcel {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition:
+      opacity var(--motion-slow) var(--ease-entrance),
+      transform var(--motion-slow) var(--ease-entrance);
+  }
+
+  html.js-reveal .benefits-parcel.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js-reveal .benefits-feed {
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset var(--motion-slower) var(--ease-entrance);
+  }
+
+  html.js-reveal .benefits-feed.is-revealed {
+    stroke-dashoffset: 0;
+  }
+
+  html.js-reveal .benefits-stamp {
+    opacity: 0;
+    transform: scale(1.6) rotate(-14deg);
+    transition:
+      opacity var(--motion-slow) var(--ease-entrance),
+      transform var(--motion-slow) var(--ease-entrance);
+  }
+
+  html.js-reveal .benefits-stamp.is-revealed {
     opacity: 1;
     transform: scale(1) rotate(-8deg);
   }

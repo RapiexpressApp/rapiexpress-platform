@@ -3,13 +3,18 @@ import { Image } from 'astro:assets';
 
 import logo from '../assets/logo.webp';
 
+// Section anchors only resolve on the landing. Anywhere else they have to
+// carry the path or the link silently does nothing.
+const isLanding = Astro.url.pathname === '/';
+const anchor = (id: string) => (isLanding ? `#${id}` : `/#${id}`);
+
 const navLinks = [
-  { label: 'Nosotros', href: '#nosotros' },
-  { label: 'Cómo funciona', href: '#como-funciona' },
-  { label: 'Beneficios', href: '#beneficios' },
-  { label: 'Cobertura', href: '#cobertura' },
-  { label: 'Tiendas', href: '#tiendas' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Cómo funciona', href: '/como-funciona' },
+  { label: 'Nosotros', href: anchor('nosotros') },
+  { label: 'Beneficios', href: anchor('beneficios') },
+  { label: 'Cobertura', href: anchor('cobertura') },
+  { label: 'Tiendas', href: anchor('tiendas') },
+  { label: 'FAQ', href: anchor('faq') },
 ];
 ---
 
@@ -49,7 +54,7 @@ const navLinks = [
 
     <div class="flex items-center gap-3">
       <a
-        href="#empieza"
+        href={anchor('empieza')}
         class="hidden lg:inline-flex items-center px-4 py-2 text-sm font-semibold text-brand-950 bg-accent-400 rounded-button transition-[background-color,box-shadow,transform] duration-[var(--motion-fast)] ease-entrance hover:bg-accent-300 hover:shadow-md hover:shadow-accent-400/25 motion-safe:hover:-translate-y-px motion-safe:active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
       >
         Crea tu casillero gratis
