@@ -1,0 +1,100 @@
+---
+import '../../styles/process.css';
+
+// Transit range and state names taken from the previous production site.
+// TODO: have operations confirm 7-12 business days before this ships.
+export interface JourneyState {
+  label: string;
+  happens: string;
+  youSee: string;
+}
+
+const states: JourneyState[] = [
+  {
+    label: 'Bodega Miami',
+    happens: 'Tu paquete llega a nuestra bodega y lo registramos a tu nombre.',
+    youSee: 'Te escribimos por WhatsApp con el peso real del bulto.',
+  },
+  {
+    label: 'Embarcado',
+    happens: 'Sale de Miami en el siguiente vuelo disponible hacia Ecuador.',
+    youSee: 'Recibes el número de guía para seguirlo.',
+  },
+  {
+    label: 'En aduana',
+    happens: 'Entra al proceso aduanero en Ecuador. Si hace falta un documento, lo gestionamos nosotros.',
+    youSee: 'Solo te escribimos si necesitamos algo de tu parte.',
+  },
+  {
+    label: 'Agencia',
+    happens: 'Ya en el país, pasa a la agencia que cubre tu ciudad.',
+    youSee: 'Coordinamos contigo el día de entrega.',
+  },
+  {
+    label: 'Entregado',
+    happens: 'Llega a la dirección que nos diste.',
+    youSee: 'Confirmas que recibiste todo completo.',
+  },
+];
+---
+
+<section aria-labelledby="ruta-title" class="bg-brand-950">
+  <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-4">
+        <div class="process-spine">
+          <h2
+            id="ruta-title"
+            class="text-3xl font-bold tracking-tight text-white md:text-4xl"
+          >
+            Cinco estados, cero preguntas
+          </h2>
+          <p class="mt-6 text-lg leading-relaxed text-brand-100/85">
+            Cada paquete recorre la misma ruta. Te avisamos en cada cambio, sin
+            que tengas que escribir para preguntar.
+          </p>
+
+          <div class="process-stack process-stack-dark relative isolate mt-10 rounded-modal border border-white/15 bg-brand-900 p-6">
+            <p class="text-sm text-brand-200/85">Tiempo promedio de entrega</p>
+            <p class="mt-2 text-4xl font-bold tracking-tight text-accent-400 tabular-nums">
+              7–12 días
+            </p>
+            <p class="mt-2 text-sm text-brand-200/85">
+              Hábiles, desde que llega a Miami.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <ol class="process-track relative lg:col-span-7 lg:col-start-6">
+        <div
+          class="absolute bottom-2 left-[7px] top-2 w-px bg-white/15"
+          aria-hidden="true"
+        >
+        </div>
+        <div
+          class="process-progress absolute bottom-2 left-[7px] top-2 w-px bg-accent-400"
+          aria-hidden="true"
+        >
+        </div>
+
+        {
+          states.map((state) => (
+            <li class="relative flex gap-6 pb-12 last:pb-0">
+              <span class="process-node mt-1.5 h-[15px] w-[15px] shrink-0 rounded-full bg-accent-400 ring-4 ring-brand-950" />
+              <div>
+                <p class="text-xl font-semibold tracking-tight text-white">
+                  {state.label}
+                </p>
+                <p class="mt-2 leading-relaxed text-brand-100/85">{state.happens}</p>
+                <p class="mt-3 text-sm leading-relaxed text-brand-200/75">
+                  {state.youSee}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

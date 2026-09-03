@@ -1,0 +1,47 @@
+---
+import '../../styles/process.css';
+
+// Suite masked and name generic on purpose: a plausible full address would
+// eventually get something shipped to it.
+---
+
+<section aria-labelledby="proceso-title" class="relative bg-brand-900">
+  <div
+    class="pointer-events-none absolute inset-0 bg-linear-to-b from-brand-950/50 via-transparent to-brand-950/30"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-6 pb-32 pt-[clamp(7rem,16vh,10rem)] md:pb-40">
+    <div class="reveal-stagger max-w-3xl">
+      <h1
+        id="proceso-title"
+        class="text-[clamp(2.5rem,7vw,4.75rem)] font-bold leading-[1.03] tracking-[-0.04em] text-white"
+      >
+        De tu carrito en Miami a tu puerta en Ecuador
+      </h1>
+      <p class="mt-7 max-w-xl text-lg leading-relaxed text-brand-100/85 md:text-xl">
+        Cuatro pasos para empezar, cinco estados para seguir tu paquete. Esto es
+        todo lo que pasa en el camino.
+      </p>
+    </div>
+  </div>
+
+  <div class="relative mx-auto -mb-24 max-w-7xl px-6 md:-mb-28">
+    <div class="process-stack relative isolate max-w-md rounded-modal border border-slate-200 bg-white p-7 shadow-xl shadow-brand-950/10 md:p-8">
+      <p class="text-sm font-medium text-slate-600">Esto es lo que recibes al registrarte</p>
+
+      <address class="mt-5 font-mono text-base not-italic leading-relaxed text-brand-950" aria-hidden="true">
+        <span class="block font-semibold">Tu nombre · <span class="text-brand-600">RE-2481</span></span>
+        <span class="block text-slate-600">Suite ••••</span>
+        <span class="block text-slate-600">Miami, FL</span>
+        <span class="block text-slate-600">Estados Unidos</span>
+      </address>
+
+      <p class="mt-6 border-t border-slate-200 pt-5 text-sm leading-relaxed text-slate-600">
+        Una dirección física real. La pegas en el checkout de cualquier tienda
+        que despache dentro de Estados Unidos.
+      </p>
+    </div>
+  </div>
+</section>

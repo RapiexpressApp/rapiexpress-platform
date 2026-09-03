@@ -10,13 +10,18 @@ export interface ContactItem {
   value: string;
 }
 
+// Section anchors only resolve on the landing, and the footer ships on every
+// page, so anywhere else they have to carry the path.
+const isLanding = Astro.url.pathname === '/';
+const anchor = (id: string) => (isLanding ? `#${id}` : `/#${id}`);
+
 const navLinks = [
-  { label: 'Nosotros', href: '#nosotros' },
-  { label: 'Cómo funciona', href: '#como-funciona' },
-  { label: 'Beneficios', href: '#beneficios' },
-  { label: 'Cobertura', href: '#cobertura' },
-  { label: 'Tiendas', href: '#tiendas' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Nosotros', href: anchor('nosotros') },
+  { label: 'Cómo funciona', href: '/como-funciona' },
+  { label: 'Beneficios', href: anchor('beneficios') },
+  { label: 'Cobertura', href: anchor('cobertura') },
+  { label: 'Tiendas', href: anchor('tiendas') },
+  { label: 'FAQ', href: anchor('faq') },
 ];
 
 const contactItems: ContactItem[] = [
