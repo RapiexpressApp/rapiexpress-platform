@@ -1,0 +1,45 @@
+---
+const whatsappHref =
+  'https://wa.me/593963986148?text=Hola%2C%20quiero%20crear%20mi%20casillero';
+---
+
+<section aria-labelledby="empezar-title" class="bg-brand-900">
+  <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
+    <div class="section-reveal mx-auto max-w-2xl text-center">
+      <h2 id="empezar-title" class="text-3xl font-bold tracking-tight text-white md:text-4xl">
+        Tu dirección de Miami, en un minuto
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-brand-100/85">
+        Abrir el casillero es gratis y no tiene suscripción.
+      </p>
+
+      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+          href={whatsappHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group inline-flex min-h-12 items-center gap-2 rounded-button bg-accent-400 px-6 text-base font-semibold text-brand-950 transition-[background-color,box-shadow,transform] duration-200 ease-out hover:bg-accent-300 hover:shadow-lg hover:shadow-accent-400/20 motion-safe:active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+        >
+          Crea tu casillero gratis
+          <svg
+            class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+            aria-hidden="true"
+            focusable="false"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </a>
+        <a
+          href="/"
+          class="inline-flex min-h-12 items-center rounded-button border border-white/25 px-6 text-base font-medium text-white transition-[background-color,border-color] duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+        >
+          Volver al inicio
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

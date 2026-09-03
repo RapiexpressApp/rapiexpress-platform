@@ -25,6 +25,7 @@
   .coverage-progress {
     animation-name: coverage-fill-y;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: --ruta;
     animation-range: cover 5% cover 50%;
@@ -39,6 +40,7 @@
   .coverage-dot {
     animation-name: coverage-dot-arrive;
     animation-timing-function: linear;
+    animation-duration: auto;
     animation-fill-mode: both;
     animation-timeline: --ruta;
   }
@@ -84,6 +86,42 @@
     transform: scale(0.5);
   }
   to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Observer-driven fallback for engines without scroll timelines. See the
+   html.js-reveal note in globals.css. */
+@supports not (animation-timeline: view()) {
+  html.js-reveal .coverage-progress {
+    transform: scaleY(0);
+    transition: transform var(--motion-slower) var(--ease-entrance);
+  }
+
+  html.js-reveal .coverage-progress.is-revealed {
+    transform: scaleY(1);
+  }
+
+  @media (min-width: 768px) {
+    html.js-reveal .coverage-progress {
+      transform: scaleX(0);
+    }
+
+    html.js-reveal .coverage-progress.is-revealed {
+      transform: scaleX(1);
+    }
+  }
+
+  html.js-reveal .coverage-dot {
+    opacity: 0.3;
+    transform: scale(0.5);
+    transition:
+      opacity var(--motion-medium) var(--ease-entrance),
+      transform var(--motion-medium) var(--ease-entrance);
+  }
+
+  html.js-reveal .coverage-dot.is-revealed {
     opacity: 1;
     transform: scale(1);
   }

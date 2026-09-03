@@ -1,0 +1,73 @@
+---
+import '../../styles/process.css';
+
+export interface ProcessStep {
+  title: string;
+  text: string;
+  note: string;
+}
+
+const steps: ProcessStep[] = [
+  {
+    title: 'Abre tu casillero',
+    text: 'Te registras y recibes tu dirección de Miami al instante. No hay suscripción ni costo de apertura.',
+    note: 'Solo necesitas tu cédula o RUC',
+  },
+  {
+    title: 'Compra donde quieras',
+    text: 'Pegas tu dirección de Miami en el checkout. Para la tienda eres un cliente más dentro de Estados Unidos, así que pagas envío nacional.',
+    note: 'Cualquier tienda que despache a Miami',
+  },
+  {
+    title: 'Consolidamos tus compras',
+    text: 'Si compraste en cuatro tiendas, no pagas cuatro envíos. Juntamos todo en un solo paquete antes de volarlo.',
+    note: 'Consolidación y reempaque sin costo',
+  },
+  {
+    title: 'Lo recibes en tu puerta',
+    text: 'Lo pasamos por aduana, lo despachamos a tu ciudad y te lo entregamos. Te avisamos por WhatsApp en cada etapa.',
+    note: 'Entrega en todo el Ecuador',
+  },
+];
+---
+
+<section aria-labelledby="pasos-title" class="bg-white">
+  <div class="mx-auto max-w-7xl px-6 pb-24 pt-40 md:pb-32 md:pt-48">
+    <h2
+      id="pasos-title"
+      class="section-reveal max-w-2xl text-3xl font-bold tracking-tight text-brand-950 md:text-4xl"
+    >
+      Empezar toma un minuto
+    </h2>
+
+    <ol class="mt-16 space-y-16 md:mt-20 md:space-y-24">
+      {
+        steps.map((step, index) => (
+          <li
+            class:list={[
+              'section-reveal relative grid items-start gap-x-8 gap-y-5 md:grid-cols-[minmax(0,14rem)_minmax(0,32rem)]',
+              index % 2 === 1 && 'md:ml-auto md:justify-end',
+            ]}
+          >
+            <span
+              class="process-numeral parallax-drift select-none text-[clamp(5rem,13vw,9rem)] font-bold text-brand-100"
+              aria-hidden="true"
+            >
+              {index + 1}
+            </span>
+
+            <div class="md:pt-6">
+              <h3 class="text-2xl font-bold tracking-tight text-brand-950 md:text-3xl">
+                {step.title}
+              </h3>
+              <p class="mt-4 text-lg leading-relaxed text-slate-600">{step.text}</p>
+              <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700">
+                {step.note}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

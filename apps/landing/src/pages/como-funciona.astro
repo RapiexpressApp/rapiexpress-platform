@@ -1,0 +1,23 @@
+---
+import Footer from '../components/Footer/Footer.astro';
+import Navbar from '../components/Navbar.astro';
+import ProcessCta from '../components/Process/ProcessCta.astro';
+import ProcessFacts from '../components/Process/ProcessFacts.astro';
+import ProcessHero from '../components/Process/ProcessHero.astro';
+import ProcessJourney from '../components/Process/ProcessJourney.astro';
+import ProcessSteps from '../components/Process/ProcessSteps.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Cómo funciona tu casillero en Miami — Rapiexpress"
+  description="Los cuatro pasos para abrir tu casillero y los cinco estados que recorre tu paquete de Miami a Ecuador. Consolidación gratis y aviso por WhatsApp en cada etapa."
+>
+  <Navbar slot="header" />
+  <ProcessHero />
+  <ProcessSteps />
+  <ProcessJourney />
+  <ProcessFacts />
+  <ProcessCta />
+  <Footer />
+</Layout>
