@@ -6,7 +6,10 @@
     "allowArbitraryExtensions": true,
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",
-    "erasableSyntaxOnly": true
+    "erasableSyntaxOnly": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }
