@@ -1,0 +1,90 @@
+.login-stagger > * {
+  animation: login-fade-up var(--motion-slow) var(--ease-entrance) both;
+}
+
+.login-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.login-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.login-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.login-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.login-stagger > *:nth-child(6) { animation-delay: 300ms; }
+
+.login-float {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  animation: login-float 5s ease-in-out infinite;
+}
+
+.login-doodle {
+  animation: login-fade-in var(--motion-slow) var(--ease-entrance) 600ms both;
+}
+
+.login-plane {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  animation: login-plane 4s ease-in-out 900ms infinite;
+}
+
+.login-icon-pop {
+  animation: login-icon-pop 180ms var(--ease-entrance);
+}
+
+@keyframes login-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes login-plane {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(3px, -5px, 0);
+  }
+}
+
+@keyframes login-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes login-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes login-icon-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-stagger > *,
+  .login-float,
+  .login-doodle,
+  .login-plane,
+  .login-icon-pop {
+    animation: none;
+  }
+}

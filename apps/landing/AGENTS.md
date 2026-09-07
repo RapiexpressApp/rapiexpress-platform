@@ -218,9 +218,6 @@ Before calling a task finished:
   no `eslint-plugin-jsx-a11y`. Every accessibility rule above depends on
   human review. Wiring these up is the highest-value tooling improvement
   available.
-- **`@rapiexpress/config` is orphaned**: nothing imports it, and its
-  `exports` map still points at a `theme.css` that was deleted. Importing it
-  fails today. Either fix it or remove it.
 - **Prettier cannot parse `.astro` files.** `prettier-plugin-astro` is not
   installed, so `prettier --check` errors out on every component instead of
   checking it. Combined with the point above, `.astro` files are currently
