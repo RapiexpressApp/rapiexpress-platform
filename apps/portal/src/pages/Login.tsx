@@ -1,32 +1,22 @@
-import type { FormEvent } from 'react';
+import '../styles/login.css';
 
-// TODO: wire auth once packages/contracts and the API exist
-function handleSubmit(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault();
-}
+import { useEffect } from 'react';
+
+import BrandPanel from '../components/BrandPanel';
+import LoginForm from '../components/LoginForm';
 
 function Login() {
+  useEffect(() => {
+    document.title = 'Iniciar sesión · Rapiexpress';
+  }, []);
+
   return (
-    <main>
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Correo electrónico</label>
-          <input id="email" name="email" type="email" autoComplete="email" required />
-        </div>
-        <div>
-          <label htmlFor="password">Contraseña</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-          />
-        </div>
-        <button type="submit">Entrar</button>
-      </form>
-    </main>
+    <div className="flex min-h-dvh bg-white">
+      <BrandPanel />
+      <main className="flex flex-1 items-center justify-center px-6 py-8 sm:py-12">
+        <LoginForm />
+      </main>
+    </div>
   );
 }
 
