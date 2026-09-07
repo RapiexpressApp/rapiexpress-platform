@@ -8,7 +8,8 @@
     "lint:fix": "pnpm -r lint:fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "dev:landing": "pnpm --filter @rapiexpress/landing dev"
+    "dev:landing": "pnpm --filter @rapiexpress/landing dev",
+    "dev:portal": "pnpm --filter @rapiexpress/portal dev"
   },
   "license": "ISC",
   "private": true,
