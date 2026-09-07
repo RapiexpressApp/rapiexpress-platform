@@ -4,13 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./theme.css": "./theme.css",
     "./tsconfig/base.json": "./tsconfig/base.json",
     "./tsconfig/astro.json": "./tsconfig/astro.json",
     "./tsconfig/react.json": "./tsconfig/react.json"
   },
   "files": [
-    "theme.css",
     "tsconfig"
   ]
 }
