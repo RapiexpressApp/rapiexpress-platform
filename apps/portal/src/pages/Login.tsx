@@ -1,9 +1,8 @@
-import '../styles/login.css';
-
+import { Box } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 import BrandPanel from '../components/BrandPanel';
-import LoginForm from '../components/LoginForm';
+import LoginForm from '../features/auth/ui/LoginForm';
 
 function Login() {
   useEffect(() => {
@@ -11,12 +10,20 @@ function Login() {
   }, []);
 
   return (
-    <div className="flex min-h-dvh bg-white">
+    <Box display="flex" minH="100dvh" bg="white">
       <BrandPanel />
-      <main className="flex flex-1 items-center justify-center px-6 py-8 sm:py-12">
+      <Box
+        as="main"
+        display="flex"
+        flex="1"
+        alignItems="center"
+        justifyContent="center"
+        px={6}
+        py={{ base: 8, sm: 12 }}
+      >
         <LoginForm />
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
