@@ -1,16 +1,18 @@
-import './styles/globals.css';
 import '@fontsource-variable/inter';
-
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
+import { ChakraProvider } from '@chakra-ui/react';
+import { system } from './shared/ui/theme.ts';
 
 import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ChakraProvider value={system}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ChakraProvider>
   </StrictMode>,
 );
