@@ -11,19 +11,9 @@ import {
 } from '@chakra-ui/react';
 import type { SubmitEvent } from 'react';
 
-import logo from '@/assets/logo.webp';
-import { PasswordInput } from '@/shared/components/ui/password-input';
-
-function fadeUp(delay: string): SystemStyleObject {
-  return {
-    animationName: 'login-fade-up',
-    animationDuration: 'slow',
-    animationTimingFunction: 'entrance',
-    animationFillMode: 'both',
-    animationDelay: delay,
-    _motionReduce: { animation: 'none' },
-  };
-}
+import logo from '@/shared/assets/logo.webp';
+import { fadeUp } from '@/shared/ui/motion';
+import { PasswordInput } from '@/shared/ui/password-input';
 
 const inputStyles: SystemStyleObject = {
   height: 11,
