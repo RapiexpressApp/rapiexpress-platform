@@ -1,4 +1,4 @@
-import type { Locker, PreAlert, Shipment } from './types';
+import type { FeaturedShipmentConfig, Locker, PreAlert, Shipment } from './types';
 
 export const CUSTOMER_FIRST_NAME = 'Carlos';
 
@@ -60,6 +60,18 @@ export const SHIPMENTS: Shipment[] = [
     arrival: 'En bodega Miami',
   },
 ];
+
+export const FEATURED_SHIPMENT: FeaturedShipmentConfig = {
+  shipmentId: 'sony-wh-1000xm5',
+  etaLabel: 'Llega el jueves 2 oct',
+  steps: [
+    { label: 'Recibido en Miami', state: 'done', date: '27 sep' },
+    { label: 'Salió de Miami', state: 'done', date: '29 sep' },
+    { label: 'En tránsito', state: 'current' },
+    { label: 'Aduana', state: 'pending' },
+    { label: 'Listo para retirar', state: 'pending' },
+  ],
+};
 
 export const PRE_ALERTS: PreAlert[] = [
   { id: 'amazon-keyboard', store: 'Amazon', description: 'Teclado mecánico' },

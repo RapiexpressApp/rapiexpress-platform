@@ -10,6 +10,26 @@ export interface Shipment {
   arrival: string;
 }
 
+export type StepState = 'done' | 'current' | 'pending';
+
+export interface TimelineStep {
+  label: string;
+  state: StepState;
+  date?: string;
+}
+
+export interface FeaturedShipmentConfig {
+  shipmentId: string;
+  etaLabel: string;
+  steps: TimelineStep[];
+}
+
+export interface FeaturedShipmentView {
+  shipment: Shipment;
+  etaLabel: string;
+  steps: TimelineStep[];
+}
+
 export interface PreAlert {
   id: string;
   store: string;

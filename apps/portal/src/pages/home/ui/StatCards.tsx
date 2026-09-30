@@ -22,7 +22,7 @@ function StatCard({ icon: Icon, label, value, helper, hero = false }: StatCardPr
     <Flex
       as="li"
       direction="column"
-      justify="space-between"
+      justify={{ base: 'space-between', md: 'flex-start' }}
       gap={3}
       p={{ base: 4, md: 5 }}
       borderRadius="xl"

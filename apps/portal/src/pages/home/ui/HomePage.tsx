@@ -1,13 +1,23 @@
 import { Grid, Stack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
-import { CUSTOMER_FIRST_NAME, LOCKER, PRE_ALERTS, SHIPMENTS } from '../model/mock-data';
+import { resolveFeaturedShipment } from '../model/featured';
+import {
+  CUSTOMER_FIRST_NAME,
+  FEATURED_SHIPMENT,
+  LOCKER,
+  PRE_ALERTS,
+  SHIPMENTS,
+} from '../model/mock-data';
 import { computeStats, describeActivity } from '../model/stats';
+import FeaturedShipment from './FeaturedShipment';
 import GreetingHeader from './GreetingHeader';
 import LockerCard from './LockerCard';
+import RecentShipments from './RecentShipments';
 import StatCards from './StatCards';
 
 const STATS = computeStats(SHIPMENTS, PRE_ALERTS);
+const FEATURED = resolveFeaturedShipment(SHIPMENTS, FEATURED_SHIPMENT);
 
 function HomePage() {
   useEffect(() => {
@@ -21,6 +31,8 @@ function HomePage() {
         <LockerCard locker={LOCKER} />
       </Grid>
       <StatCards stats={STATS} />
+      {FEATURED && <FeaturedShipment featured={FEATURED} />}
+      <RecentShipments shipments={SHIPMENTS} />
     </Stack>
   );
 }
