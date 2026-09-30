@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod.js';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
 import { loginSchema, type LoginSchemaType } from '@/features/auth/validation/login.validation';
 import logo from '@/shared/assets/logo.webp';
@@ -33,6 +34,7 @@ const inputStyles: SystemStyleObject = {
 };
 
 function LoginForm() {
+  const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -42,8 +44,8 @@ function LoginForm() {
     mode: 'onSubmit'
   });
   // TODO: wire auth once packages/contracts and the API exist
-  function onSubmit(data: LoginSchemaType) {
-    console.log(data);
+  function onSubmit() {
+    navigate('/dashboard', { replace: true });
   }
 
   return (
@@ -77,6 +79,7 @@ function LoginForm() {
       </Text>
 
       <chakra.form
+        noValidate
         css={{ ...fadeUp('180ms'), display: 'flex', flexDirection: 'column', gap: 5 }}
         mt={8}
         onSubmit={handleSubmit(onSubmit)}
