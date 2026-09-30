@@ -9,8 +9,10 @@ import {
   type SystemStyleObject,
   Text,
 } from '@chakra-ui/react';
-import type { SubmitEvent } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod/src/zod.js';
+import { useForm } from 'react-hook-form';
 
+import { loginSchema, type LoginSchemaType } from '@/features/auth/validation/login.validation';
 import logo from '@/shared/assets/logo.webp';
 import { fadeUp } from '@/shared/ui/motion';
 import { PasswordInput } from '@/shared/ui/password-input';
@@ -31,9 +33,17 @@ const inputStyles: SystemStyleObject = {
 };
 
 function LoginForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onSubmit'
+  });
   // TODO: wire auth once packages/contracts and the API exist
-  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function onSubmit(data: LoginSchemaType) {
+    console.log(data);
   }
 
   return (
@@ -69,27 +79,31 @@ function LoginForm() {
       <chakra.form
         css={{ ...fadeUp('180ms'), display: 'flex', flexDirection: 'column', gap: 5 }}
         mt={8}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <Field.Root>
+        <Field.Root invalid={!!errors.email}>
           <Field.Label color="slate.700">Correo electrónico</Field.Label>
           <Input
             type="email"
-            autoComplete="email"
             placeholder="tucorreo@ejemplo.com"
-            required
             css={{ ...inputStyles, px: 3.5 }}
+            {...register('email')}
           />
+          {
+            errors.email && <Field.ErrorText color="red.500">{errors.email?.message}</Field.ErrorText>
+          }
         </Field.Root>
 
-        <Field.Root>
+        <Field.Root invalid={!!errors.password}>
           <Field.Label color="slate.700">Contraseña</Field.Label>
           <PasswordInput
-            autoComplete="current-password"
             placeholder="Tu contraseña"
-            required
             css={{ ...inputStyles, paddingStart: 3.5, paddingEnd: 12 }}
+            {...register('password')}
           />
+          {
+            errors.password && <Field.ErrorText color="red.500">{errors.password?.message}</Field.ErrorText>
+          }
         </Field.Root>
 
         <Button
