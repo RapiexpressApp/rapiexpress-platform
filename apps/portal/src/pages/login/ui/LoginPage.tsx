@@ -1,10 +1,11 @@
 import { Box } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
-import BrandPanel from '../components/BrandPanel';
-import LoginForm from '../features/auth/ui/LoginForm';
+import LoginForm from '@/features/auth/ui/LoginForm';
 
-function Login() {
+import BrandPanel from './BrandPanel';
+
+function LoginPage() {
   useEffect(() => {
     document.title = 'Iniciar sesión · Rapiexpress';
   }, []);
@@ -27,4 +28,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

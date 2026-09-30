@@ -9,21 +9,14 @@ import {
   type SystemStyleObject,
   Text,
 } from '@chakra-ui/react';
-import type { SubmitEvent } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
-import logo from '@/assets/logo.webp';
-import { PasswordInput } from '@/shared/components/ui/password-input';
-
-function fadeUp(delay: string): SystemStyleObject {
-  return {
-    animationName: 'login-fade-up',
-    animationDuration: 'slow',
-    animationTimingFunction: 'entrance',
-    animationFillMode: 'both',
-    animationDelay: delay,
-    _motionReduce: { animation: 'none' },
-  };
-}
+import { loginSchema, type LoginSchemaType } from '@/features/auth/validation/login.validation';
+import logo from '@/shared/assets/logo.webp';
+import { fadeUp } from '@/shared/ui/motion';
+import { PasswordInput } from '@/shared/ui/password-input';
 
 const inputStyles: SystemStyleObject = {
   height: 11,
@@ -41,9 +34,18 @@ const inputStyles: SystemStyleObject = {
 };
 
 function LoginForm() {
+  const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onSubmit'
+  });
   // TODO: wire auth once packages/contracts and the API exist
-  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function onSubmit() {
+    navigate('/dashboard', { replace: true });
   }
 
   return (
@@ -77,29 +79,34 @@ function LoginForm() {
       </Text>
 
       <chakra.form
+        noValidate
         css={{ ...fadeUp('180ms'), display: 'flex', flexDirection: 'column', gap: 5 }}
         mt={8}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <Field.Root>
+        <Field.Root invalid={!!errors.email}>
           <Field.Label color="slate.700">Correo electrónico</Field.Label>
           <Input
             type="email"
-            autoComplete="email"
             placeholder="tucorreo@ejemplo.com"
-            required
             css={{ ...inputStyles, px: 3.5 }}
+            {...register('email')}
           />
+          {
+            errors.email && <Field.ErrorText color="red.500">{errors.email?.message}</Field.ErrorText>
+          }
         </Field.Root>
 
-        <Field.Root>
+        <Field.Root invalid={!!errors.password}>
           <Field.Label color="slate.700">Contraseña</Field.Label>
           <PasswordInput
-            autoComplete="current-password"
             placeholder="Tu contraseña"
-            required
             css={{ ...inputStyles, paddingStart: 3.5, paddingEnd: 12 }}
+            {...register('password')}
           />
+          {
+            errors.password && <Field.ErrorText color="red.500">{errors.password?.message}</Field.ErrorText>
+          }
         </Field.Root>
 
         <Button
