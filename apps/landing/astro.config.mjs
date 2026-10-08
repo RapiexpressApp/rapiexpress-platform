@@ -11,9 +11,11 @@ export default defineConfig({
     {
       // Self-hosted: removes the render-blocking Google Fonts stylesheet
       // and the third-party connection it required.
+      // Rounded and friendly without reading comic: Nunito over Inter per
+      // client feedback on brand personality.
       provider: fontProviders.fontsource(),
-      name: 'Inter',
-      cssVariable: '--font-inter',
+      name: 'Nunito',
+      cssVariable: '--font-nunito',
       weights: [400, 500, 600, 700],
       styles: ['normal'],
       subsets: ['latin'],
