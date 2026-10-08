@@ -1,60 +1,59 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-    --color-brand-50: #f3f5fc;
-    --color-brand-100: #dde4f8;
-    --color-brand-200: #bac9f2;
-    --color-brand-300: #8aa4ea;
-    --color-brand-400: #567de6;
-    --color-brand-500: #2a5ce5;
-    --color-brand-600: #164ada;
-    --color-brand-700: #1041c6;
-    --color-brand-800: #0937b3;
-    --color-brand-900: #062e9d;
-    --color-brand-950: #031f6d;
+  --color-brand-50: #f3f5fc;
+  --color-brand-100: #dde4f8;
+  --color-brand-200: #bac9f2;
+  --color-brand-300: #8aa4ea;
+  --color-brand-400: #567de6;
+  --color-brand-500: #2a5ce5;
+  --color-brand-600: #164ada;
+  --color-brand-700: #1041c6;
+  --color-brand-800: #0937b3;
+  --color-brand-900: #062e9d;
+  --color-brand-950: #031f6d;
 
-    --color-accent-50: #fefce8;
-    --color-accent-100: #fef9c3;
-    --color-accent-200: #fef08a;
-    --color-accent-300: #fde047;
-    --color-accent-400: #facc15;
-    --color-accent-500: #eab308;
-    --color-accent-600: #ca8a04;
-    --color-accent-700: #a16207;
-    --color-accent-800: #854d0e;
-    --color-accent-900: #713f12;
-    --color-accent-950: #422006;
+  --color-accent-50: #fefce8;
+  --color-accent-100: #fef9c3;
+  --color-accent-200: #fef08a;
+  --color-accent-300: #fde047;
+  --color-accent-400: #facc15;
+  --color-accent-500: #eab308;
+  --color-accent-600: #ca8a04;
+  --color-accent-700: #a16207;
+  --color-accent-800: #854d0e;
+  --color-accent-900: #713f12;
+  --color-accent-950: #422006;
 
-    --color-status-bodega: #f59e0b;
-    --color-status-embarcado: #3b82f6;
-    --color-status-aduana: #6366f1;
-    --color-status-agencia: #8b5cf6;
-    --color-status-entregado: #22c55e;
-    --color-status-incidencia: #ef4444;
-    --color-status-pendiente: #94a3b8;
+  --color-status-bodega: #f59e0b;
+  --color-status-embarcado: #3b82f6;
+  --color-status-aduana: #6366f1;
+  --color-status-agencia: #8b5cf6;
+  --color-status-entregado: #22c55e;
+  --color-status-incidencia: #ef4444;
+  --color-status-pendiente: #94a3b8;
 
-    --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 
-    --radius-input: 0.375rem;
-    --radius-button: 0.5rem;
-    --radius-card: 0.75rem;
-    --radius-modal: 1rem;
-    --radius-full: 9999px;
-
+  --radius-input: 0.375rem;
+  --radius-button: 0.5rem;
+  --radius-card: 0.75rem;
+  --radius-modal: 1rem;
+  --radius-full: 9999px;
 }
 
 /* `static` because Tailwind drops @theme values that no utility references,
    and the per-section stylesheets read these at runtime. */
 @theme static {
-    --motion-fast: 120ms;
-    --motion-base: 200ms;
-    --motion-medium: 280ms;
-    --motion-slow: 400ms;
-    --motion-slower: 600ms;
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-medium: 280ms;
+  --motion-slow: 400ms;
+  --motion-slower: 600ms;
 
-    --ease-entrance: cubic-bezier(0.22, 1, 0.36, 1);
-    --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
-    --ease-settle: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-entrance: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-settle: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* Cross-document transitions, no router and no JS: the browser cross-fades
@@ -77,7 +76,12 @@
     }
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     text-wrap: balance;
   }
 
@@ -120,11 +124,21 @@
     animation-timeline: view();
   }
 
-  .reveal-stagger > *:nth-child(1) { animation-range: cover 5% cover 38%; }
-  .reveal-stagger > *:nth-child(2) { animation-range: cover 8% cover 41%; }
-  .reveal-stagger > *:nth-child(3) { animation-range: cover 11% cover 44%; }
-  .reveal-stagger > *:nth-child(4) { animation-range: cover 14% cover 47%; }
-  .reveal-stagger > *:nth-child(5) { animation-range: cover 17% cover 50%; }
+  .reveal-stagger > *:nth-child(1) {
+    animation-range: cover 5% cover 38%;
+  }
+  .reveal-stagger > *:nth-child(2) {
+    animation-range: cover 8% cover 41%;
+  }
+  .reveal-stagger > *:nth-child(3) {
+    animation-range: cover 11% cover 44%;
+  }
+  .reveal-stagger > *:nth-child(4) {
+    animation-range: cover 14% cover 47%;
+  }
+  .reveal-stagger > *:nth-child(5) {
+    animation-range: cover 17% cover 50%;
+  }
 
   /* Paths carry pathLength="1", so one dashoffset unit is the whole stroke
      regardless of geometry. */
@@ -191,10 +205,18 @@
     transform: none;
   }
 
-  html.js-reveal .reveal-stagger > *:nth-child(2) { transition-delay: 80ms; }
-  html.js-reveal .reveal-stagger > *:nth-child(3) { transition-delay: 160ms; }
-  html.js-reveal .reveal-stagger > *:nth-child(4) { transition-delay: 240ms; }
-  html.js-reveal .reveal-stagger > *:nth-child(5) { transition-delay: 320ms; }
+  html.js-reveal .reveal-stagger > *:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  html.js-reveal .reveal-stagger > *:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  html.js-reveal .reveal-stagger > *:nth-child(4) {
+    transition-delay: 240ms;
+  }
+  html.js-reveal .reveal-stagger > *:nth-child(5) {
+    transition-delay: 320ms;
+  }
 
   html.js-reveal .draw-on-scroll {
     stroke-dasharray: 1;
