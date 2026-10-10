@@ -1,3 +1,7 @@
+---
+import portalHref from '../../data/portal-url';
+---
+
 <div>
   <p class="hero-enter hero-delay-1 mx-auto max-w-lg text-center lg:text-left lg:mx-0 text-lg leading-relaxed text-brand-100/85">
     ¿Por qué esperar semanas para tener tus paquetes? Con nuestro servicio express, recibe en Ecuador todas tus compras de 5 a 10 días hábiles. ¿Qué esperas? Crea tu casillero gratis y empieza a comprar ¡ya!
@@ -5,7 +9,9 @@
 
   <div class="hero-enter hero-delay-2 mt-7 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center lg:justify-start">
     <a
-      href="#empieza"
+      href={portalHref}
+      target="_blank"
+      rel="noopener noreferrer"
       class="group inline-flex min-h-12 items-center justify-center gap-2 rounded-button bg-accent-400 px-6 text-base font-semibold text-brand-950 transition-[background-color,box-shadow,transform] duration-200 ease-out hover:bg-accent-300 hover:shadow-lg hover:shadow-accent-400/20 motion-safe:active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
     >
       Crea tu casillero gratis aquí
