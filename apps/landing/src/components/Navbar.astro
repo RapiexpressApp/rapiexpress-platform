@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 
 import logo from '../assets/logo.webp';
 
+import portalHref from '../data/portal-url';
+
 // Section anchors only resolve on the landing. Anywhere else they have to
 // carry the path or the link silently does nothing.
 const isLanding = Astro.url.pathname === '/';
@@ -54,7 +56,9 @@ const navLinks = [
 
     <div class="flex items-center gap-3">
       <a
-        href={anchor('empieza')}
+        href={portalHref}
+        target="_blank"
+        rel="noopener noreferrer"
         class="hidden lg:inline-flex items-center px-4 py-2 text-sm font-semibold text-brand-950 bg-accent-400 rounded-button transition-[background-color,box-shadow,transform] duration-[var(--motion-fast)] ease-entrance hover:bg-accent-300 hover:shadow-md hover:shadow-accent-400/25 motion-safe:hover:-translate-y-px motion-safe:active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-brand-900 focus-visible:ring-offset-2"
       >
         Crea tu casillero gratis
