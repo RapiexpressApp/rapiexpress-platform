@@ -1,6 +1,5 @@
 ---
-const whatsappHref =
-  'https://wa.me/593963986148?text=Hola%2C%20quiero%20crear%20mi%20casillero';
+import portalHref from '../../data/portal-url';
 ---
 
 <section aria-labelledby="empezar-title" class="bg-brand-900">
@@ -15,7 +14,7 @@ const whatsappHref =
 
       <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
         <a
-          href={whatsappHref}
+          href={portalHref}
           target="_blank"
           rel="noopener noreferrer"
           class="group inline-flex min-h-12 items-center gap-2 rounded-button bg-accent-400 px-6 text-base font-semibold text-brand-950 transition-[background-color,box-shadow,transform] duration-200 ease-out hover:bg-accent-300 hover:shadow-lg hover:shadow-accent-400/20 motion-safe:active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"

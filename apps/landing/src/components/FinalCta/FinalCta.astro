@@ -1,8 +1,7 @@
 ---
 import CurvedArrow from '../CurvedArrow.astro';
 
-const whatsappHref =
-  'https://wa.me/593963986148?text=Hola%2C%20quiero%20crear%20mi%20casillero';
+import portalHref from '../../data/portal-url';
 ---
 
 <section id="empieza" aria-labelledby="empieza-title" class="bg-brand-900">
@@ -19,7 +18,7 @@ const whatsappHref =
         <div class="relative">
           <CurvedArrow class="draw-on-scroll pointer-events-none absolute -left-20 -top-9 hidden h-14 w-16 -scale-x-100 text-accent-400 md:block" />
           <a
-            href={whatsappHref}
+            href={portalHref}
             target="_blank"
             rel="noopener noreferrer"
             class="group inline-flex min-h-12 items-center gap-2 rounded-button bg-accent-400 px-6 text-base font-semibold text-brand-950 transition-[background-color,box-shadow,transform] duration-200 ease-out hover:bg-accent-300 hover:shadow-lg hover:shadow-accent-400/20 motion-safe:active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
