@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
+    "./session-provider": "./src/session-provider.tsx",
     "./*": "./src/*.ts"
   },
   "scripts": {
@@ -18,7 +19,8 @@
     "zod": "catalog:"
   },
   "peerDependencies": {
-    "@tanstack/react-query": "^5.104.1"
+    "@tanstack/react-query": "^5.104.1",
+    "react": "19.2.8"
   },
   "devDependencies": {
     "@rapiexpress/config": "workspace:*",
@@ -26,8 +28,10 @@
     "@rapiexpress/prettier-config": "workspace:*",
     "@tanstack/react-query": "^5.104.1",
     "@types/node": "24.13.3",
+    "@types/react": "19.2.18",
     "jsdom": "^30.1.2",
     "msw": "^3.0.3",
+    "react": "19.2.8",
     "vitest": "^5.0.3"
   },
   "prettier": "@rapiexpress/prettier-config"

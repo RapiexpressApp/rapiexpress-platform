@@ -1,22 +1,22 @@
-import { onSessionExpired } from '@rapiexpress/api-client/session-events';
-import { useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 import { type ReactNode, useEffect, useState } from 'react';
 
-import { bootstrapSession } from './bootstrap-session';
-import { SessionContext, type SessionStatus } from './session-context';
+import { SessionContext, type SessionStatus } from './session-context.ts';
+import { onSessionExpired } from './session-events.ts';
 
 interface SessionProviderProps {
+  bootstrap: (queryClient: QueryClient) => Promise<boolean>;
   children: ReactNode;
 }
 
-function SessionProvider({ children }: SessionProviderProps) {
+function SessionProvider({ bootstrap, children }: SessionProviderProps) {
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<SessionStatus>('loading');
 
   useEffect(() => {
     let active = true;
 
-    void bootstrapSession(queryClient).then((authenticated) => {
+    void bootstrap(queryClient).then((authenticated) => {
       if (active) setStatus(authenticated ? 'authenticated' : 'anonymous');
     });
 
@@ -29,7 +29,7 @@ function SessionProvider({ children }: SessionProviderProps) {
       active = false;
       unsubscribe();
     };
-  }, [queryClient]);
+  }, [queryClient, bootstrap]);
 
   const value = {
     status,
