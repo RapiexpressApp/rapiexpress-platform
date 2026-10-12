@@ -1,5 +1,10 @@
 import { Box, Button, chakra, Grid, Input, Link as ChakraLink, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import AuthField from '@rapiexpress/ui/auth-field';
+import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles';
+import AuthMobileBrand from '@rapiexpress/ui/auth-mobile-brand';
+import { fadeUp } from '@rapiexpress/ui/motion';
+import { PasswordInput } from '@rapiexpress/ui/password-input';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router';
 
@@ -14,12 +19,6 @@ import {
   registerSchema,
   type RegisterSchemaType,
 } from '@/features/auth/validation/register.validation';
-import { fadeUp } from '@/shared/ui/motion';
-import { PasswordInput } from '@/shared/ui/password-input';
-
-import { inputStyles, submitButtonProps } from './auth-form-styles';
-import AuthField from './AuthField';
-import AuthMobileBrand from './AuthMobileBrand';
 
 function RegisterForm() {
   const registration = useRegister();

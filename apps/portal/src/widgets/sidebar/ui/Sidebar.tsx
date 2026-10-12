@@ -1,10 +1,10 @@
 import { Box, Button, Flex, Stack } from '@chakra-ui/react';
+import { focusRing, pressable } from '@rapiexpress/ui/interaction';
 import { Plus } from 'lucide-react';
 import { Link, NavLink } from 'react-router';
 
 import type { NavItem } from '@/shared/model/nav-item';
 import BrandLink from '@/shared/ui/brand-link';
-import { focusRing, pressable } from '@/shared/ui/interaction';
 
 interface SidebarProps {
   items: NavItem[];

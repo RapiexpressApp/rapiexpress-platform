@@ -1,7 +1,7 @@
 import { Flex, Image, Text } from '@chakra-ui/react';
-import logo from '@rapiexpress/ui/assets/logo.webp';
 
-import { fadeUp } from '@/shared/ui/motion';
+import logo from './assets/logo.webp';
+import { fadeUp } from './motion.ts';
 
 function AuthMobileBrand() {
   return (

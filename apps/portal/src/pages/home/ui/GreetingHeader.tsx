@@ -1,9 +1,8 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
+import { focusRing, pressable } from '@rapiexpress/ui/interaction';
+import { fadeUp } from '@rapiexpress/ui/motion';
 import { Plus, Search } from 'lucide-react';
 import { Link } from 'react-router';
-
-import { focusRing, pressable } from '@/shared/ui/interaction';
-import { fadeUp } from '@/shared/ui/motion';
 
 interface GreetingHeaderProps {
   firstName: string;

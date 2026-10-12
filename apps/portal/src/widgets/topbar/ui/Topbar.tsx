@@ -1,11 +1,11 @@
 import { Box, Flex, IconButton, Text } from '@chakra-ui/react';
+import { focusRing } from '@rapiexpress/ui/interaction';
 import { Bell, LogOut } from 'lucide-react';
 
 import { getFullName, getInitials } from '@/features/auth/model/profile-display';
 import { useLogout } from '@/features/auth/model/use-logout';
 import { useMe } from '@/features/auth/model/use-me';
 import BrandLink from '@/shared/ui/brand-link';
-import { focusRing } from '@/shared/ui/interaction';
 
 function Topbar() {
   const logout = useLogout();

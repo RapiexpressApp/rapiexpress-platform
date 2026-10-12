@@ -1,7 +1,7 @@
 import { Box, chakra } from '@chakra-ui/react';
+import { focusRing } from '@rapiexpress/ui/interaction';
 import { Outlet } from 'react-router';
 
-import { focusRing } from '@/shared/ui/interaction';
 import MobileNav from '@/widgets/mobile-nav/ui/MobileNav';
 import Sidebar from '@/widgets/sidebar/ui/Sidebar';
 import Topbar from '@/widgets/topbar/ui/Topbar';

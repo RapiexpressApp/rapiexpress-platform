@@ -8,6 +8,12 @@
     "./package-illustration": "./src/package-illustration.tsx",
     "./auth-layout": "./src/auth-layout.tsx",
     "./brand-panel": "./src/brand-panel.tsx",
+    "./auth-field": "./src/auth-field.tsx",
+    "./auth-form-styles": "./src/auth-form-styles.ts",
+    "./auth-mobile-brand": "./src/auth-mobile-brand.tsx",
+    "./interaction": "./src/interaction.ts",
+    "./motion": "./src/motion.ts",
+    "./password-input": "./src/password-input.tsx",
     "./assets/logo.webp": "./src/assets/logo.webp"
   },
   "scripts": {

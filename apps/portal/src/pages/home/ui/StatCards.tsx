@@ -1,7 +1,6 @@
 import { Box, Flex, Grid, Text } from '@chakra-ui/react';
+import { fadeUp } from '@rapiexpress/ui/motion';
 import { ClipboardList, type LucideIcon, PackageCheck, Truck } from 'lucide-react';
-
-import { fadeUp } from '@/shared/ui/motion';
 
 import type { HomeStats } from '../model/types';
 
