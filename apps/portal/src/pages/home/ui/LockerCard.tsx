@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { fadeUp } from '@rapiexpress/ui/motion';
 import { Check, CircleAlert, Copy, MapPin } from 'lucide-react';
 
 import { type CopyStatus, useCopyToClipboard } from '@/shared/lib/use-copy-to-clipboard';
-import { fadeUp } from '@/shared/ui/motion';
 
 import { getLockerLines } from '../model/locker';
 import type { Locker } from '../model/types';

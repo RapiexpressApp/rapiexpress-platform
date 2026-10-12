@@ -1,0 +1,9 @@
+{
+  "extends": "@rapiexpress/config/tsconfig/react.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src"]
+}

@@ -1,8 +1,7 @@
 import { Box, Button, Flex, Stack, Table, Text } from '@chakra-ui/react';
+import { focusRing, pressable } from '@rapiexpress/ui/interaction';
 import { PackageOpen, Plus } from 'lucide-react';
 import { Link } from 'react-router';
-
-import { focusRing, pressable } from '@/shared/ui/interaction';
 
 import { formatWeight } from '../model/shipment-format';
 import type { Shipment } from '../model/types';

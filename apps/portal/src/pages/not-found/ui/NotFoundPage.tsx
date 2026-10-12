@@ -1,10 +1,9 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import logo from '@rapiexpress/ui/assets/logo.webp';
+import { fadeUp } from '@rapiexpress/ui/motion';
+import { PackageIllustration } from '@rapiexpress/ui/package-illustration';
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
-
-import logo from '@/shared/assets/logo.webp';
-import { fadeUp } from '@/shared/ui/motion';
-import { PackageIllustration } from '@/shared/ui/package-illustration';
 
 function NotFoundPage() {
   const { pathname } = useLocation();

@@ -1,67 +1,39 @@
-import {
-  Box,
-  Button,
-  chakra,
-  Field,
-  Flex,
-  Image,
-  Input,
-  type SystemStyleObject,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Button, chakra, Field, Input, Link as ChakraLink, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles';
+import AuthMobileBrand from '@rapiexpress/ui/auth-mobile-brand';
+import { fadeUp } from '@rapiexpress/ui/motion';
+import { PasswordInput } from '@rapiexpress/ui/password-input';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 
+import { getLoginErrorMessage } from '@/features/auth/model/auth-errors';
+import { useLogin } from '@/features/auth/model/use-login';
 import { loginSchema, type LoginSchemaType } from '@/features/auth/validation/login.validation';
-import logo from '@/shared/assets/logo.webp';
-import { fadeUp } from '@/shared/ui/motion';
-import { PasswordInput } from '@/shared/ui/password-input';
-
-const inputStyles: SystemStyleObject = {
-  height: 11,
-  width: 'full',
-  fontSize: 'md',
-  color: 'slate.900',
-  borderColor: 'slate.300',
-  bg: 'white',
-  touchAction: 'manipulation',
-  _placeholder: { color: 'slate.500' },
-  _focusVisible: {
-    borderColor: 'brand.500',
-    boxShadow: '0 0 0 2px {colors.brand.500/25}',
-  },
-};
 
 function LoginForm() {
-  const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>({
+  const login = useLogin();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
     },
-    mode: 'onSubmit'
+    mode: 'onSubmit',
   });
-  // TODO: wire auth once packages/contracts and the API exist
-  function onSubmit() {
-    navigate('/dashboard', { replace: true });
+
+  function onSubmit(values: LoginSchemaType) {
+    if (login.isPending) return;
+    login.mutate(values);
   }
 
   return (
     <Box w="full" maxW="380px">
-      <Flex
-        css={fadeUp('0ms')}
-        display={{ base: 'flex', lg: 'none' }}
-        align="center"
-        gap={2.5}
-        mb={10}
-      >
-        <Image src={logo} alt="" boxSize={9} fit="contain" />
-        <Text fontSize="lg" fontWeight="bold" letterSpacing="tight" color="brand.950">
-          Rapiexpress
-        </Text>
-      </Flex>
+      <AuthMobileBrand />
 
       <Text
         as="h1"
@@ -92,9 +64,9 @@ function LoginForm() {
             css={{ ...inputStyles, px: 3.5 }}
             {...register('email')}
           />
-          {
-            errors.email && <Field.ErrorText color="red.500">{errors.email?.message}</Field.ErrorText>
-          }
+          {errors.email && (
+            <Field.ErrorText color="red.500">{errors.email?.message}</Field.ErrorText>
+          )}
         </Field.Root>
 
         <Field.Root invalid={!!errors.password}>
@@ -104,34 +76,32 @@ function LoginForm() {
             css={{ ...inputStyles, paddingStart: 3.5, paddingEnd: 12 }}
             {...register('password')}
           />
-          {
-            errors.password && <Field.ErrorText color="red.500">{errors.password?.message}</Field.ErrorText>
-          }
+          {errors.password && (
+            <Field.ErrorText color="red.500">{errors.password?.message}</Field.ErrorText>
+          )}
         </Field.Root>
+
+        {login.isError && (
+          <Text role="alert" fontSize="sm" color="red.500">
+            {getLoginErrorMessage(login.error)}
+          </Text>
+        )}
 
         <Button
           type="submit"
-          colorPalette="brand"
-          width="full"
-          height={11}
-          fontSize="md"
-          fontWeight="semibold"
-          borderRadius="lg"
-          touchAction="manipulation"
-          transition="background-color 150ms ease, transform 150ms ease"
-          _hover={{ bg: 'brand.700', translateY: '-2px' }}
-          _active={{ transform: 'scale(0.98)' }}
-          _focusVisible={{
-            outline: 'none',
-            boxShadow: '0 0 0 2px white, 0 0 0 4px {colors.brand.600}',
-          }}
+          loading={login.isPending}
+          loadingText="Ingresando"
+          {...submitButtonProps}
         >
           Entrar
         </Button>
       </chakra.form>
 
       <Text css={fadeUp('240ms')} mt={6} textAlign="center" fontSize="sm" color="slate.600">
-        ¿Aún no tienes casillero?
+        ¿Aún no tienes casillero?{' '}
+        <ChakraLink asChild fontWeight="semibold" color="brand.700">
+          <Link to="/registro">Regístrate</Link>
+        </ChakraLink>
       </Text>
     </Box>
   );

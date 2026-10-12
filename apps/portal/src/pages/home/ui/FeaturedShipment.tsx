@@ -1,8 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
+import { focusRing } from '@rapiexpress/ui/interaction';
 import { ArrowRight, Headphones } from 'lucide-react';
 import { Link } from 'react-router';
-
-import { focusRing } from '@/shared/ui/interaction';
 
 import { formatWeight } from '../model/shipment-format';
 import type { FeaturedShipmentView } from '../model/types';

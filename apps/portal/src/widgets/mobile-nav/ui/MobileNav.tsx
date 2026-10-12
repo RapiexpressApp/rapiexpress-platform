@@ -1,8 +1,8 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
+import { focusRing } from '@rapiexpress/ui/interaction';
 import { NavLink } from 'react-router';
 
 import type { NavItem } from '@/shared/model/nav-item';
-import { focusRing } from '@/shared/ui/interaction';
 
 interface MobileNavProps {
   items: NavItem[];
