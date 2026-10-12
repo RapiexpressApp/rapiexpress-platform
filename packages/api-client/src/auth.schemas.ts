@@ -46,9 +46,9 @@ export const userProfileSchema = z.object({
   name: z.string(),
   lastName: z.string(),
   phone: z.string(),
-  kind: z.string(),
+  kind: z.string().nullable(),
   role: z.string(),
-  lockerCode: z.string(),
+  lockerCode: z.string().nullable(),
   createdAt: z.string(),
 });
 

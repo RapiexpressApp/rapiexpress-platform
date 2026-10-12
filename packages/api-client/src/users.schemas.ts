@@ -51,7 +51,7 @@ export const userListItemSchema = z.object({
 
 export const userListSchema = paginatedSchema(userListItemSchema);
 
-export const createdUserSchema = userListItemSchema.extend({ kind: z.string() });
+export const createdUserSchema = userListItemSchema.extend({ kind: z.string().nullable() });
 
 export type StaffRole = z.infer<typeof staffRoleSchema>;
 export type CreateUserPayload = z.input<typeof createUserPayloadSchema>;

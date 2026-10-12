@@ -35,7 +35,7 @@ function HomePage() {
 
   if (!profile) return <HomeSkeleton />;
 
-  const locker = buildLocker({ recipient: getFullName(profile), suite: profile.lockerCode });
+  const locker = buildLocker({ recipient: getFullName(profile), suite: profile.lockerCode ?? '' });
 
   return (
     <Stack gap={{ base: 6, lg: 8 }}>

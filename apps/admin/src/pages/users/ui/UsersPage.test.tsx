@@ -168,7 +168,7 @@ describe('UsersPage create', () => {
       }),
       http.post('*/api/users', async ({ request }) => {
         body = await request.json();
-        return HttpResponse.json({ ...userFixture({ id: 'u3' }), kind: 'STAFF' }, { status: 201 });
+        return HttpResponse.json({ ...userFixture({ id: 'u3' }), kind: null }, { status: 201 });
       })
     );
     renderPage();

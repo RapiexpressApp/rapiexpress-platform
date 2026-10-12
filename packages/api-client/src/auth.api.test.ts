@@ -111,6 +111,21 @@ describe('authApi', () => {
     await expect(authApi.me()).resolves.toEqual(profile);
   });
 
+  it('me parses a staff profile without a kind or locker code', async () => {
+    setAccessToken('tok');
+    server.use(
+      http.get('*/api/auth/me', () =>
+        HttpResponse.json({ ...profile, kind: null, role: 'ADMIN', lockerCode: null })
+      )
+    );
+
+    await expect(authApi.me()).resolves.toMatchObject({
+      kind: null,
+      role: 'ADMIN',
+      lockerCode: null,
+    });
+  });
+
   it('me rejects a response that does not match the contract', async () => {
     setAccessToken('tok');
     server.use(http.get('*/api/auth/me', () => HttpResponse.json({ id: 1 })));

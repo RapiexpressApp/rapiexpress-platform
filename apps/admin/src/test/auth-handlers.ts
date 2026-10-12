@@ -6,9 +6,9 @@ export const profileFixture = (role = 'ADMIN') => ({
   name: 'Ana',
   lastName: 'Rojas',
   phone: '+58 412 1234567',
-  kind: role === 'CUSTOMER' ? 'CUSTOMER' : 'STAFF',
+  kind: role === 'CUSTOMER' ? 'CUSTOMER' : null,
   role,
-  lockerCode: '',
+  lockerCode: null,
   createdAt: '2026-01-01T00:00:00.000Z',
 });
 

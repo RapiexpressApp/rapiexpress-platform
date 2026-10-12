@@ -81,7 +81,7 @@ describe('usersApi.create', () => {
     server.use(
       http.post('*/api/users', async ({ request }) => {
         body = await request.json();
-        return HttpResponse.json({ ...user, kind: 'STAFF' }, { status: 201 });
+        return HttpResponse.json({ ...user, kind: null }, { status: 201 });
       })
     );
 
