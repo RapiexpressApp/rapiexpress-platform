@@ -1,0 +1,55 @@
+{
+  "name": "@rapiexpress/admin",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@rapiexpress/api-client": "workspace:*",
+    "@rapiexpress/ui": "workspace:*",
+    "@chakra-ui/react": "3.37.0",
+    "@emotion/react": "11.14.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@hookform/resolvers": "5.9.1",
+    "@tanstack/react-query": "^5.104.1",
+    "lucide-react": "^1.41.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "7.89.0",
+    "react-router": "8.3.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.7",
+    "@rapiexpress/config": "workspace:*",
+    "@rapiexpress/eslint-config": "workspace:*",
+    "@rapiexpress/prettier-config": "workspace:*",
+    "@rolldown/plugin-babel": "0.2.3",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/babel__core": "7.20.5",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.1.0",
+    "babel-plugin-react-compiler": "1.0.0",
+    "jsdom": "^30.1.2",
+    "msw": "^3.0.3",
+    "vite": "8.2.2",
+    "vitest": "^5.0.3"
+  },
+  "prettier": "@rapiexpress/prettier-config"
+}

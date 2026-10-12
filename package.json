@@ -9,7 +9,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "dev:landing": "pnpm --filter @rapiexpress/landing dev",
-    "dev:portal": "pnpm --filter @rapiexpress/portal dev"
+    "dev:portal": "pnpm --filter @rapiexpress/portal dev",
+    "dev:admin": "pnpm --filter @rapiexpress/admin dev"
   },
   "license": "ISC",
   "private": true,
