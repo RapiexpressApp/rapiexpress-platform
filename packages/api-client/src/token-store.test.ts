@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { clearAccessToken, getAccessToken, setAccessToken } from './token-store';
+import { clearAccessToken, getAccessToken, setAccessToken } from './token-store.ts';
 
 describe('token store', () => {
   beforeEach(() => clearAccessToken());

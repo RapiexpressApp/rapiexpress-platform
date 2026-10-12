@@ -1,11 +1,12 @@
 import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { server } from '@/test/server';
+import { server } from '../test/server';
+import { createApiClient } from './client.ts';
+import { onSessionExpired } from './session-events.ts';
+import { clearAccessToken, getAccessToken, setAccessToken } from './token-store.ts';
 
-import { apiClient } from './client';
-import { onSessionExpired } from './session-events';
-import { clearAccessToken, getAccessToken, setAccessToken } from './token-store';
+const { apiClient } = createApiClient({ baseURL: '/api' });
 
 const tokens = (accessToken: string) => ({
   accessToken,

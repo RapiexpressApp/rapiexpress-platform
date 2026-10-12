@@ -1,0 +1,34 @@
+{
+  "name": "@rapiexpress/api-client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.104.1"
+  },
+  "devDependencies": {
+    "@rapiexpress/config": "workspace:*",
+    "@rapiexpress/eslint-config": "workspace:*",
+    "@rapiexpress/prettier-config": "workspace:*",
+    "@tanstack/react-query": "^5.104.1",
+    "@types/node": "24.13.3",
+    "jsdom": "^30.1.2",
+    "msw": "^3.0.3",
+    "vitest": "^5.0.3"
+  },
+  "prettier": "@rapiexpress/prettier-config"
+}

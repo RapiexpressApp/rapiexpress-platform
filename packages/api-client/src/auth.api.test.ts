@@ -2,10 +2,10 @@ import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
 
-import { server } from '@/test/server';
-
-import { authApi } from './auth.api';
-import { clearAccessToken, getAccessToken, setAccessToken } from './token-store';
+import { server } from '../test/server';
+import { createAuthApi } from './auth.api.ts';
+import { createApiClient } from './client.ts';
+import { clearAccessToken, getAccessToken, setAccessToken } from './token-store.ts';
 
 const profile = {
   id: 'u1',
@@ -18,6 +18,8 @@ const profile = {
   lockerCode: 'MI-00001',
   createdAt: '2026-01-01T00:00:00.000Z',
 };
+
+const authApi = createAuthApi(createApiClient({ baseURL: '/api' }));
 
 describe('authApi', () => {
   beforeEach(() => clearAccessToken());
