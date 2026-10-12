@@ -1,38 +1,15 @@
-import {
-  Box,
-  Button,
-  chakra,
-  Field,
-  Flex,
-  Image,
-  Input,
-  type SystemStyleObject,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Button, chakra, Field, Input, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { getLoginErrorMessage } from '@/features/auth/model/auth-errors';
 import { useLogin } from '@/features/auth/model/use-login';
 import { loginSchema, type LoginSchemaType } from '@/features/auth/validation/login.validation';
-import logo from '@/shared/assets/logo.webp';
 import { fadeUp } from '@/shared/ui/motion';
 import { PasswordInput } from '@/shared/ui/password-input';
 
-const inputStyles: SystemStyleObject = {
-  height: 11,
-  width: 'full',
-  fontSize: 'md',
-  color: 'slate.900',
-  borderColor: 'slate.300',
-  bg: 'white',
-  touchAction: 'manipulation',
-  _placeholder: { color: 'slate.500' },
-  _focusVisible: {
-    borderColor: 'brand.500',
-    boxShadow: '0 0 0 2px {colors.brand.500/25}',
-  },
-};
+import { inputStyles, submitButtonProps } from './auth-form-styles';
+import AuthMobileBrand from './AuthMobileBrand';
 
 function LoginForm() {
   const login = useLogin();
@@ -56,18 +33,7 @@ function LoginForm() {
 
   return (
     <Box w="full" maxW="380px">
-      <Flex
-        css={fadeUp('0ms')}
-        display={{ base: 'flex', lg: 'none' }}
-        align="center"
-        gap={2.5}
-        mb={10}
-      >
-        <Image src={logo} alt="" boxSize={9} fit="contain" />
-        <Text fontSize="lg" fontWeight="bold" letterSpacing="tight" color="brand.950">
-          Rapiexpress
-        </Text>
-      </Flex>
+      <AuthMobileBrand />
 
       <Text
         as="h1"
@@ -125,20 +91,7 @@ function LoginForm() {
           type="submit"
           loading={login.isPending}
           loadingText="Ingresando"
-          colorPalette="brand"
-          width="full"
-          height={11}
-          fontSize="md"
-          fontWeight="semibold"
-          borderRadius="lg"
-          touchAction="manipulation"
-          transition="background-color 150ms ease, transform 150ms ease"
-          _hover={{ bg: 'brand.700', translateY: '-2px' }}
-          _active={{ transform: 'scale(0.98)' }}
-          _focusVisible={{
-            outline: 'none',
-            boxShadow: '0 0 0 2px white, 0 0 0 4px {colors.brand.600}',
-          }}
+          {...submitButtonProps}
         >
           Entrar
         </Button>
