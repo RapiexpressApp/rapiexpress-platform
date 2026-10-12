@@ -1,6 +1,7 @@
-import { Box, Button, chakra, Field, Input, Text } from '@chakra-ui/react';
+import { Box, Button, chakra, Field, Input, Link as ChakraLink, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router';
 
 import { getLoginErrorMessage } from '@/features/auth/model/auth-errors';
 import { useLogin } from '@/features/auth/model/use-login';
@@ -98,7 +99,10 @@ function LoginForm() {
       </chakra.form>
 
       <Text css={fadeUp('240ms')} mt={6} textAlign="center" fontSize="sm" color="slate.600">
-        ¿Aún no tienes casillero?
+        ¿Aún no tienes casillero?{' '}
+        <ChakraLink asChild fontWeight="semibold" color="brand.700">
+          <Link to="/registro">Regístrate</Link>
+        </ChakraLink>
       </Text>
     </Box>
   );

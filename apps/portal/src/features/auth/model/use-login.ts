@@ -1,12 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
-import { authApi } from '@/shared/api/auth.api';
 import type { LoginPayload } from '@/shared/api/auth.schemas';
-import { clearAccessToken } from '@/shared/api/token-store';
 
 import { useSession } from './session-context';
-import { meQueryOptions } from './use-me';
+import { signIn } from './sign-in';
 
 export function useLogin() {
   const queryClient = useQueryClient();
@@ -14,15 +12,7 @@ export function useLogin() {
   const { markAuthenticated } = useSession();
 
   return useMutation({
-    mutationFn: async (payload: LoginPayload) => {
-      await authApi.login(payload);
-      try {
-        await queryClient.fetchQuery({ ...meQueryOptions, staleTime: 0 });
-      } catch (error) {
-        clearAccessToken();
-        throw error;
-      }
-    },
+    mutationFn: (payload: LoginPayload) => signIn(queryClient, payload),
     onSuccess: () => {
       markAuthenticated();
       navigate('/dashboard', { replace: true });
