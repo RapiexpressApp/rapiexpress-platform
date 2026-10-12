@@ -1,17 +1,9 @@
-import { queryKeys } from '@rapiexpress/api-client/query-keys';
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { useSession } from '@rapiexpress/api-client/session-context';
+import { useQuery } from '@tanstack/react-query';
 
-import { authApi } from '@/shared/api/api';
+import { session } from '@/shared/api/api';
 
-import { useSession } from './session-context';
-
-const ME_STALE_TIME_MS = 5 * 60 * 1000;
-
-export const meQueryOptions = queryOptions({
-  queryKey: queryKeys.auth.me(),
-  queryFn: () => authApi.me(),
-  staleTime: ME_STALE_TIME_MS,
-});
+export const meQueryOptions = session.meQueryOptions;
 
 export function useMe() {
   const { status } = useSession();

@@ -1,6 +1,5 @@
+import { useSession } from '@rapiexpress/api-client/session-context';
 import { Navigate, Outlet } from 'react-router';
-
-import { useSession } from '@/features/auth/model/session-context';
 
 import SessionLoading from './SessionLoading';
 

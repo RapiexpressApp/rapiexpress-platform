@@ -1,4 +1,5 @@
 import { queryKeys } from '@rapiexpress/api-client/query-keys';
+import { useSession } from '@rapiexpress/api-client/session-context';
 import { notifySessionExpired } from '@rapiexpress/api-client/session-events';
 import { getAccessToken, setAccessToken } from '@rapiexpress/api-client/token-store';
 import { screen, waitFor } from '@testing-library/react';
@@ -16,7 +17,6 @@ import {
 import { renderWithProviders } from '@/test/render';
 import { server } from '@/test/server';
 
-import { useSession } from './session-context';
 import { useLogout } from './use-logout';
 
 function StatusProbe() {

@@ -1,10 +1,9 @@
+import { useSession } from '@rapiexpress/api-client/session-context';
 import { clearAccessToken } from '@rapiexpress/api-client/token-store';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
 import { authApi } from '@/shared/api/api';
-
-import { useSession } from './session-context';
 
 export function useLogout() {
   const queryClient = useQueryClient();
