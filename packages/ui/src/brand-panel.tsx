@@ -1,16 +1,20 @@
 import { Box, chakra, Flex, Grid, Image, Stack, Text } from '@chakra-ui/react';
-import { type LucideIcon, Package, ShieldCheck, Truck } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-import logo from '@/shared/assets/logo.webp';
-import { PackageIllustration } from '@/shared/ui/package-illustration';
+import logo from './assets/logo.webp';
+import { PackageIllustration } from './package-illustration.tsx';
 
-const FEATURES: { icon: LucideIcon; label: string }[] = [
-  { icon: Package, label: 'Seguimiento en línea de tus paquetes' },
-  { icon: ShieldCheck, label: 'Tus comprobantes y datos, protegidos' },
-  { icon: Truck, label: 'Entrega a domicilio o retiro en agencia' },
-];
+export interface BrandPanelFeature {
+  icon: LucideIcon;
+  label: string;
+}
 
-function BrandPanel() {
+export interface BrandPanelProps {
+  tagline: string;
+  features: BrandPanelFeature[];
+}
+
+function BrandPanel({ tagline, features }: BrandPanelProps) {
   return (
     <Flex
       as="aside"
@@ -90,11 +94,11 @@ function BrandPanel() {
           </Box>
 
           <Text mt={7} textAlign="center" fontSize="sm" fontWeight="medium" color="brand.800">
-            De la bodega a tu puerta
+            {tagline}
           </Text>
 
           <Stack as="ul" mx="auto" mt={8} w="fit-content" gap={3.5} listStyleType="none">
-            {FEATURES.map((feature) => (
+            {features.map((feature) => (
               <Flex as="li" key={feature.label} align="center" gap={3}>
                 <Box display="flex" flexShrink={0} color="brand.600">
                   <feature.icon size={20} strokeWidth={2} aria-hidden="true" />

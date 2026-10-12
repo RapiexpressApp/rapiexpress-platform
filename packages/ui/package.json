@@ -1,0 +1,36 @@
+{
+  "name": "@rapiexpress/ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./theme": "./src/theme.ts",
+    "./package-illustration": "./src/package-illustration.tsx",
+    "./auth-layout": "./src/auth-layout.tsx",
+    "./brand-panel": "./src/brand-panel.tsx",
+    "./assets/logo.webp": "./src/assets/logo.webp"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@chakra-ui/react": "3.37.0",
+    "@emotion/react": "11.14.0",
+    "lucide-react": "^1.41.0",
+    "react": "19.2.8"
+  },
+  "devDependencies": {
+    "@chakra-ui/react": "3.37.0",
+    "@emotion/react": "11.14.0",
+    "@rapiexpress/config": "workspace:*",
+    "@rapiexpress/eslint-config": "workspace:*",
+    "@rapiexpress/prettier-config": "workspace:*",
+    "@types/react": "19.2.18",
+    "lucide-react": "^1.41.0",
+    "react": "19.2.8",
+    "vite": "8.2.2"
+  },
+  "prettier": "@rapiexpress/prettier-config"
+}
