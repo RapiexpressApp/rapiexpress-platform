@@ -1,6 +1,5 @@
+import { registerPayloadSchema } from '@rapiexpress/api-client/auth.schemas';
 import * as z from 'zod';
-
-import { registerPayloadSchema } from '@/shared/api/auth.schemas';
 
 export const registerSchema = registerPayloadSchema
   .extend({

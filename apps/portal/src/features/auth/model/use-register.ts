@@ -1,8 +1,8 @@
+import type { RegisterPayload } from '@rapiexpress/api-client/auth.schemas';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
-import { authApi } from '@/shared/api/auth.api';
-import type { RegisterPayload } from '@/shared/api/auth.schemas';
+import { authApi } from '@/shared/api/api';
 
 import { AccountCreatedLoginFailedError } from './auth-errors';
 import { useSession } from './session-context';

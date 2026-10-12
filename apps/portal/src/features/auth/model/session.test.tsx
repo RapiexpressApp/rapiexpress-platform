@@ -1,12 +1,12 @@
+import { queryKeys } from '@rapiexpress/api-client/query-keys';
+import { notifySessionExpired } from '@rapiexpress/api-client/session-events';
+import { getAccessToken, setAccessToken } from '@rapiexpress/api-client/token-store';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { Route, Routes, useLocation } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 
-import { queryKeys } from '@/shared/api/query-keys';
-import { notifySessionExpired } from '@/shared/api/session-events';
-import { getAccessToken, setAccessToken } from '@/shared/api/token-store';
 import {
   meHandler,
   profileFixture,

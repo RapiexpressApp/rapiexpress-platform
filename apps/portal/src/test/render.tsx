@@ -1,11 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import { system } from '@rapiexpress/ui/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { Fragment, type ReactElement, StrictMode } from 'react';
 import { MemoryRouter } from 'react-router';
 
 import SessionProvider from '@/features/auth/model/SessionProvider';
-import { system } from '@/shared/ui/theme';
 
 interface RenderOptions {
   route?: string;

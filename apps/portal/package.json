@@ -16,6 +16,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@rapiexpress/api-client": "workspace:*",
+    "@rapiexpress/ui": "workspace:*",
     "@chakra-ui/react": "3.37.0",
     "@emotion/react": "11.14.0",
     "@fontsource-variable/inter": "^5.3.0",

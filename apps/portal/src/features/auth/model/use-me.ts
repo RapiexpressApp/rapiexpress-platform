@@ -1,7 +1,7 @@
+import { queryKeys } from '@rapiexpress/api-client/query-keys';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { authApi } from '@/shared/api/auth.api';
-import { queryKeys } from '@/shared/api/query-keys';
+import { authApi } from '@/shared/api/api';
 
 import { useSession } from './session-context';
 

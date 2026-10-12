@@ -1,9 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 
+import { clearAccessToken } from '@rapiexpress/api-client/token-store';
 import { cleanup } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll } from 'vitest';
-
-import { clearAccessToken } from '@/shared/api/token-store';
 
 import { server } from './server';
 

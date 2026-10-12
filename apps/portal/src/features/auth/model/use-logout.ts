@@ -1,8 +1,8 @@
+import { clearAccessToken } from '@rapiexpress/api-client/token-store';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
-import { authApi } from '@/shared/api/auth.api';
-import { clearAccessToken } from '@/shared/api/token-store';
+import { authApi } from '@/shared/api/api';
 
 import { useSession } from './session-context';
 

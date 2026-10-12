@@ -1,10 +1,10 @@
+import { getAccessToken } from '@rapiexpress/api-client/token-store';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { Route, Routes } from 'react-router';
 import { describe, expect, it } from 'vitest';
 
-import { getAccessToken } from '@/shared/api/token-store';
 import { meHandler, refreshFailHandler, tokensFixture, unauthorized } from '@/test/auth-handlers';
 import { renderWithProviders } from '@/test/render';
 import { server } from '@/test/server';

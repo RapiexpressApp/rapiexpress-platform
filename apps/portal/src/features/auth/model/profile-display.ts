@@ -1,4 +1,4 @@
-import type { UserProfile } from '@/shared/api/auth.schemas';
+import type { UserProfile } from '@rapiexpress/api-client/auth.schemas';
 
 type NamedProfile = Pick<UserProfile, 'name' | 'lastName'>;
 

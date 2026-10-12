@@ -1,7 +1,6 @@
+import { onSessionExpired } from '@rapiexpress/api-client/session-events';
 import { useQueryClient } from '@tanstack/react-query';
 import { type ReactNode, useEffect, useState } from 'react';
-
-import { onSessionExpired } from '@/shared/api/session-events';
 
 import { bootstrapSession } from './bootstrap-session';
 import { SessionContext, type SessionStatus } from './session-context';

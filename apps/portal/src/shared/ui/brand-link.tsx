@@ -1,7 +1,7 @@
 import { Flex, Image, Text } from '@chakra-ui/react';
+import logo from '@rapiexpress/ui/assets/logo.webp';
 import { Link } from 'react-router';
 
-import logo from '@/shared/assets/logo.webp';
 import { focusRing } from '@/shared/ui/interaction';
 
 function BrandLink() {

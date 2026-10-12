@@ -1,8 +1,8 @@
+import type { LoginPayload } from '@rapiexpress/api-client/auth.schemas';
+import { clearAccessToken } from '@rapiexpress/api-client/token-store';
 import type { QueryClient } from '@tanstack/react-query';
 
-import { authApi } from '@/shared/api/auth.api';
-import type { LoginPayload } from '@/shared/api/auth.schemas';
-import { clearAccessToken } from '@/shared/api/token-store';
+import { authApi } from '@/shared/api/api';
 
 import { meQueryOptions } from './use-me';
 
