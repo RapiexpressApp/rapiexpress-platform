@@ -1,10 +1,6 @@
-import type { FeaturedShipmentConfig, Locker, PreAlert, Shipment } from './types';
+import type { FeaturedShipmentConfig, PreAlert, Shipment, WarehouseAddress } from './types';
 
-export const CUSTOMER_FIRST_NAME = 'Carlos';
-
-export const LOCKER: Locker = {
-  recipient: 'Carlos Mendoza',
-  suite: 'RX-85421',
+export const WAREHOUSE_ADDRESS: WarehouseAddress = {
   street: '8250 NW 27th St',
   city: 'Doral',
   state: 'FL',
