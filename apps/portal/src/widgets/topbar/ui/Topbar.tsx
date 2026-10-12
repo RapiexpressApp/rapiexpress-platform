@@ -1,10 +1,13 @@
 import { Box, Flex, IconButton, Text } from '@chakra-ui/react';
-import { Bell } from 'lucide-react';
+import { Bell, LogOut } from 'lucide-react';
 
+import { useLogout } from '@/features/auth/model/use-logout';
 import BrandLink from '@/shared/ui/brand-link';
 import { focusRing } from '@/shared/ui/interaction';
 
 function Topbar() {
+  const logout = useLogout();
+
   return (
     <Flex
       as="header"
@@ -76,6 +79,21 @@ function Topbar() {
             Carlos Mendoza
           </Text>
         </Flex>
+
+        <IconButton
+          aria-label="Cerrar sesión"
+          variant="ghost"
+          h={11}
+          minW={11}
+          borderRadius="full"
+          color="slate.600"
+          loading={logout.isPending}
+          onClick={() => logout.mutate()}
+          _hover={{ bg: 'slate.100', color: 'slate.900' }}
+          _focusVisible={focusRing}
+        >
+          <LogOut size={20} aria-hidden="true" />
+        </IconButton>
       </Flex>
     </Flex>
   );

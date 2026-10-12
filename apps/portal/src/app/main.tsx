@@ -6,6 +6,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 
+import SessionProvider from '@/features/auth/model/SessionProvider.tsx';
 import { queryClient } from '@/shared/api/query-client.ts';
 import { system } from '@/shared/ui/theme.ts';
 
@@ -14,11 +15,13 @@ import App from './App.tsx';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider value={system}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ChakraProvider>
+      <SessionProvider>
+        <ChakraProvider value={system}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ChakraProvider>
+      </SessionProvider>
     </QueryClientProvider>
   </StrictMode>
 );

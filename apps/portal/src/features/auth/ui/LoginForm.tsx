@@ -11,8 +11,9 @@ import {
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
 
+import { getLoginErrorMessage } from '@/features/auth/model/auth-errors';
+import { useLogin } from '@/features/auth/model/use-login';
 import { loginSchema, type LoginSchemaType } from '@/features/auth/validation/login.validation';
 import logo from '@/shared/assets/logo.webp';
 import { fadeUp } from '@/shared/ui/motion';
@@ -34,18 +35,23 @@ const inputStyles: SystemStyleObject = {
 };
 
 function LoginForm() {
-  const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginSchemaType>({
+  const login = useLogin();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
     },
-    mode: 'onSubmit'
+    mode: 'onSubmit',
   });
-  // TODO: wire auth once packages/contracts and the API exist
-  function onSubmit() {
-    navigate('/dashboard', { replace: true });
+
+  function onSubmit(values: LoginSchemaType) {
+    if (login.isPending) return;
+    login.mutate(values);
   }
 
   return (
@@ -92,9 +98,9 @@ function LoginForm() {
             css={{ ...inputStyles, px: 3.5 }}
             {...register('email')}
           />
-          {
-            errors.email && <Field.ErrorText color="red.500">{errors.email?.message}</Field.ErrorText>
-          }
+          {errors.email && (
+            <Field.ErrorText color="red.500">{errors.email?.message}</Field.ErrorText>
+          )}
         </Field.Root>
 
         <Field.Root invalid={!!errors.password}>
@@ -104,13 +110,21 @@ function LoginForm() {
             css={{ ...inputStyles, paddingStart: 3.5, paddingEnd: 12 }}
             {...register('password')}
           />
-          {
-            errors.password && <Field.ErrorText color="red.500">{errors.password?.message}</Field.ErrorText>
-          }
+          {errors.password && (
+            <Field.ErrorText color="red.500">{errors.password?.message}</Field.ErrorText>
+          )}
         </Field.Root>
+
+        {login.isError && (
+          <Text role="alert" fontSize="sm" color="red.500">
+            {getLoginErrorMessage(login.error)}
+          </Text>
+        )}
 
         <Button
           type="submit"
+          loading={login.isPending}
+          loadingText="Ingresando"
           colorPalette="brand"
           width="full"
           height={11}
