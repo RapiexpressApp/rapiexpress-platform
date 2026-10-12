@@ -6,6 +6,7 @@ import { Fragment, type ReactElement, StrictMode } from 'react';
 import { MemoryRouter } from 'react-router';
 
 import SessionProvider from '@/features/auth/model/SessionProvider';
+import AppToaster from '@/shared/ui/AppToaster';
 
 interface RenderOptions {
   route?: string;
@@ -32,6 +33,7 @@ export function renderWithProviders(
       <QueryClientProvider client={queryClient}>
         <ChakraProvider value={system}>
           <MemoryRouter initialEntries={[route]}>{content}</MemoryRouter>
+          <AppToaster />
         </ChakraProvider>
       </QueryClientProvider>
     </Root>

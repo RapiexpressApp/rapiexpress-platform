@@ -1,6 +1,6 @@
-export const STAFF_ROLES = ['ADMIN', 'OPERATIONS', 'WAREHOUSE'] as const;
+import { STAFF_ROLES, type StaffRole } from '@rapiexpress/api-client/users.schemas';
 
-export type StaffRole = (typeof STAFF_ROLES)[number];
+export { STAFF_ROLES, type StaffRole };
 
 export const PANEL_ROLES = ['ADMIN', 'OPERATIONS'] as const;
 

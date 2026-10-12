@@ -9,6 +9,7 @@ import { BrowserRouter } from 'react-router';
 
 import SessionProvider from '@/features/auth/model/SessionProvider.tsx';
 import { queryClient } from '@/shared/api/query-client.ts';
+import AppToaster from '@/shared/ui/AppToaster';
 
 import App from './App.tsx';
 
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
           <BrowserRouter>
             <App />
           </BrowserRouter>
+          <AppToaster />
         </ChakraProvider>
       </SessionProvider>
     </QueryClientProvider>
