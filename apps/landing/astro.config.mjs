@@ -19,16 +19,22 @@ export default defineConfig({
   },
   fonts: [
     {
-      // Self-hosted: removes the render-blocking Google Fonts stylesheet
-      // and the third-party connection it required.
+      // Bundled in the repo: no render-blocking stylesheet, and builds never
+      // need to reach a font CDN (Docker builds start without a font cache).
       // Rounded and friendly without reading comic: Nunito over Inter per
       // client feedback on brand personality.
-      provider: fontProviders.fontsource(),
+      provider: fontProviders.local(),
       name: 'Nunito',
       cssVariable: '--font-nunito',
-      weights: [400, 500, 600, 700],
-      styles: ['normal'],
-      subsets: ['latin'],
+      options: {
+        variants: [
+          {
+            src: ['./src/assets/fonts/nunito-latin-wght-normal.woff2'],
+            weight: '200 1000',
+            style: 'normal',
+          },
+        ],
+      },
     },
   ],
 });
