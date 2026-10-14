@@ -1,12 +1,22 @@
 // @ts-check
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig, fontProviders } from 'astro/config';
+import { defineConfig, envField, fontProviders } from 'astro/config';
 
 // `site` drives canonical URLs, Open Graph URLs and sitemap generation.
 // TODO: replace with the real production domain once confirmed.
 export default defineConfig({
   site: 'https://rapiexpress.ec',
   vite: { plugins: [tailwindcss()] },
+  env: {
+    schema: {
+      PUBLIC_PORTAL_URL: envField.string({
+        context: 'client',
+        access: 'public',
+        url: true,
+        default: 'https://portal-pearl-one-62.vercel.app/',
+      }),
+    },
+  },
   fonts: [
     {
       // Self-hosted: removes the render-blocking Google Fonts stylesheet

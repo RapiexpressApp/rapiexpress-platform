@@ -1,3 +1,3 @@
-const portalHref = 'https://portal-pearl-one-62.vercel.app/';
+import { PUBLIC_PORTAL_URL } from 'astro:env/client';
 
-export default portalHref;
+export default PUBLIC_PORTAL_URL;
