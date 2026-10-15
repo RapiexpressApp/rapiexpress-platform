@@ -1,0 +1,34 @@
+---
+import portalHref from '../data/portal-url';
+---
+
+<section aria-labelledby="not-found-title" class="bg-brand-900">
+  <div class="mx-auto flex min-h-[70vh] max-w-7xl items-center px-6 pt-28 pb-24">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent-400">Error 404</p>
+      <h1 id="not-found-title" class="mt-4 text-3xl font-bold tracking-tight text-white md:text-5xl">
+        No encontramos esta página
+      </h1>
+      <p class="mt-4 text-lg leading-relaxed text-brand-100/85">
+        La dirección que buscas no existe o cambió de lugar.
+      </p>
+
+      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+          href="/"
+          class="inline-flex min-h-12 items-center rounded-button bg-accent-400 px-6 text-base font-semibold text-brand-950 transition-[background-color,box-shadow,transform] duration-200 ease-out hover:bg-accent-300 hover:shadow-lg hover:shadow-accent-400/20 motion-safe:active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+        >
+          Volver al inicio
+        </a>
+        <a
+          href={portalHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-12 items-center rounded-button border border-white/25 px-6 text-base font-medium text-white transition-[background-color,border-color] duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+        >
+          Crea tu casillero gratis
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

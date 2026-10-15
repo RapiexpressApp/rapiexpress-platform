@@ -1,0 +1,16 @@
+---
+import Footer from '../components/Footer/Footer.astro';
+import Navbar from '../components/Navbar.astro';
+import NotFound from '../components/NotFound.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Página no encontrada — Rapiexpress"
+  description="La página que buscas no existe o cambió de lugar. Vuelve al inicio para conocer tu casillero gratis en Miami."
+  noindex
+>
+  <Navbar slot="header" />
+  <NotFound />
+  <Footer />
+</Layout>
