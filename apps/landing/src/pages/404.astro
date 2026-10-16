@@ -1,0 +1,16 @@
+---
+import Footer from '../components/Footer/Footer.astro';
+import Navbar from '../components/Navbar.astro';
+import NotFound from '../components/NotFound/NotFound.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  noindex
+  title="Página no encontrada — Rapiexpress"
+  description="La página que buscas no existe o cambió de dirección. Vuelve al inicio o descubre cómo abrir tu casillero gratis de Rapiexpress."
+>
+  <Navbar slot="header" />
+  <NotFound />
+  <Footer />
+</Layout>
