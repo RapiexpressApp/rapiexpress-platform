@@ -91,6 +91,43 @@ describe('CustomerSearch', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows only the latest search when the responses arrive out of order', async () => {
+    let releaseSlow: () => void = () => {};
+    const slowGate = new Promise<void>((resolve) => {
+      releaseSlow = resolve;
+    });
+    const requested: string[] = [];
+    const served: string[] = [];
+    server.use(
+      http.get('*/api/packages/reception/customers', async ({ request }) => {
+        const search = new URL(request.url).searchParams.get('search') ?? '';
+        requested.push(search);
+        if (search === 'ja') await slowGate;
+        served.push(search);
+        return HttpResponse.json(
+          search === 'ja'
+            ? [customerSummaryFixture({ name: 'Jane', lastName: 'Doe' })]
+            : [customerSummaryFixture({ id: OTHER_CUSTOMER_ID, name: 'Janet', lastName: 'Ruiz' })]
+        );
+      })
+    );
+    const { input } = renderSearch();
+
+    await userEvent.type(input, 'ja');
+    await waitFor(() => expect(requested).toEqual(['ja']));
+    await userEvent.type(input, 'n');
+
+    expect(await screen.findByRole('button', { name: /Janet Ruiz/ })).toBeInTheDocument();
+    expect(served).toEqual(['jan']);
+
+    releaseSlow();
+    await waitFor(() => expect(served).toEqual(['jan', 'ja']));
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(screen.getByRole('button', { name: /Janet Ruiz/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Jane Doe/ })).toBeNull();
+  });
+
   it('shows an empty state when nobody matches', async () => {
     server.use(customerSearchHandler([]));
     const { input } = renderSearch();
