@@ -14,12 +14,13 @@ function TargetSummary({ target, onChange }: TargetSummaryProps) {
     <Flex
       justify="space-between"
       align="flex-start"
+      wrap="wrap"
       gap={3}
       borderStartWidth="3px"
       borderColor="brand.500"
       ps={4}
     >
-      <Box minW={0} flex="1">
+      <Box minW={0} flex="1 1 14rem">
         {target.kind === 'purchase' && (
           <>
             <Heading as="h2" size="sm" color="slate.900" mb={2}>

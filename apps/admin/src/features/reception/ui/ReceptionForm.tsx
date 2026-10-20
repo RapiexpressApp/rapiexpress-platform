@@ -55,6 +55,7 @@ function ReceptionForm({
   return (
     <chakra.form
       noValidate
+      aria-label="Datos del bulto"
       display="flex"
       flexDirection="column"
       gap={5}

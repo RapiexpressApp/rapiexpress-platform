@@ -31,6 +31,12 @@ function renderForm(
 }
 
 describe('ReceptionForm', () => {
+  it('names the form so screen reader users can find it', () => {
+    renderForm();
+
+    expect(screen.getByRole('form', { name: 'Datos del bulto' })).toBeInTheDocument();
+  });
+
   it('focuses the weight so the scale reading can be typed right away', () => {
     const { weight } = renderForm();
 
