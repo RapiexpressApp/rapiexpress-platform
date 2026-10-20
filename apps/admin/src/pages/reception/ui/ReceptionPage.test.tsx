@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
@@ -65,6 +65,21 @@ describe('ReceptionPage scan step', () => {
     expect(requests).toHaveLength(1);
     release();
     await screen.findByText('Paso 2 de 4 · Destino del bulto');
+  });
+
+  it('sends one request when the scanner submits twice before the page re-renders', async () => {
+    const requests: URL[] = [];
+    renderReceptionPage(lookupHandler(receptionLookupFixture(), (url) => requests.push(url)));
+    await userEvent.type(getGuideInput(), TRACKING_NUMBER);
+    const form = getGuideInput().closest('form')!;
+
+    act(() => {
+      fireEvent.submit(form);
+      fireEvent.submit(form);
+    });
+
+    await screen.findByText('Paso 2 de 4 · Destino del bulto');
+    expect(requests).toHaveLength(1);
   });
 
   it('shows an error with a working retry when the lookup fails', async () => {

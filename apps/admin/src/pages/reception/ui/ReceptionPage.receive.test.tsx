@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it, vi } from 'vitest';
@@ -146,6 +146,22 @@ describe('ReceptionPage two-step confirmation', () => {
     expect(await screen.findByRole('button', { name: /Registrando/ })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Editar datos' })).toBeDisabled();
     release();
+    await screen.findByRole('heading', { name: 'Paquete recibido' });
+    expect(bodies).toHaveLength(1);
+  });
+
+  it('registers once when the confirm button is clicked twice before the page re-renders', async () => {
+    const bodies: Record<string, unknown>[] = [];
+    await reachDetails(receiveHandler(undefined, (b) => bodies.push(b)));
+    await enterWeight('2,5');
+    await reviewReception();
+    const confirm = await screen.findByRole('button', { name: 'Confirmar recepción' });
+
+    act(() => {
+      confirm.click();
+      confirm.click();
+    });
+
     await screen.findByRole('heading', { name: 'Paquete recibido' });
     expect(bodies).toHaveLength(1);
   });

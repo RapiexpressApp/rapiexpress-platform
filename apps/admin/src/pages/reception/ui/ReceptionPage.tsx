@@ -1,5 +1,5 @@
 import { Heading, Stack, Text } from '@chakra-ui/react';
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 
 import { classifyReceiveError } from '@/features/reception/model/reception-errors';
 import {
@@ -32,31 +32,46 @@ function ReceptionPage() {
   const [state, dispatch] = useReducer(receptionReducer, INITIAL_RECEPTION_STATE);
   const lookup = useReceptionLookup();
   const receive = useReceivePackage();
+  const lookupInFlight = useRef(false);
+  const receiveInFlight = useRef(false);
 
   useEffect(() => {
     document.title = 'Recepción · Rapiexpress';
   }, []);
 
   function runLookup(trackingNumber: string) {
+    if (lookupInFlight.current) return;
+    lookupInFlight.current = true;
+
     lookup.mutate(trackingNumber, {
-      onSuccess: (result) => dispatch({ type: 'looked-up', trackingNumber, lookup: result }),
+      onSuccess: (result) => {
+        lookupInFlight.current = false;
+        dispatch({ type: 'looked-up', trackingNumber, lookup: result });
+      },
+      onError: () => {
+        lookupInFlight.current = false;
+      },
     });
   }
 
   function restart() {
+    lookupInFlight.current = false;
+    receiveInFlight.current = false;
     receive.reset();
     lookup.reset();
     dispatch({ type: 'restarted' });
   }
 
   function handleScan(trackingNumber: string) {
+    if (lookupInFlight.current) return;
     receive.reset();
     dispatch({ type: 'restarted' });
     runLookup(trackingNumber);
   }
 
   function handleConfirm() {
-    if (receive.isPending || !state.trackingNumber || !state.target || !state.values) return;
+    if (receiveInFlight.current || !state.trackingNumber || !state.target || !state.values) return;
+    receiveInFlight.current = true;
 
     receive.mutate(
       buildReceivePayload({
@@ -66,8 +81,14 @@ function ReceptionPage() {
         confirmDuplicate: state.duplicate?.confirmed,
       }),
       {
-        onSuccess: (received) => dispatch({ type: 'received', received }),
-        onError: handleReceiveFailure,
+        onSuccess: (received) => {
+          receiveInFlight.current = false;
+          dispatch({ type: 'received', received });
+        },
+        onError: (error) => {
+          receiveInFlight.current = false;
+          handleReceiveFailure(error);
+        },
       }
     );
   }
