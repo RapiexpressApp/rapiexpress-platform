@@ -130,6 +130,35 @@ describe('PreAlertsPage cancel', () => {
     expect(list.queryByRole('button', { name: /^Cancelar pre-alerta/ })).not.toBeInTheDocument();
   });
 
+  it('steps back to the previous page when cancelling the only row of the last page', async () => {
+    const requests: URL[] = [];
+    let cancelledOne = false;
+    server.use(
+      http.get('*/api/me/purchases', ({ request }) => {
+        const url = new URL(request.url);
+        requests.push(url);
+        const page = Number(url.searchParams.get('page'));
+        const total = cancelledOne ? 10 : 11;
+        const items = page === 1 ? [received] : cancelledOne ? [] : [pending];
+        return HttpResponse.json({ items, page, pageSize: 10, total });
+      }),
+      http.post('*/api/me/purchases/:id/cancel', () => {
+        cancelledOne = true;
+        return HttpResponse.json({ ...pending, status: 'CANCELLED' });
+      })
+    );
+    renderPreAlertsPage('/pre-alerts?page=2');
+    const dialog = await openConfirmation();
+
+    await confirm(dialog);
+
+    expect(await screen.findByText('Pre-alerta cancelada.')).toBeInTheDocument();
+    expect(await screen.findByText('Página 1 de 1')).toBeInTheDocument();
+    expect(screen.queryByText(/No tienes pre-alertas/)).not.toBeInTheDocument();
+    expect(screen.getByTestId('search')).toHaveTextContent(/^$/);
+    expect(requests.at(-1)?.searchParams.get('page')).toBe('1');
+  });
+
   it('explains that it was already received or cancelled and refreshes the list', async () => {
     let listCalls = 0;
     server.use(

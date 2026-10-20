@@ -266,6 +266,54 @@ describe('PreAlertsPage pagination', () => {
   });
 });
 
+describe('PreAlertsPage out-of-range page', () => {
+  function pagedHandler(total: number, requests: URL[]) {
+    return http.get('*/api/me/purchases', ({ request }) => {
+      const url = new URL(request.url);
+      requests.push(url);
+      const page = Number(url.searchParams.get('page'));
+      const lastPage = Math.max(1, Math.ceil(total / 10));
+      const items = page <= lastPage && total > 0 ? [purchaseFixture({ id: `p${page}` })] : [];
+      return HttpResponse.json({ items, page, pageSize: 10, total });
+    });
+  }
+
+  it('moves to the last page instead of showing an empty state', async () => {
+    const requests: URL[] = [];
+    server.use(pagedHandler(25, requests));
+
+    renderPreAlertsPage('/pre-alerts?page=99');
+
+    expect(await screen.findByText('Página 3 de 3')).toBeInTheDocument();
+    expect(screen.getByTestId('search')).toHaveTextContent('?page=3');
+    expect(requests.at(-1)?.searchParams.get('page')).toBe('3');
+    expect(screen.queryByText(/No tienes pre-alertas/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Aún no tienes pre-alertas/)).not.toBeInTheDocument();
+  });
+
+  it('moves to the first page and clears the param when there is nothing at all', async () => {
+    const requests: URL[] = [];
+    server.use(pagedHandler(0, requests));
+
+    renderPreAlertsPage('/pre-alerts?page=3');
+
+    expect(await screen.findByText(/Aún no tienes pre-alertas/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByTestId('search')).toHaveTextContent(/^$/));
+  });
+
+  it('keeps the filter when it moves to the last page', async () => {
+    const requests: URL[] = [];
+    server.use(pagedHandler(12, requests));
+
+    renderPreAlertsPage('/pre-alerts?status=RECEIVED&page=7');
+
+    expect(await screen.findByText('Página 2 de 2')).toBeInTheDocument();
+    expect(requests.at(-1)?.searchParams.get('status')).toBe('RECEIVED');
+    expect(screen.getByTestId('search')).toHaveTextContent('status=RECEIVED');
+    expect(screen.getByTestId('search')).toHaveTextContent('page=2');
+  });
+});
+
 describe('PreAlertsPage route', () => {
   it('is reachable inside the authenticated layout', async () => {
     server.use(refreshOkHandler(), meHandler(), purchasesListHandler());

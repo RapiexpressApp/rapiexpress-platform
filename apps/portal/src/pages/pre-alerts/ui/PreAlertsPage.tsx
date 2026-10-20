@@ -41,6 +41,16 @@ function PreAlertsPage() {
   }, []);
 
   const items = purchases.data?.items ?? [];
+  const lastPage = Math.max(1, Math.ceil((purchases.data?.total ?? 0) / pageSize));
+  const outOfRange =
+    purchases.data !== undefined &&
+    !purchases.isPlaceholderData &&
+    items.length === 0 &&
+    page > lastPage;
+
+  useEffect(() => {
+    if (outOfRange) update({ page: lastPage > 1 ? String(lastPage) : null }, { replace: true });
+  }, [outOfRange, lastPage, update]);
 
   function openCreate() {
     setNotice(null);
@@ -135,7 +145,7 @@ function PreAlertsPage() {
 
       <ListStatus
         buttonSize="lg"
-        isPending={purchases.isPending}
+        isPending={purchases.isPending || outOfRange}
         isError={purchases.isError}
         isEmpty={items.length === 0}
         errorMessage={LOAD_PURCHASES_FAILED_MESSAGE}
