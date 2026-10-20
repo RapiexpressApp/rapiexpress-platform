@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it, vi } from 'vitest';
@@ -307,6 +307,46 @@ describe('PackageDetailPage states', () => {
 
   it('shows the not found state when the package does not exist', async () => {
     renderPackageDetailPage({}, packageNotFoundHandler());
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'No encontramos este paquete' })
+    ).toBeInTheDocument();
+  });
+
+  it('keeps showing the package when a later refresh fails', async () => {
+    let calls = 0;
+    const { queryClient } = renderPackageDetailPage(
+      {},
+      http.get('*/api/packages/:id', () => {
+        calls += 1;
+        return calls === 1
+          ? HttpResponse.json(packageStaffDetailFixture())
+          : new HttpResponse(null, { status: 500 });
+      })
+    );
+    await screen.findByRole('heading', { level: 1, name: 'WH-000042' });
+
+    await queryClient.invalidateQueries();
+
+    await waitFor(() => expect(calls).toBe(2));
+    expect(screen.getByRole('heading', { level: 1, name: 'WH-000042' })).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('shows the not found state when a refresh finds the package gone', async () => {
+    let calls = 0;
+    const { queryClient } = renderPackageDetailPage(
+      {},
+      http.get('*/api/packages/:id', () => {
+        calls += 1;
+        return calls === 1
+          ? HttpResponse.json(packageStaffDetailFixture())
+          : HttpResponse.json({ code: 'PACKAGE_NOT_FOUND' }, { status: 404 });
+      })
+    );
+    await screen.findByRole('heading', { level: 1, name: 'WH-000042' });
+
+    await queryClient.invalidateQueries();
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'No encontramos este paquete' })

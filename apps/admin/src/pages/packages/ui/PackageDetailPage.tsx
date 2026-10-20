@@ -153,10 +153,9 @@ function PackageDetailPage() {
   }, [title]);
 
   if (notFound) return <PackageNotFound />;
+  if (pkg.data) return <PackageDetail detail={pkg.data} />;
   if (pkg.isError) return <PackageLoadError onRetry={() => void pkg.refetch()} />;
-  if (!pkg.data) return <PackageDetailSkeleton />;
-
-  return <PackageDetail detail={pkg.data} />;
+  return <PackageDetailSkeleton />;
 }
 
 export default PackageDetailPage;
