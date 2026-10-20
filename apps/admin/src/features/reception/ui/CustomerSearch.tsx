@@ -6,7 +6,11 @@ import ListStatus from '@rapiexpress/ui/list-status';
 import { useDebouncedValue } from '@rapiexpress/ui/use-debounced-value';
 import { useState } from 'react';
 
-import { isSearchable, useReceptionCustomerSearch } from '../model/use-reception-customer-search';
+import {
+  isSearchable,
+  RECEPTION_CUSTOMER_LIMIT,
+  useReceptionCustomerSearch,
+} from '../model/use-reception-customer-search';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const MAX_SEARCH_LENGTH = 100;
@@ -84,6 +88,12 @@ function CustomerSearch({ onChoose }: CustomerSearchProps) {
               </li>
             ))}
           </Stack>
+          {customers.length >= RECEPTION_CUSTOMER_LIMIT && (
+            <Text fontSize="sm" color="slate.600" mt={2}>
+              Mostramos los primeros {RECEPTION_CUSTOMER_LIMIT} clientes. Escribe más para afinar la
+              búsqueda.
+            </Text>
+          )}
         </ListStatus>
       )}
     </Stack>

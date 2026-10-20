@@ -4,6 +4,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { packagesApi } from '@/shared/api/api';
 
+export const RECEPTION_CUSTOMER_LIMIT = 10;
+
 export function isSearchable(search: string): boolean {
   return receptionCustomerSearchSchema.safeParse(search).success;
 }

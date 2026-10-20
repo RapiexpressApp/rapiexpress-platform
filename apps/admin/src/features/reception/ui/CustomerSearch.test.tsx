@@ -128,6 +128,40 @@ describe('CustomerSearch', () => {
     expect(screen.queryByRole('button', { name: /Jane Doe/ })).toBeNull();
   });
 
+  describe('when the backend limit may have cut the results', () => {
+    const customers = (count: number) =>
+      Array.from({ length: count }, (_, index) =>
+        customerSummaryFixture({
+          id: `00000000-0000-4000-8000-${String(index).padStart(12, '0')}`,
+          name: 'Jane',
+          lastName: `Doe ${index}`,
+          lockerCode: `MI-${String(index).padStart(5, '0')}`,
+        })
+      );
+
+    it('asks the operator to refine the search when the list is full', async () => {
+      server.use(customerSearchHandler(customers(10)));
+      const { input } = renderSearch();
+
+      await userEvent.type(input, 'jane');
+
+      expect(await screen.findAllByRole('button', { name: /Jane Doe/ })).toHaveLength(10);
+      expect(
+        screen.getByText('Mostramos los primeros 10 clientes. Escribe más para afinar la búsqueda.')
+      ).toBeInTheDocument();
+    });
+
+    it('stays quiet when fewer results than the limit came back', async () => {
+      server.use(customerSearchHandler(customers(9)));
+      const { input } = renderSearch();
+
+      await userEvent.type(input, 'jane');
+
+      expect(await screen.findAllByRole('button', { name: /Jane Doe/ })).toHaveLength(9);
+      expect(screen.queryByText(/Escribe más para afinar/)).toBeNull();
+    });
+  });
+
   it('shows an empty state when nobody matches', async () => {
     server.use(customerSearchHandler([]));
     const { input } = renderSearch();
