@@ -31,28 +31,23 @@ function DuplicateWarning({ packages, onConfirm, onCancel }: DuplicateWarningPro
           </Text>
           <Stack as="ul" gap={2} listStyleType="none">
             {packages.map((item) => (
-              <Flex
-                as="li"
-                key={item.id}
-                align="center"
-                wrap="wrap"
-                columnGap={3}
-                rowGap={1}
-                fontSize="sm"
-              >
-                <Text as="span" fontFamily="mono" fontWeight="semibold" color="slate.900">
-                  {item.warehouseNumber}
-                </Text>
-                <Badge variant="subtle" colorPalette="gray">
-                  {PACKAGE_STATUS_LABEL[item.status]}
-                </Badge>
-                <Text as="span" color="slate.600" fontVariantNumeric="tabular-nums">
-                  {formatDate(item.createdAt)}
-                </Text>
-                <Text as="span" color="slate.600">
-                  {item.customerId === null ? 'Sin asignar' : 'Asignado'}
-                </Text>
-              </Flex>
+              <Stack as="li" key={item.id} gap={0.5} fontSize="sm">
+                <Flex align="center" columnGap={3}>
+                  <Text as="span" fontFamily="mono" fontWeight="semibold" color="slate.900">
+                    {item.warehouseNumber}
+                  </Text>
+                  <Badge variant="subtle" colorPalette="gray">
+                    {PACKAGE_STATUS_LABEL[item.status]}
+                  </Badge>
+                </Flex>
+                <Flex columnGap={2} color="slate.600" fontVariantNumeric="tabular-nums">
+                  <Text as="span">{formatDate(item.createdAt)}</Text>
+                  <Text as="span" aria-hidden="true">
+                    ·
+                  </Text>
+                  <Text as="span">{item.customerId === null ? 'Sin asignar' : 'Asignado'}</Text>
+                </Flex>
+              </Stack>
             ))}
           </Stack>
         </Alert.Content>
