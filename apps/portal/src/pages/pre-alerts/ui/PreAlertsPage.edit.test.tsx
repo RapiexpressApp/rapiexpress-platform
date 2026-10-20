@@ -146,6 +146,48 @@ describe('PreAlertsPage edit', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
+  it.each([
+    ['trailing spaces in the store', 'Tienda', 'Amazon  '],
+    ['a guide in another case with hyphens', 'Guía de seguimiento', 'tba-123456789'],
+    ['a decimal point instead of the comma', 'Valor declarado (USD)', '120.5'],
+    ['an extra zero in the weight', 'Peso estimado (lb)', '1,50'],
+  ])(
+    'explains that nothing changed when the edit only differs by %s',
+    async (_name, label, typed) => {
+      let patches = 0;
+      server.use(
+        purchasesListHandler([pending]),
+        http.patch('*/api/me/purchases/:id', () => {
+          patches += 1;
+          return HttpResponse.json(pending);
+        })
+      );
+      renderPreAlertsPage();
+      const form = await openEdit();
+      await userEvent.clear(form.getByLabelText(label));
+      await userEvent.type(form.getByLabelText(label), typed);
+
+      await save(form);
+
+      expect(await form.findByRole('alert')).toHaveTextContent(
+        'Modifica al menos un campo para guardar los cambios.'
+      );
+      expect(patches).toBe(0);
+    }
+  );
+
+  it('clears the no-changes message as soon as a field changes', async () => {
+    server.use(purchasesListHandler([pending]));
+    renderPreAlertsPage();
+    const form = await openEdit();
+    await save(form);
+    await form.findByRole('alert');
+
+    await userEvent.type(form.getByLabelText('Tienda'), 's');
+
+    await waitFor(() => expect(form.queryByRole('alert')).not.toBeInTheDocument());
+  });
+
   it('validates before the request', async () => {
     let patches = 0;
     server.use(

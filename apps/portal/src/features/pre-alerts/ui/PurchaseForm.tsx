@@ -53,7 +53,7 @@ function PurchaseForm({ purchase, onSaved, onNotPending, onCancel }: PurchaseFor
     handleSubmit,
     control,
     setError,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm<PurchaseFormInput, unknown, PurchaseFormValues>({
     resolver: zodResolver(purchaseFormSchema),
     defaultValues: purchase ? toFormValues(purchase) : EMPTY_VALUES,
@@ -88,7 +88,6 @@ function PurchaseForm({ purchase, onSaved, onNotPending, onCancel }: PurchaseFor
     savePurchase.isError &&
     !isDuplicatePurchaseError(savePurchase.error) &&
     !isPurchaseNotPendingError(savePurchase.error);
-  const noChangesError = submittedWithoutChanges && !isDirty;
 
   return (
     <chakra.form
@@ -96,6 +95,7 @@ function PurchaseForm({ purchase, onSaved, onNotPending, onCancel }: PurchaseFor
       display="flex"
       flexDirection="column"
       gap={4}
+      onChange={() => setSubmittedWithoutChanges(false)}
       onSubmit={handleSubmit(onSubmit)}
     >
       <AuthField label="Tienda" error={errors.store?.message}>
@@ -177,9 +177,9 @@ function PurchaseForm({ purchase, onSaved, onNotPending, onCancel }: PurchaseFor
         <CategoryGuide id={guideId} selected={category} />
       </AuthField>
 
-      {(genericError || noChangesError) && (
+      {(genericError || submittedWithoutChanges) && (
         <Text role="alert" fontSize="sm" color="red.500">
-          {noChangesError
+          {submittedWithoutChanges
             ? NO_CHANGES_MESSAGE
             : isEdit
               ? UPDATE_PURCHASE_FAILED_MESSAGE
