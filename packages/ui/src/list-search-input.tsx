@@ -1,8 +1,8 @@
 import { Input } from '@chakra-ui/react';
-import { inputStyles } from '@rapiexpress/ui/auth-form-styles';
 import { useEffect, useState } from 'react';
 
-import { useDebouncedValue } from '@/shared/lib/use-debounced-value';
+import { inputStyles } from './auth-form-styles.ts';
+import { useDebouncedValue } from './use-debounced-value.ts';
 
 const SEARCH_DEBOUNCE_MS = 300;
 

@@ -1,12 +1,12 @@
 import { Heading, Stack } from '@chakra-ui/react';
+import ListPagination from '@rapiexpress/ui/list-pagination';
+import ListSearchInput from '@rapiexpress/ui/list-search-input';
+import ListStatus from '@rapiexpress/ui/list-status';
 import { useEffect } from 'react';
 
 import { useCustomers } from '@/features/customers/model/use-customers';
 import CustomersTable from '@/features/customers/ui/CustomersTable';
 import { useListParams } from '@/shared/lib/use-list-params';
-import ListPagination from '@/shared/ui/ListPagination';
-import ListSearchInput from '@/shared/ui/ListSearchInput';
-import ListStatus from '@/shared/ui/ListStatus';
 
 function CustomersPage() {
   const { page, pageSize, search, setSearch, setPage } = useListParams();
