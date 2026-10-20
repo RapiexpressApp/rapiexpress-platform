@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildPackageListParams, parsePackageFilters } from './package-list-params';
+import { buildPackageListParams, filtersToQuery, parsePackageFilters } from './package-list-params';
 
 describe('parsePackageFilters', () => {
   it('reads every filter from the URL', () => {
@@ -69,5 +69,27 @@ describe('buildPackageListParams', () => {
 
     expect(params).not.toHaveProperty('unassigned');
     expect(params).not.toHaveProperty('hasIncident');
+  });
+});
+
+describe('filtersToQuery', () => {
+  it('writes a status and switched on flags', () => {
+    expect(filtersToQuery({ status: 'AT_AGENCY', unassigned: true, hasIncident: true })).toEqual({
+      status: 'AT_AGENCY',
+      unassigned: 'true',
+      hasIncident: 'true',
+    });
+  });
+
+  it('clears the params of the filters that are switched off', () => {
+    expect(filtersToQuery({ status: null, unassigned: false, hasIncident: false })).toEqual({
+      status: null,
+      unassigned: null,
+      hasIncident: null,
+    });
+  });
+
+  it('only touches the filters that changed', () => {
+    expect(filtersToQuery({ hasIncident: true })).toEqual({ hasIncident: 'true' });
   });
 });

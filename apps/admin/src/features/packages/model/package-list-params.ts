@@ -37,3 +37,11 @@ export function buildPackageListParams(
     ...(hasIncident && { hasIncident: true }),
   };
 }
+
+export function filtersToQuery(changes: Partial<PackageFilters>): Record<string, string | null> {
+  const query: Record<string, string | null> = {};
+  if ('status' in changes) query.status = changes.status ?? null;
+  if ('unassigned' in changes) query.unassigned = changes.unassigned ? 'true' : null;
+  if ('hasIncident' in changes) query.hasIncident = changes.hasIncident ? 'true' : null;
+  return query;
+}
