@@ -16,8 +16,11 @@ import TargetStep from './TargetStep';
 
 function renderStep(lookup = receptionLookupFixture()) {
   const onChoose = vi.fn();
-  renderWithProviders(<TargetStep lookup={lookup} onChoose={onChoose} />, { withSession: false });
-  return { onChoose };
+  const onRestart = vi.fn();
+  renderWithProviders(<TargetStep lookup={lookup} onChoose={onChoose} onRestart={onRestart} />, {
+    withSession: false,
+  });
+  return { onChoose, onRestart };
 }
 
 describe('TargetStep without a matching purchase', () => {
@@ -49,6 +52,15 @@ describe('TargetStep without a matching purchase', () => {
 
     expect(onChoose).toHaveBeenCalledWith({ kind: 'unassigned' });
   });
+
+  it('lets the operator scan another guide when the first one was a typo', async () => {
+    const { onChoose, onRestart } = renderStep();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Escanear otra guía' }));
+
+    expect(onRestart).toHaveBeenCalledTimes(1);
+    expect(onChoose).not.toHaveBeenCalled();
+  });
 });
 
 describe('TargetStep with matching purchases', () => {
@@ -61,5 +73,18 @@ describe('TargetStep with matching purchases', () => {
 
     expect(onChoose).toHaveBeenCalledWith({ kind: 'purchase', match: second });
     expect(screen.queryByRole('searchbox')).toBeNull();
+  });
+
+  it('lets the operator scan another guide instead of picking one', async () => {
+    const first = receptionMatchFixture();
+    const second = receptionMatchFixture({ purchaseId: OTHER_PURCHASE_ID, store: 'Shein' });
+    const { onChoose, onRestart } = renderStep(
+      receptionLookupFixture({ matches: [first, second] })
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Escanear otra guía' }));
+
+    expect(onRestart).toHaveBeenCalledTimes(1);
+    expect(onChoose).not.toHaveBeenCalled();
   });
 });

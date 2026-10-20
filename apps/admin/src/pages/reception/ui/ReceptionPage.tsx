@@ -139,6 +139,7 @@ function ReceptionPage() {
         <TargetStep
           lookup={state.lookup}
           onChoose={(target) => dispatch({ type: 'target-chosen', target })}
+          onRestart={restart}
         />
       );
     }

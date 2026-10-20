@@ -9,15 +9,25 @@ import MatchPicker from './MatchPicker';
 interface TargetStepProps {
   lookup: ReceptionLookup;
   onChoose: (target: ReceptionTarget) => void;
+  onRestart: () => void;
 }
 
-function TargetStep({ lookup, onChoose }: TargetStepProps) {
+function TargetStep({ lookup, onChoose, onRestart }: TargetStepProps) {
+  const rescan = (
+    <Button variant="ghost" height={11} px={4} alignSelf="flex-start" onClick={onRestart}>
+      Escanear otra guía
+    </Button>
+  );
+
   if (lookup.matches.length > 0) {
     return (
-      <MatchPicker
-        matches={lookup.matches}
-        onChoose={(match) => onChoose({ kind: 'purchase', match })}
-      />
+      <Stack gap={5}>
+        <MatchPicker
+          matches={lookup.matches}
+          onChoose={(match) => onChoose({ kind: 'purchase', match })}
+        />
+        {rescan}
+      </Stack>
     );
   }
 
@@ -49,6 +59,8 @@ function TargetStep({ lookup, onChoose }: TargetStepProps) {
           Operaciones podrá asignarle un cliente después.
         </Text>
       </Stack>
+
+      {rescan}
     </Stack>
   );
 }

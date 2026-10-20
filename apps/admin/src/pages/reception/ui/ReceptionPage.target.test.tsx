@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
@@ -17,6 +17,7 @@ import {
 import {
   confirmReception,
   enterWeight,
+  getGuideInput,
   renderReceptionPage,
   reviewReception,
   scanGuide,
@@ -199,5 +200,37 @@ describe('ReceptionPage without a matching purchase', () => {
 
     expect(await screen.findByRole('searchbox', { name: 'Buscar cliente' })).toBeInTheDocument();
     expect(screen.getByText('Paso 2 de 4 · Destino del bulto')).toBeInTheDocument();
+  });
+});
+
+describe('ReceptionPage rescanning from the destination step', () => {
+  it.each([
+    ['no purchase matches', receptionLookupFixture()],
+    [
+      'several purchases match',
+      receptionLookupFixture({
+        matches: [
+          receptionMatchFixture(),
+          receptionMatchFixture({ purchaseId: OTHER_PURCHASE_ID, store: 'Shein' }),
+        ],
+      }),
+    ],
+  ])('lets the operator scan a corrected guide when %s', async (_label, lookup) => {
+    const requests: URL[] = [];
+    renderReceptionPage(lookupHandler(lookup, (url) => requests.push(url)));
+    await scanGuide('TBA00000001');
+    await screen.findByText('Paso 2 de 4 · Destino del bulto');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Escanear otra guía' }));
+
+    await waitFor(() => expect(getGuideInput()).toHaveFocus());
+    expect(getGuideInput()).toHaveValue('');
+    expect(screen.getByText('Paso 1 de 4 · Escanear guía')).toBeInTheDocument();
+    await scanGuide(TRACKING_NUMBER);
+    await screen.findByText('Paso 2 de 4 · Destino del bulto');
+    expect(requests.map((url) => url.searchParams.get('trackingNumber'))).toEqual([
+      'TBA00000001',
+      TRACKING_NUMBER,
+    ]);
   });
 });
