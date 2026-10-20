@@ -113,6 +113,34 @@ describe('ListStatus', () => {
     expect(screen.queryByText('contenido')).not.toBeInTheDocument();
   });
 
+  it('offers the empty action next to the empty message', async () => {
+    const onCreate = vi.fn();
+    renderWithProviders(
+      <ListStatus
+        {...baseProps}
+        isEmpty
+        emptyAction={<button onClick={onCreate}>Crear la primera</button>}
+      >
+        <p>contenido</p>
+      </ListStatus>,
+      { withSession: false }
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Crear la primera' }));
+    expect(onCreate).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not render the empty action while there is data', () => {
+    renderWithProviders(
+      <ListStatus {...baseProps} emptyAction={<button>Crear la primera</button>}>
+        <p>contenido</p>
+      </ListStatus>,
+      { withSession: false }
+    );
+
+    expect(screen.queryByRole('button', { name: 'Crear la primera' })).not.toBeInTheDocument();
+  });
+
   it('renders the children once data is available', () => {
     renderWithProviders(
       <ListStatus {...baseProps}>

@@ -5,10 +5,18 @@ interface ListPaginationProps {
   pageSize: number;
   total: number;
   itemCount: number;
+  buttonSize?: 'sm' | 'lg';
   onPageChange: (page: number) => void;
 }
 
-function ListPagination({ page, pageSize, total, itemCount, onPageChange }: ListPaginationProps) {
+function ListPagination({
+  page,
+  pageSize,
+  total,
+  itemCount,
+  buttonSize = 'sm',
+  onPageChange,
+}: ListPaginationProps) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const from = itemCount === 0 ? 0 : (page - 1) * pageSize + 1;
   const to = (page - 1) * pageSize + itemCount;
@@ -20,7 +28,7 @@ function ListPagination({ page, pageSize, total, itemCount, onPageChange }: List
       </Text>
       <Flex align="center" gap={3}>
         <Button
-          size="sm"
+          size={buttonSize}
           variant="outline"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
@@ -31,7 +39,7 @@ function ListPagination({ page, pageSize, total, itemCount, onPageChange }: List
           {`Página ${page} de ${totalPages}`}
         </Text>
         <Button
-          size="sm"
+          size={buttonSize}
           variant="outline"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
