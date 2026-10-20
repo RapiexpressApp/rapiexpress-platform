@@ -17,6 +17,9 @@ import {
   type PackageStatus,
   type ReceivePackagePayload,
   receivePackagePayloadSchema,
+  type ReceptionCustomers,
+  receptionCustomerSearchSchema,
+  receptionCustomersSchema,
   type ReceptionLookup,
   receptionLookupSchema,
   type ResolveIncidentPayload,
@@ -34,6 +37,13 @@ export function createPackagesApi({ apiClient }: ApiClient) {
         params: { trackingNumber: trackingNumberSchema.parse(trackingNumber) },
       });
       return receptionLookupSchema.parse(data);
+    },
+
+    async searchReceptionCustomers(search: string): Promise<ReceptionCustomers> {
+      const { data } = await apiClient.get('/packages/reception/customers', {
+        params: { search: receptionCustomerSearchSchema.parse(search) },
+      });
+      return receptionCustomersSchema.parse(data);
     },
 
     async receive(payload: ReceivePackagePayload): Promise<PackageDetail> {

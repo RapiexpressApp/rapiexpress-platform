@@ -43,5 +43,7 @@ export const queryKeys = {
     list: (params: PackageListParams) => [...packagesRoot, 'list', params] as const,
     detail: (id: string) => [...packagesRoot, 'detail', id] as const,
     lookup: (trackingNumber: string) => [...packagesRoot, 'lookup', trackingNumber] as const,
+    receptionCustomers: (search: string) =>
+      [...packagesRoot, 'receptionCustomers', search] as const,
   },
 };

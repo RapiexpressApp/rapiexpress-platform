@@ -129,6 +129,14 @@ export const receptionLookupSchema = z.object({
   matches: z.array(receptionMatchSchema),
 });
 
+export const receptionCustomerSearchSchema = z
+  .string({ required_error: 'Ingresa un nombre o casillero.' })
+  .trim()
+  .min(2, { message: 'Escribe al menos 2 caracteres.' })
+  .max(100, { message: 'La búsqueda no puede superar los 100 caracteres.' });
+
+export const receptionCustomersSchema = z.array(customerSummarySchema);
+
 export const packageLabelSchema = z.object({
   warehouseNumber: z.string(),
   customerName: z.string().nullable(),
@@ -233,6 +241,7 @@ export type ResolveIncidentPayload = z.input<typeof resolveIncidentPayloadSchema
 export type ExistingPackage = z.infer<typeof existingPackageSchema>;
 export type ReceptionMatch = z.infer<typeof receptionMatchSchema>;
 export type ReceptionLookup = z.infer<typeof receptionLookupSchema>;
+export type ReceptionCustomers = z.infer<typeof receptionCustomersSchema>;
 export type PackageLabel = z.infer<typeof packageLabelSchema>;
 export type PackageDetail = z.infer<typeof packageDetailSchema>;
 export type PackageListItem = z.infer<typeof packageListItemSchema>;
