@@ -14,6 +14,7 @@ import { useMyPurchases } from '@/features/pre-alerts/model/use-my-purchases';
 import PurchaseFormDialog from '@/features/pre-alerts/ui/PurchaseFormDialog';
 import PurchasesList from '@/features/pre-alerts/ui/PurchasesList';
 import PurchaseStatusFilter from '@/features/pre-alerts/ui/PurchaseStatusFilter';
+import { useDialogTarget } from '@/shared/lib/use-dialog-target';
 import { useListParams } from '@/shared/lib/use-list-params';
 
 import PreAlertsNotice from './PreAlertsNotice';
@@ -25,15 +26,10 @@ interface Notice {
   message: string;
 }
 
-interface EditTarget {
-  purchase: Purchase;
-  open: boolean;
-}
-
 function PreAlertsPage() {
   const { page, pageSize, searchParams, setPage, update } = useListParams();
   const [notice, setNotice] = useState<Notice | null>(null);
-  const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
+  const editDialog = useDialogTarget<Purchase>();
   const status = purchaseStatusSchema.safeParse(searchParams.get('status')).data ?? null;
   const purchases = useMyPurchases({ page, pageSize, ...(status ? { status } : {}) });
   const creating = searchParams.get(NEW_PARAM) === '1';
@@ -60,20 +56,16 @@ function PreAlertsPage() {
 
   function openEdit(purchase: Purchase) {
     setNotice(null);
-    setEditTarget({ purchase, open: true });
-  }
-
-  function closeEdit() {
-    setEditTarget((current) => current && { ...current, open: false });
+    editDialog.show(purchase);
   }
 
   function handleEdited() {
-    closeEdit();
+    editDialog.hide();
     setNotice({ status: 'success', message: 'Cambios guardados.' });
   }
 
   function handleNotPending() {
-    closeEdit();
+    editDialog.hide();
     setNotice({ status: 'warning', message: PURCHASE_NOT_PENDING_MESSAGE });
   }
 
@@ -187,9 +179,9 @@ function PreAlertsPage() {
 
       <PurchaseFormDialog open={creating} onClose={closeCreate} onSaved={handleCreated} />
       <PurchaseFormDialog
-        open={editTarget?.open ?? false}
-        purchase={editTarget?.purchase}
-        onClose={closeEdit}
+        open={editDialog.open}
+        purchase={editDialog.target}
+        onClose={editDialog.hide}
         onSaved={handleEdited}
         onNotPending={handleNotPending}
       />
