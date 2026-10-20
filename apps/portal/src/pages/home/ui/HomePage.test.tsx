@@ -1,9 +1,11 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 
 import { profileFixture } from '@/test/auth-handlers';
 import { renderHomePage } from '@/test/home-page';
+import { myPackageFixture, myPackagesListHandler } from '@/test/packages-handlers';
 
 describe('HomePage', () => {
   it('greets the customer by first name and shows the real locker code', async () => {
@@ -51,6 +53,47 @@ describe('HomePage', () => {
 
     expect(screen.getByRole('status', { name: 'Cargando perfil' })).toBeInTheDocument();
     expect(screen.queryByText(/Hola,/)).not.toBeInTheDocument();
+
+    release();
+    expect(await screen.findByText('Hola, Jane')).toBeInTheDocument();
+  });
+
+  it('keeps the rest of the page when the profile fails and retries it', async () => {
+    let calls = 0;
+    renderHomePage(
+      http.get('*/api/auth/me', () => {
+        calls += 1;
+        return calls === 1
+          ? new HttpResponse(null, { status: 500 })
+          : HttpResponse.json(profileFixture);
+      }),
+      myPackagesListHandler([myPackageFixture()])
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('No pudimos cargar tu perfil.');
+    expect(await screen.findByRole('link', { name: 'WH-000123' })).toBeInTheDocument();
+    expect(screen.queryByText(/Hola,/)).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
+    expect(await screen.findByText('Hola, Jane')).toBeInTheDocument();
+    expect(screen.queryByText('No pudimos cargar tu perfil.')).not.toBeInTheDocument();
+  });
+
+  it('loads the shipments while the profile is still pending', async () => {
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    renderHomePage(
+      http.get('*/api/auth/me', async () => {
+        await gate;
+        return HttpResponse.json(profileFixture);
+      }),
+      myPackagesListHandler([myPackageFixture()])
+    );
+
+    expect(await screen.findByRole('link', { name: 'WH-000123' })).toBeInTheDocument();
+    expect(screen.getByRole('status', { name: 'Cargando perfil' })).toBeInTheDocument();
 
     release();
     expect(await screen.findByText('Hola, Jane')).toBeInTheDocument();
