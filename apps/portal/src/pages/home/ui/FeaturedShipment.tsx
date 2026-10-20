@@ -3,9 +3,10 @@ import { focusRing } from '@rapiexpress/ui/interaction';
 import { ArrowRight, Headphones } from 'lucide-react';
 import { Link } from 'react-router';
 
+import ShipmentTimeline from '@/features/shipments/ui/ShipmentTimeline';
+
 import { formatWeight } from '../model/shipment-format';
 import type { FeaturedShipmentView } from '../model/types';
-import ShipmentTimeline from './ShipmentTimeline';
 import StatusIndicator from './StatusIndicator';
 
 interface FeaturedShipmentProps {
