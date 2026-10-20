@@ -4,6 +4,7 @@ import AdminLayout from '@/app/layouts/AdminLayout';
 import CustomersPage from '@/pages/customers/ui/CustomersPage';
 import LoginPage from '@/pages/login/ui/LoginPage';
 import NotFoundPage from '@/pages/not-found/ui/NotFoundPage';
+import ReceptionPage from '@/pages/reception/ui/ReceptionPage';
 import UsersPage from '@/pages/users/ui/UsersPage';
 
 import GuestOnly from './GuestOnly';
@@ -22,6 +23,7 @@ export function AppRoutes() {
             <Route path="/usuarios" element={<UsersPage />} />
           </Route>
           <Route path="/clientes" element={<CustomersPage />} />
+          <Route path="/recepcion" element={<ReceptionPage />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFoundPage />} />
