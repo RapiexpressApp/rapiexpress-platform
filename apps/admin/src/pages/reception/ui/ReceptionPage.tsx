@@ -93,6 +93,7 @@ function ReceptionPage() {
   }
 
   const step = getStepNumber(state);
+  const receiveFailure = receive.isError ? classifyReceiveError(receive.error) : null;
 
   return (
     <Stack gap={6} maxW="2xl">
@@ -164,7 +165,7 @@ function ReceptionPage() {
           values={state.values}
           duplicateConfirmed={state.duplicate?.confirmed === true}
           pending={receive.isPending}
-          errorMessage={receive.isError ? classifyReceiveError(receive.error).message : undefined}
+          errorMessage={receiveFailure?.kind === 'generic' ? receiveFailure.message : undefined}
           onConfirm={handleConfirm}
           onEdit={handleEdit}
         />
