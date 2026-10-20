@@ -12,12 +12,16 @@ import { useCancelPurchase } from '../model/use-cancel-purchase';
 interface CancelPurchaseDialogProps {
   open: boolean;
   purchase?: Purchase;
+  finalFocusEl?: () => HTMLElement | null;
   onClose: () => void;
   onCancelled: () => void;
   onNotPending: () => void;
 }
 
-interface CancelPurchasePanelProps extends Omit<CancelPurchaseDialogProps, 'open' | 'purchase'> {
+interface CancelPurchasePanelProps extends Omit<
+  CancelPurchaseDialogProps,
+  'open' | 'purchase' | 'finalFocusEl'
+> {
   purchase: Purchase;
   keepRef: RefObject<HTMLButtonElement | null>;
   onBusyChange: (busy: boolean) => void;
@@ -93,6 +97,7 @@ function CancelPurchasePanel({
 function CancelPurchaseDialog({
   open,
   purchase,
+  finalFocusEl,
   onClose,
   onCancelled,
   onNotPending,
@@ -111,6 +116,7 @@ function CancelPurchaseDialog({
       }}
       closeOnEscape={!busy}
       initialFocusEl={() => keepRef.current}
+      finalFocusEl={finalFocusEl}
       closeOnInteractOutside={false}
       placement="center"
     >

@@ -4,7 +4,7 @@ import { pressable } from '@rapiexpress/ui/interaction';
 import ListPagination from '@rapiexpress/ui/list-pagination';
 import ListStatus from '@rapiexpress/ui/list-status';
 import { Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   LOAD_PURCHASES_FAILED_MESSAGE,
@@ -35,6 +35,12 @@ function PreAlertsPage() {
   const status = purchaseStatusSchema.safeParse(searchParams.get('status')).data ?? null;
   const purchases = useMyPurchases({ page, pageSize, ...(status ? { status } : {}) });
   const creating = searchParams.get(NEW_PARAM) === '1';
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const rowActionGone = useRef(false);
+
+  function getFinalFocusEl() {
+    return rowActionGone.current ? headingRef.current : null;
+  }
 
   useEffect(() => {
     document.title = 'Pre-alertas · Rapiexpress';
@@ -68,6 +74,7 @@ function PreAlertsPage() {
 
   function openEdit(purchase: Purchase) {
     setNotice(null);
+    rowActionGone.current = false;
     editDialog.show(purchase);
   }
 
@@ -77,6 +84,7 @@ function PreAlertsPage() {
   }
 
   function handleNotPending() {
+    rowActionGone.current = true;
     editDialog.hide();
     cancelDialog.hide();
     setNotice({ status: 'warning', message: PURCHASE_NOT_PENDING_MESSAGE });
@@ -84,10 +92,12 @@ function PreAlertsPage() {
 
   function openCancel(purchase: Purchase) {
     setNotice(null);
+    rowActionGone.current = false;
     cancelDialog.show(purchase);
   }
 
   function handleCancelled() {
+    rowActionGone.current = true;
     cancelDialog.hide();
     setNotice({ status: 'success', message: 'Pre-alerta cancelada.' });
   }
@@ -103,6 +113,9 @@ function PreAlertsPage() {
         <Stack gap={2}>
           <Text
             as="h1"
+            ref={headingRef}
+            tabIndex={-1}
+            outline="none"
             fontSize={{ base: '3xl', md: '4xl' }}
             fontWeight="semibold"
             letterSpacing="tight"
@@ -204,6 +217,7 @@ function PreAlertsPage() {
       <PurchaseFormDialog
         open={editDialog.open}
         purchase={editDialog.target}
+        finalFocusEl={getFinalFocusEl}
         onClose={editDialog.hide}
         onSaved={handleEdited}
         onNotPending={handleNotPending}
@@ -211,6 +225,7 @@ function PreAlertsPage() {
       <CancelPurchaseDialog
         open={cancelDialog.open}
         purchase={cancelDialog.target}
+        finalFocusEl={getFinalFocusEl}
         onClose={cancelDialog.hide}
         onCancelled={handleCancelled}
         onNotPending={handleNotPending}

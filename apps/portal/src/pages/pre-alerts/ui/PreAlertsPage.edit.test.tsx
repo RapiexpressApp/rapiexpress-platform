@@ -307,6 +307,26 @@ describe('PreAlertsPage edit', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 
+  it('moves focus to the page heading when the purchase was no longer pending', async () => {
+    server.use(
+      purchasesListHandler([pending]),
+      http.patch('*/api/me/purchases/:id', () =>
+        HttpResponse.json({ code: 'PURCHASE_NOT_PENDING', message: 'Not pending' }, { status: 409 })
+      )
+    );
+    renderPreAlertsPage();
+    const form = await openEdit();
+    await userEvent.clear(form.getByLabelText('Tienda'));
+    await userEvent.type(form.getByLabelText('Tienda'), 'eBay');
+
+    await save(form);
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { level: 1, name: 'Pre-alertas' })).toHaveFocus()
+    );
+  });
+
   it('shows one generic retry message for other errors and keeps the dialog open', async () => {
     server.use(
       purchasesListHandler([pending]),

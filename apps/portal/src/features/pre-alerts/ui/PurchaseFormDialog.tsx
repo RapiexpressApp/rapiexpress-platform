@@ -8,6 +8,7 @@ import PurchaseForm from './PurchaseForm';
 interface PurchaseFormDialogProps {
   open: boolean;
   purchase?: Purchase;
+  finalFocusEl?: () => HTMLElement | null;
   onClose: () => void;
   onSaved: () => void;
   onNotPending?: () => void;
@@ -16,6 +17,7 @@ interface PurchaseFormDialogProps {
 function PurchaseFormDialog({
   open,
   purchase,
+  finalFocusEl,
   onClose,
   onSaved,
   onNotPending,
@@ -31,6 +33,7 @@ function PurchaseFormDialog({
         if (!event.open && !busy) onClose();
       }}
       closeOnEscape={!busy}
+      finalFocusEl={finalFocusEl}
       closeOnInteractOutside={false}
       placement="center"
       scrollBehavior="inside"

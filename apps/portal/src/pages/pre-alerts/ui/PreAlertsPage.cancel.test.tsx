@@ -159,6 +159,52 @@ describe('PreAlertsPage cancel', () => {
     expect(requests.at(-1)?.searchParams.get('page')).toBe('1');
   });
 
+  it('moves focus to the page heading once the cancelled row has lost its actions', async () => {
+    let cancelledOne = false;
+    server.use(
+      http.get('*/api/me/purchases', () =>
+        HttpResponse.json({
+          items: [cancelledOne ? { ...pending, status: 'CANCELLED' } : pending],
+          page: 1,
+          pageSize: 10,
+          total: 1,
+        })
+      ),
+      http.post('*/api/me/purchases/:id/cancel', () => {
+        cancelledOne = true;
+        return HttpResponse.json({ ...pending, status: 'CANCELLED' });
+      })
+    );
+    renderPreAlertsPage();
+    const dialog = await openConfirmation();
+
+    await confirm(dialog);
+
+    await screen.findByText('Pre-alerta cancelada.');
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { level: 1, name: 'Pre-alertas' })).toHaveFocus()
+    );
+  });
+
+  it('moves focus to the page heading when the purchase was no longer pending', async () => {
+    server.use(
+      purchasesListHandler([pending]),
+      http.post('*/api/me/purchases/:id/cancel', () =>
+        HttpResponse.json({ code: 'PURCHASE_NOT_PENDING', message: 'Not pending' }, { status: 409 })
+      )
+    );
+    renderPreAlertsPage();
+    const dialog = await openConfirmation();
+
+    await confirm(dialog);
+
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { level: 1, name: 'Pre-alertas' })).toHaveFocus()
+    );
+  });
+
   it('explains that it was already received or cancelled and refreshes the list', async () => {
     let listCalls = 0;
     server.use(
