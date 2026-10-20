@@ -26,6 +26,12 @@ describe('formatDate', () => {
     expect(formatDate('2026-03-15T12:00:00.000Z')).toBe('15 mar 2026');
   });
 
+  it('reads the date in the pinned test timezone, not the machine one', () => {
+    expect(formatDate('2026-03-15T01:00:00.000Z')).toBe('15 mar 2026');
+    expect(formatDate('2026-03-15T23:30:00.000Z')).toBe('15 mar 2026');
+    expect(new Date('2026-03-15T12:00:00.000Z').getTimezoneOffset()).toBe(0);
+  });
+
   it('returns an empty string for an invalid date', () => {
     expect(formatDate('not-a-date')).toBe('');
   });
