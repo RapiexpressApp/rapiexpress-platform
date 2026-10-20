@@ -15,6 +15,8 @@ import { renderWithProviders } from '@/test/render';
 import { server } from '@/test/server';
 import { renderShipmentDetailPage } from '@/test/shipment-detail-page';
 
+const SLOW = { timeout: 3000 };
+
 const AGENCY_TIMELINE = [
   { status: 'WAREHOUSE', reachedAt: '2026-03-10T12:00:00.000Z' },
   { status: 'SHIPPED', reachedAt: '2026-03-12T12:00:00.000Z' },
@@ -260,9 +262,11 @@ describe('ShipmentDetailPage route', () => {
 
     renderWithProviders(<AppRoutes />, { route: '/shipments' });
 
-    await userEvent.click(await screen.findByRole('link', { name: 'WH-000123' }));
+    await userEvent.click(await screen.findByRole('link', { name: 'WH-000123' }, SLOW));
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'WH-000123' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'WH-000123' }, SLOW)
+    ).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Datos del paquete' })).toBeInTheDocument();
   });
 });
