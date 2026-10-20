@@ -1,56 +1,32 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { Route, Routes, useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
 
 import { AppRoutes } from '@/app/router/routes';
 import { meHandler, refreshOkHandler } from '@/test/auth-handlers';
+import { findPurchasesList, renderPreAlertsPage } from '@/test/pre-alerts-page';
 import { purchaseFixture, purchasesListHandler } from '@/test/purchases-handlers';
 import { renderWithProviders } from '@/test/render';
 import { server } from '@/test/server';
-
-import PreAlertsPage from './PreAlertsPage';
-
-function LocationProbe() {
-  const location = useLocation();
-  return <p data-testid="search">{location.search}</p>;
-}
-
-function renderPage(route = '/pre-alerts') {
-  server.use(refreshOkHandler(), meHandler());
-  return renderWithProviders(
-    <>
-      <Routes>
-        <Route path="/pre-alerts" element={<PreAlertsPage />} />
-      </Routes>
-      <LocationProbe />
-    </>,
-    { route }
-  );
-}
-
-async function findList() {
-  return within(await screen.findByRole('list', { name: 'Pre-alertas' }));
-}
 
 describe('PreAlertsPage list', () => {
   it('shows the heading and the document title', async () => {
     server.use(purchasesListHandler());
 
-    renderPage();
+    renderPreAlertsPage();
 
     expect(screen.getByRole('heading', { level: 1, name: 'Pre-alertas' })).toBeInTheDocument();
-    await findList();
+    await findPurchasesList();
     expect(document.title).toBe('Pre-alertas · Rapiexpress');
   });
 
   it('shows store, guide, description, amounts, category, status and date for each row', async () => {
     server.use(purchasesListHandler([purchaseFixture()]));
 
-    renderPage();
+    renderPreAlertsPage();
 
-    const list = await findList();
+    const list = await findPurchasesList();
     expect(list.getByText('Amazon')).toBeInTheDocument();
     expect(list.getByText('Audífonos inalámbricos')).toBeInTheDocument();
     expect(list.getByText(/TBA123456789/)).toBeInTheDocument();
@@ -76,9 +52,9 @@ describe('PreAlertsPage list', () => {
       ])
     );
 
-    renderPage();
+    renderPreAlertsPage();
 
-    const list = await findList();
+    const list = await findPurchasesList();
     expect(list.getByText('Por recibir')).toBeInTheDocument();
     expect(list.getByText('Recibida')).toBeInTheDocument();
     expect(list.getByText('Cancelada')).toBeInTheDocument();
@@ -89,8 +65,8 @@ describe('PreAlertsPage list', () => {
   it('renders a table for wide screens with the same columns', async () => {
     server.use(purchasesListHandler());
 
-    renderPage();
-    await findList();
+    renderPreAlertsPage();
+    await findPurchasesList();
 
     const table = within(screen.getByRole('table', { name: 'Pre-alertas', hidden: true }));
     for (const header of [
@@ -110,16 +86,16 @@ describe('PreAlertsPage list', () => {
   it('shows a loading skeleton first', async () => {
     server.use(purchasesListHandler());
 
-    renderPage();
+    renderPreAlertsPage();
 
     expect(screen.getByRole('status', { name: 'Cargando listado' })).toBeInTheDocument();
-    await findList();
+    await findPurchasesList();
   });
 
   it('shows an empty state when the customer has no pre-alerts', async () => {
     server.use(purchasesListHandler([]));
 
-    renderPage();
+    renderPreAlertsPage();
 
     expect(await screen.findByText(/Aún no tienes pre-alertas/)).toBeInTheDocument();
   });
@@ -128,7 +104,7 @@ describe('PreAlertsPage list', () => {
     const requests: URL[] = [];
     server.use(purchasesListHandler([], { onRequest: (url) => requests.push(url) }));
 
-    renderPage('/pre-alerts?status=RECEIVED');
+    renderPreAlertsPage('/pre-alerts?status=RECEIVED');
 
     expect(await screen.findByText('No tienes pre-alertas con este estado.')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Ver todas' }));
@@ -148,13 +124,13 @@ describe('PreAlertsPage list', () => {
       })
     );
 
-    renderPage();
+    renderPreAlertsPage();
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'No pudimos cargar tus pre-alertas.'
     );
     await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
-    const list = await findList();
+    const list = await findPurchasesList();
     expect(list.getByText('Amazon')).toBeInTheDocument();
   });
 });
@@ -166,8 +142,8 @@ describe('PreAlertsPage status filter', () => {
       purchasesListHandler([purchaseFixture()], { onRequest: (url) => requests.push(url) })
     );
 
-    renderPage();
-    await findList();
+    renderPreAlertsPage();
+    await findPurchasesList();
 
     expect(screen.getByRole('button', { name: 'Todas', pressed: true })).toBeInTheDocument();
     expect(requests[0]?.searchParams.has('status')).toBe(false);
@@ -180,8 +156,8 @@ describe('PreAlertsPage status filter', () => {
       purchasesListHandler([purchaseFixture()], { onRequest: (url) => requests.push(url) })
     );
 
-    renderPage('/pre-alerts?page=3');
-    await findList();
+    renderPreAlertsPage('/pre-alerts?page=3');
+    await findPurchasesList();
 
     await userEvent.click(screen.getByRole('button', { name: 'Recibidas' }));
 
@@ -201,8 +177,8 @@ describe('PreAlertsPage status filter', () => {
       purchasesListHandler([purchaseFixture()], { onRequest: (url) => requests.push(url) })
     );
 
-    renderPage();
-    await findList();
+    renderPreAlertsPage();
+    await findPurchasesList();
 
     await userEvent.click(screen.getByRole('button', { name: label }));
 
@@ -218,8 +194,8 @@ describe('PreAlertsPage status filter', () => {
       })
     );
 
-    renderPage('/pre-alerts?status=CANCELLED&page=2');
-    await findList();
+    renderPreAlertsPage('/pre-alerts?status=CANCELLED&page=2');
+    await findPurchasesList();
 
     expect(requests[0]?.searchParams.get('status')).toBe('CANCELLED');
     expect(requests[0]?.searchParams.get('page')).toBe('2');
@@ -233,8 +209,8 @@ describe('PreAlertsPage status filter', () => {
       purchasesListHandler([purchaseFixture()], { onRequest: (url) => requests.push(url) })
     );
 
-    renderPage('/pre-alerts?status=BOGUS&page=0');
-    await findList();
+    renderPreAlertsPage('/pre-alerts?status=BOGUS&page=0');
+    await findPurchasesList();
 
     expect(requests[0]?.searchParams.has('status')).toBe(false);
     expect(requests[0]?.searchParams.get('page')).toBe('1');
@@ -244,8 +220,8 @@ describe('PreAlertsPage status filter', () => {
   it('removes the status from the URL when going back to all', async () => {
     server.use(purchasesListHandler());
 
-    renderPage('/pre-alerts?status=RECEIVED');
-    await findList();
+    renderPreAlertsPage('/pre-alerts?status=RECEIVED');
+    await findPurchasesList();
 
     await userEvent.click(screen.getByRole('button', { name: 'Todas' }));
 
@@ -263,7 +239,7 @@ describe('PreAlertsPage pagination', () => {
       })
     );
 
-    renderPage();
+    renderPreAlertsPage();
     await screen.findByText('Página 1 de 3');
     expect(screen.getByRole('button', { name: 'Anterior' })).toBeDisabled();
 
@@ -284,7 +260,7 @@ describe('PreAlertsPage route', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Pre-alertas' })
     ).toBeInTheDocument();
-    const list = await findList();
+    const list = await findPurchasesList();
     expect(list.getByText('Amazon')).toBeInTheDocument();
   });
 });
