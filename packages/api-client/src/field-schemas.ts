@@ -51,3 +51,15 @@ export function amountSchema(max: number, label: string) {
       message: `${label} admite como máximo 2 decimales.`,
     });
 }
+
+const DECIMAL_PATTERN = /^\d*[.,]?\d+$/;
+
+function parseFormNumber(raw: string): number | undefined {
+  const text = raw.trim();
+  if (text === '') return undefined;
+  return DECIMAL_PATTERN.test(text) ? Number(text.replace(',', '.')) : Number.NaN;
+}
+
+export function formNumberSchema<T extends z.ZodTypeAny>(schema: T) {
+  return z.string().transform(parseFormNumber).pipe(schema);
+}

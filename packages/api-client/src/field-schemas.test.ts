@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   amountSchema,
+  formNumberSchema,
   normalizeTrackingNumber,
   trackingNumberSchema,
   trimmedTextSchema,
@@ -75,5 +76,43 @@ describe('amountSchema', () => {
     ['a string', '2.5'],
   ])('rejects %s', (_label, value) => {
     expect(schema.safeParse(value).success).toBe(false);
+  });
+});
+
+describe('formNumberSchema', () => {
+  const schema = formNumberSchema(amountSchema(1000, 'El peso'));
+
+  it.each([
+    ['2,5', 2.5],
+    ['2.5', 2.5],
+    [' 45,90 ', 45.9],
+    ['.5', 0.5],
+    ['7', 7],
+  ])('turns %j into a number', (raw, expected) => {
+    expect(schema.parse(raw)).toBe(expected);
+  });
+
+  it.each(['', '   '])('reports the blank value %j as missing', (raw) => {
+    expect(schema.safeParse(raw).error?.issues[0]?.message).toBe('El peso es obligatorio.');
+  });
+
+  it.each(['abc', '1e3', '1.234,50', '-5', '12 lb', '1,2,3'])(
+    'rejects %j as a non-number',
+    (raw) => {
+      expect(schema.safeParse(raw).error?.issues[0]?.message).toBe('El peso debe ser un número.');
+    }
+  );
+
+  it('still applies the wrapped schema to the parsed number', () => {
+    expect(schema.safeParse('1000,5').error?.issues[0]?.message).toBe(
+      'El peso no puede superar 1000.'
+    );
+  });
+
+  it('lets an optional schema leave a blank value out', () => {
+    const optional = formNumberSchema(amountSchema(1000, 'El peso').optional());
+
+    expect(optional.parse('  ')).toBeUndefined();
+    expect(optional.parse('2,5')).toBe(2.5);
   });
 });
