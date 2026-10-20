@@ -1,4 +1,4 @@
-import { PackageCheck, Users, UserSquare } from 'lucide-react';
+import { Package, PackageCheck, Users, UserSquare } from 'lucide-react';
 
 import type { NavItem } from '@/shared/model/nav-item';
 import type { PanelRole } from '@/shared/model/roles';
@@ -8,6 +8,12 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Recepción',
     to: '/recepcion',
     icon: PackageCheck,
+    roles: ['ADMIN', 'OPERATIONS', 'WAREHOUSE'],
+  },
+  {
+    label: 'Paquetes',
+    to: '/paquetes',
+    icon: Package,
     roles: ['ADMIN', 'OPERATIONS', 'WAREHOUSE'],
   },
   { label: 'Usuarios', to: '/usuarios', icon: Users, roles: ['ADMIN'] },

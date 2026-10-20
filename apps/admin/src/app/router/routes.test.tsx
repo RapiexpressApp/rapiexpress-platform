@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AppRoutes } from '@/app/router/routes';
 import { logoutHandler, meHandler, refreshOkHandler } from '@/test/auth-handlers';
+import { packagesListHandler } from '@/test/packages-handlers';
 import { renderWithProviders } from '@/test/render';
 import { server } from '@/test/server';
 import { usersListHandler } from '@/test/users-handlers';
@@ -15,6 +16,7 @@ function renderApp(role: string, route: string) {
     refreshOkHandler(),
     meHandler(role),
     logoutHandler(),
+    packagesListHandler([]),
     http.get('*/api/customers', () => {
       customersRequested();
       return HttpResponse.json({ items: [], page: 1, pageSize: 20, total: 0 });
@@ -34,14 +36,21 @@ describe('AppRoutes for warehouse staff', () => {
     expect(await heading('Recepción')).toBeInTheDocument();
   });
 
-  it('shows reception as the only navigation entry', async () => {
+  it('shows reception and packages as the only navigation entries', async () => {
     renderApp('WAREHOUSE', '/recepcion');
 
     await heading('Recepción');
     const sidebar = screen.getByRole('navigation', { name: 'Navegación móvil' });
     expect(sidebar).toHaveTextContent('Recepción');
+    expect(sidebar).toHaveTextContent('Paquetes');
     expect(sidebar).not.toHaveTextContent('Usuarios');
     expect(sidebar).not.toHaveTextContent('Clientes');
+  });
+
+  it('lets warehouse staff open the packages page', async () => {
+    renderApp('WAREHOUSE', '/paquetes');
+
+    expect(await heading('Paquetes')).toBeInTheDocument();
   });
 
   it('keeps warehouse staff out of the users page', async () => {
@@ -68,14 +77,31 @@ describe('AppRoutes for the other staff roles', () => {
     expect(await heading('Recepción')).toBeInTheDocument();
   });
 
-  it('shows admins reception, users and customers', async () => {
+  it.each(['ADMIN', 'OPERATIONS'])('lets %s open the packages page', async (role) => {
+    renderApp(role, '/paquetes');
+
+    expect(await heading('Paquetes')).toBeInTheDocument();
+  });
+
+  it('shows admins reception, packages, users and customers', async () => {
     renderApp('ADMIN', '/recepcion');
 
     await heading('Recepción');
     const sidebar = screen.getByRole('navigation', { name: 'Navegación móvil' });
     expect(sidebar).toHaveTextContent('Recepción');
+    expect(sidebar).toHaveTextContent('Paquetes');
     expect(sidebar).toHaveTextContent('Usuarios');
     expect(sidebar).toHaveTextContent('Clientes');
+  });
+
+  it('shows operations reception, packages and customers but not users', async () => {
+    renderApp('OPERATIONS', '/recepcion');
+
+    await heading('Recepción');
+    const sidebar = screen.getByRole('navigation', { name: 'Navegación móvil' });
+    expect(sidebar).toHaveTextContent('Paquetes');
+    expect(sidebar).toHaveTextContent('Clientes');
+    expect(sidebar).not.toHaveTextContent('Usuarios');
   });
 
   it('still lets admins and operations open the customers page', async () => {
