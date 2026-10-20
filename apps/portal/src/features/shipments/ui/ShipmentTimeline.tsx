@@ -77,7 +77,12 @@ interface ShipmentTimelineProps {
 
 function ShipmentTimeline({ steps }: ShipmentTimelineProps) {
   return (
-    <Flex as="ol" direction={{ base: 'column', md: 'row' }} listStyleType="none">
+    <Flex
+      as="ol"
+      aria-label="Seguimiento del envío"
+      direction={{ base: 'column', md: 'row' }}
+      listStyleType="none"
+    >
       {steps.map((step, index) => {
         const isLast = index === steps.length - 1;
 
