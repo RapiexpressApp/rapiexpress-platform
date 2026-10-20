@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { describe, expect, it } from 'vitest';
 
-import { getApiErrorCode, getHttpStatus } from './http-error.ts';
+import { getApiErrorCode, getHttpStatus, isNetworkError } from './http-error.ts';
 
 describe('getHttpStatus', () => {
   it('returns the response status of an axios error', () => {
@@ -14,6 +14,24 @@ describe('getHttpStatus', () => {
     expect(getHttpStatus(new AxiosError('offline'))).toBeUndefined();
     expect(getHttpStatus(new Error('nope'))).toBeUndefined();
     expect(getHttpStatus(undefined)).toBeUndefined();
+  });
+});
+
+describe('isNetworkError', () => {
+  it('is true for an axios error that never got a response', () => {
+    expect(isNetworkError(new AxiosError('Network Error'))).toBe(true);
+  });
+
+  it.each([400, 404, 409, 500, 503])('is false when the server answered with %s', (status) => {
+    const error = Object.assign(new AxiosError('failed'), { response: { status } });
+
+    expect(isNetworkError(error)).toBe(false);
+  });
+
+  it('is false for errors that are not axios errors', () => {
+    expect(isNetworkError(new Error('nope'))).toBe(false);
+    expect(isNetworkError('Network Error')).toBe(false);
+    expect(isNetworkError(undefined)).toBe(false);
   });
 });
 
