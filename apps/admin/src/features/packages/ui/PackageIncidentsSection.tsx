@@ -1,5 +1,6 @@
 import { Box, Stack, Text } from '@chakra-ui/react';
 import type { PackageIncident, PackageStaffDetail } from '@rapiexpress/api-client/packages.schemas';
+import type { Ref } from 'react';
 
 import { formatDateTime } from '@/shared/lib/format';
 import { INCIDENT_TYPE_LABEL } from '@/shared/model/package-labels';
@@ -9,6 +10,7 @@ import DetailSection from './DetailSection';
 interface PackageIncidentsSectionProps {
   openIncident: PackageStaffDetail['openIncident'];
   incidents: PackageIncident[];
+  headingRef?: Ref<HTMLHeadingElement>;
 }
 
 function staffName({ name, lastName }: PackageIncident['openedBy']): string {
@@ -62,11 +64,15 @@ function ResolvedIncident({ incident }: { incident: PackageIncident }) {
   );
 }
 
-function PackageIncidentsSection({ openIncident, incidents }: PackageIncidentsSectionProps) {
+function PackageIncidentsSection({
+  openIncident,
+  incidents,
+  headingRef,
+}: PackageIncidentsSectionProps) {
   const resolved = incidents.filter((incident) => incident.resolvedAt !== null);
 
   return (
-    <DetailSection title="Incidencias">
+    <DetailSection title="Incidencias" headingRef={headingRef}>
       <Stack gap={4}>
         {openIncident ? (
           <OpenIncident incident={openIncident} />

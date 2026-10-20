@@ -23,6 +23,7 @@ import PackageIncidentsSection from '@/features/packages/ui/PackageIncidentsSect
 import PackageNotice from '@/features/packages/ui/PackageNotice';
 import PackagePurchaseSection from '@/features/packages/ui/PackagePurchaseSection';
 import PackageStatusBadge from '@/features/packages/ui/PackageStatusBadge';
+import TransitionActions from '@/features/packages/ui/TransitionActions';
 import { PACKAGES_PATH } from '@/shared/model/paths';
 
 function BackToPackages() {
@@ -53,6 +54,7 @@ function BackToPackages() {
 
 function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const incidentsHeadingRef = useRef<HTMLHeadingElement>(null);
   const [notice, setNotice] = useState<PackageNoticeContent | null>(null);
   const refresh = useRefreshPackages();
 
@@ -62,6 +64,11 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
   }
 
   const fallbackFocus = () => headingRef.current;
+
+  function showIncidents() {
+    incidentsHeadingRef.current?.focus();
+    incidentsHeadingRef.current?.scrollIntoView?.({ block: 'start' });
+  }
 
   return (
     <Stack gap={6}>
@@ -87,13 +94,19 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
           <PackageStatusBadge status={detail.status} />
           {detail.openIncident && <OpenIncidentFlag />}
         </Flex>
+        <TransitionActions
+          detail={detail}
+          fallbackFocus={fallbackFocus}
+          onStale={handleStale}
+          onShowIncidents={showIncidents}
+        />
       </Stack>
 
       {notice && (
         <PackageNotice
           notice={notice}
           onDismiss={() => setNotice(null)}
-          onShowIncidents={() => {}}
+          onShowIncidents={showIncidents}
         />
       )}
 
@@ -111,7 +124,11 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
       />
       <PackageCustomerSection customer={detail.customer} />
       <PackagePurchaseSection purchase={detail.purchase} />
-      <PackageIncidentsSection openIncident={detail.openIncident} incidents={detail.incidents} />
+      <PackageIncidentsSection
+        openIncident={detail.openIncident}
+        incidents={detail.incidents}
+        headingRef={incidentsHeadingRef}
+      />
       <PackageHistorySection events={detail.events} />
     </Stack>
   );

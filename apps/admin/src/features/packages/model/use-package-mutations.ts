@@ -1,4 +1,4 @@
-import type { UpdatePackagePayload } from '@rapiexpress/api-client/packages.schemas';
+import type { PackageStatus, UpdatePackagePayload } from '@rapiexpress/api-client/packages.schemas';
 import { useMutation } from '@tanstack/react-query';
 
 import { packagesApi } from '@/shared/api/api';
@@ -10,6 +10,15 @@ export function useUpdatePackage(id: string) {
 
   return useMutation({
     mutationFn: (payload: UpdatePackagePayload) => packagesApi.update(id, payload),
+    onSuccess: refresh,
+  });
+}
+
+export function useTransitionPackage(id: string) {
+  const refresh = useRefreshPackages();
+
+  return useMutation({
+    mutationFn: (to: PackageStatus) => packagesApi.transition(id, to),
     onSuccess: refresh,
   });
 }
