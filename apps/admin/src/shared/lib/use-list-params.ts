@@ -24,28 +24,6 @@ export function useListParams() {
   );
   const search = searchParams.get('search')?.trim() ?? '';
 
-  function setSearch(value: string) {
-    setSearchParams(
-      (previous) => {
-        const next = new URLSearchParams(previous);
-        const term = value.trim();
-        if (term) next.set('search', term);
-        else next.delete('search');
-        next.delete('page');
-        return next;
-      },
-      { replace: true }
-    );
-  }
-
-  function setPage(value: number) {
-    setSearchParams((previous) => {
-      const next = new URLSearchParams(previous);
-      next.set('page', String(value));
-      return next;
-    });
-  }
-
   function update(changes: Record<string, string | null>, options: UpdateOptions = {}) {
     setSearchParams(
       (previous) => {
@@ -59,6 +37,14 @@ export function useListParams() {
       },
       { replace: options.replace }
     );
+  }
+
+  function setSearch(value: string) {
+    update({ search: value.trim() || null }, { resetPage: true, replace: true });
+  }
+
+  function setPage(value: number) {
+    update({ page: String(value) });
   }
 
   return { page, pageSize, search, searchParams, setSearch, setPage, update };
