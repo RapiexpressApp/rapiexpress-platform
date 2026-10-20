@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatDate, formatUsd, formatWeightLb } from './format';
+import { formatDate, formatUsd, formatWeightKg, formatWeightLb } from './format';
 
 describe('formatUsd', () => {
   it('always shows two decimals with the Spanish decimal comma', () => {
@@ -18,6 +18,14 @@ describe('formatWeightLb', () => {
     expect(formatWeightLb(8)).toBe('8 lb');
     expect(formatWeightLb(8.5)).toBe('8,5 lb');
     expect(formatWeightLb(8.25)).toBe('8,25 lb');
+  });
+});
+
+describe('formatWeightKg', () => {
+  it('drops trailing zeros and keeps up to two decimals', () => {
+    expect(formatWeightKg(3)).toBe('3 kg');
+    expect(formatWeightKg(0.68)).toBe('0,68 kg');
+    expect(formatWeightKg(0.6804)).toBe('0,68 kg');
   });
 });
 
