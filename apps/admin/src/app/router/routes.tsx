@@ -22,7 +22,9 @@ export function AppRoutes() {
           <Route element={<RequireRole allow={['ADMIN']} />}>
             <Route path="/usuarios" element={<UsersPage />} />
           </Route>
-          <Route path="/clientes" element={<CustomersPage />} />
+          <Route element={<RequireRole allow={['ADMIN', 'OPERATIONS']} />}>
+            <Route path="/clientes" element={<CustomersPage />} />
+          </Route>
           <Route path="/recepcion" element={<ReceptionPage />} />
         </Route>
       </Route>

@@ -15,7 +15,11 @@ describe('getNavItems', () => {
     expect(getNavItems('OPERATIONS').map((item) => item.label)).toEqual(['Recepción', 'Clientes']);
   });
 
+  it('gives warehouse staff only reception', () => {
+    expect(getNavItems('WAREHOUSE').map((item) => item.label)).toEqual(['Recepción']);
+  });
+
   it('points reception to its own page', () => {
-    expect(getNavItems('ADMIN')[0]?.to).toBe('/recepcion');
+    expect(getNavItems('WAREHOUSE')[0]?.to).toBe('/recepcion');
   });
 });

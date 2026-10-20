@@ -24,6 +24,7 @@ function renderLogin() {
       <Route path="/" element={<LoginForm />} />
       <Route path="/usuarios" element={<p>users page</p>} />
       <Route path="/clientes" element={<p>customers page</p>} />
+      <Route path="/recepcion" element={<p>reception page</p>} />
     </Routes>
   );
 }
@@ -58,6 +59,18 @@ describe('LoginForm', () => {
     await fillAndSubmit();
 
     expect(await screen.findByText('customers page')).toBeInTheDocument();
+  });
+
+  it('logs in a warehouse user and lands on the reception page', async () => {
+    renderLogin();
+    server.use(
+      http.post('*/api/auth/login', () => HttpResponse.json(tokensFixture())),
+      meHandler('WAREHOUSE')
+    );
+
+    await fillAndSubmit();
+
+    expect(await screen.findByText('reception page')).toBeInTheDocument();
   });
 
   it('shows one generic message when credentials are rejected', async () => {

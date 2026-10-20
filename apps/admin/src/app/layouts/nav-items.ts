@@ -8,7 +8,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Recepción',
     to: '/recepcion',
     icon: PackageCheck,
-    roles: ['ADMIN', 'OPERATIONS'],
+    roles: ['ADMIN', 'OPERATIONS', 'WAREHOUSE'],
   },
   { label: 'Usuarios', to: '/usuarios', icon: Users, roles: ['ADMIN'] },
   { label: 'Clientes', to: '/clientes', icon: UserSquare, roles: ['ADMIN', 'OPERATIONS'] },

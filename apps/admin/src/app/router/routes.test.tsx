@@ -27,7 +27,41 @@ function renderApp(role: string, route: string) {
 
 const heading = (name: string) => screen.findByRole('heading', { level: 1, name });
 
-describe('AppRoutes reception', () => {
+describe('AppRoutes for warehouse staff', () => {
+  it('lands on reception after the session starts', async () => {
+    renderApp('WAREHOUSE', '/');
+
+    expect(await heading('Recepción')).toBeInTheDocument();
+  });
+
+  it('shows reception as the only navigation entry', async () => {
+    renderApp('WAREHOUSE', '/recepcion');
+
+    await heading('Recepción');
+    const sidebar = screen.getByRole('navigation', { name: 'Navegación móvil' });
+    expect(sidebar).toHaveTextContent('Recepción');
+    expect(sidebar).not.toHaveTextContent('Usuarios');
+    expect(sidebar).not.toHaveTextContent('Clientes');
+  });
+
+  it('keeps warehouse staff out of the users page', async () => {
+    const { usersRequested } = renderApp('WAREHOUSE', '/usuarios');
+
+    expect(await heading('Recepción')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Usuarios' })).toBeNull();
+    expect(usersRequested).not.toHaveBeenCalled();
+  });
+
+  it('keeps warehouse staff out of the customers page', async () => {
+    const { customersRequested } = renderApp('WAREHOUSE', '/clientes');
+
+    expect(await heading('Recepción')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Clientes' })).toBeNull();
+    expect(customersRequested).not.toHaveBeenCalled();
+  });
+});
+
+describe('AppRoutes for the other staff roles', () => {
   it.each(['ADMIN', 'OPERATIONS'])('lets %s open reception', async (role) => {
     renderApp(role, '/recepcion');
 

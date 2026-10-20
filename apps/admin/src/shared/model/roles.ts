@@ -2,7 +2,7 @@ import { STAFF_ROLES, type StaffRole } from '@rapiexpress/api-client/users.schem
 
 export { STAFF_ROLES, type StaffRole };
 
-export const PANEL_ROLES = ['ADMIN', 'OPERATIONS'] as const;
+export const PANEL_ROLES = ['ADMIN', 'OPERATIONS', 'WAREHOUSE'] as const;
 
 export type PanelRole = (typeof PANEL_ROLES)[number];
 
@@ -23,4 +23,5 @@ export function getRoleLabel(role: string): string {
 export const DEFAULT_ROUTE: Record<PanelRole, string> = {
   ADMIN: '/usuarios',
   OPERATIONS: '/clientes',
+  WAREHOUSE: '/recepcion',
 };
