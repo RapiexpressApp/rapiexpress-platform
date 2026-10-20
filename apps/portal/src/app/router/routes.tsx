@@ -6,6 +6,7 @@ import LoginPage from '@/pages/login/ui/LoginPage';
 import NotFoundPage from '@/pages/not-found/ui/NotFoundPage';
 import PreAlertsPage from '@/pages/pre-alerts/ui/PreAlertsPage';
 import RegisterPage from '@/pages/register/ui/RegisterPage';
+import ShipmentsPage from '@/pages/shipments/ui/ShipmentsPage';
 
 import GuestOnly from './GuestOnly';
 import RequireAuth from './RequireAuth';
@@ -22,6 +23,7 @@ export function AppRoutes() {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<HomePage />} />
           <Route path="/pre-alerts" element={<PreAlertsPage />} />
+          <Route path="/shipments" element={<ShipmentsPage />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFoundPage />} />
