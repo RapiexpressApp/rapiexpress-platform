@@ -1,5 +1,6 @@
-import { Box, Stack, Table, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Stack, Table, Text } from '@chakra-ui/react';
 import type { Purchase } from '@rapiexpress/api-client/purchases.schemas';
+import { focusRing } from '@rapiexpress/ui/interaction';
 
 import { formatDate, formatUsd, formatWeightLb } from '@/shared/lib/format';
 
@@ -8,9 +9,42 @@ import PurchaseStatusIndicator from './PurchaseStatusIndicator';
 
 interface PurchasesListProps {
   purchases: Purchase[];
+  onEdit: (purchase: Purchase) => void;
 }
 
-function PurchasesTable({ purchases }: PurchasesListProps) {
+function PurchaseActions({
+  purchase,
+  onEdit,
+}: {
+  purchase: Purchase;
+  onEdit: PurchasesListProps['onEdit'];
+}) {
+  if (purchase.status !== 'PENDING_RECEPTION') return null;
+
+  return (
+    <Flex gap={2}>
+      <Button
+        variant="outline"
+        aria-label={`Editar pre-alerta ${purchase.trackingNumber}`}
+        minH={11}
+        px={4}
+        fontSize="sm"
+        fontWeight="medium"
+        borderRadius="lg"
+        borderColor="slate.300"
+        color="slate.700"
+        touchAction="manipulation"
+        _hover={{ bg: 'slate.50' }}
+        _focusVisible={focusRing}
+        onClick={() => onEdit(purchase)}
+      >
+        Editar
+      </Button>
+    </Flex>
+  );
+}
+
+function PurchasesTable({ purchases, onEdit }: PurchasesListProps) {
   return (
     <Box display={{ base: 'none', md: 'block' }} overflowX="auto">
       <Table.Root
@@ -38,8 +72,11 @@ function PurchasesTable({ purchases }: PurchasesListProps) {
             <Table.ColumnHeader fontWeight="medium" color="slate.600">
               Estado
             </Table.ColumnHeader>
-            <Table.ColumnHeader pe={6} fontWeight="medium" color="slate.600">
+            <Table.ColumnHeader fontWeight="medium" color="slate.600">
               Creada
+            </Table.ColumnHeader>
+            <Table.ColumnHeader pe={6} fontWeight="medium" color="slate.600">
+              Acciones
             </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
@@ -79,13 +116,11 @@ function PurchasesTable({ purchases }: PurchasesListProps) {
               <Table.Cell whiteSpace="nowrap">
                 <PurchaseStatusIndicator status={purchase.status} />
               </Table.Cell>
-              <Table.Cell
-                pe={6}
-                fontVariantNumeric="tabular-nums"
-                color="slate.700"
-                whiteSpace="nowrap"
-              >
+              <Table.Cell fontVariantNumeric="tabular-nums" color="slate.700" whiteSpace="nowrap">
                 {formatDate(purchase.createdAt)}
+              </Table.Cell>
+              <Table.Cell pe={6}>
+                <PurchaseActions purchase={purchase} onEdit={onEdit} />
               </Table.Cell>
             </Table.Row>
           ))}
@@ -95,7 +130,7 @@ function PurchasesTable({ purchases }: PurchasesListProps) {
   );
 }
 
-function PurchasesCards({ purchases }: PurchasesListProps) {
+function PurchasesCards({ purchases, onEdit }: PurchasesListProps) {
   return (
     <Stack
       as="ul"
@@ -134,17 +169,22 @@ function PurchasesCards({ purchases }: PurchasesListProps) {
               Creada {formatDate(purchase.createdAt)}
             </Text>
           </Box>
+          {purchase.status === 'PENDING_RECEPTION' && (
+            <Box mt={3}>
+              <PurchaseActions purchase={purchase} onEdit={onEdit} />
+            </Box>
+          )}
         </Box>
       ))}
     </Stack>
   );
 }
 
-function PurchasesList({ purchases }: PurchasesListProps) {
+function PurchasesList({ purchases, onEdit }: PurchasesListProps) {
   return (
     <Box borderRadius="xl" borderWidth="1px" borderColor="slate.200" bg="white" overflow="hidden">
-      <PurchasesTable purchases={purchases} />
-      <PurchasesCards purchases={purchases} />
+      <PurchasesTable purchases={purchases} onEdit={onEdit} />
+      <PurchasesCards purchases={purchases} onEdit={onEdit} />
     </Box>
   );
 }

@@ -1,12 +1,15 @@
 import { Button, Flex, Stack, Text } from '@chakra-ui/react';
-import { purchaseStatusSchema } from '@rapiexpress/api-client/purchases.schemas';
+import { type Purchase, purchaseStatusSchema } from '@rapiexpress/api-client/purchases.schemas';
 import { pressable } from '@rapiexpress/ui/interaction';
 import ListPagination from '@rapiexpress/ui/list-pagination';
 import ListStatus from '@rapiexpress/ui/list-status';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { LOAD_PURCHASES_FAILED_MESSAGE } from '@/features/pre-alerts/model/pre-alert-errors';
+import {
+  LOAD_PURCHASES_FAILED_MESSAGE,
+  PURCHASE_NOT_PENDING_MESSAGE,
+} from '@/features/pre-alerts/model/pre-alert-errors';
 import { useMyPurchases } from '@/features/pre-alerts/model/use-my-purchases';
 import PurchaseFormDialog from '@/features/pre-alerts/ui/PurchaseFormDialog';
 import PurchasesList from '@/features/pre-alerts/ui/PurchasesList';
@@ -17,9 +20,20 @@ import PreAlertsNotice from './PreAlertsNotice';
 
 const NEW_PARAM = 'new';
 
+interface Notice {
+  status: 'success' | 'warning';
+  message: string;
+}
+
+interface EditTarget {
+  purchase: Purchase;
+  open: boolean;
+}
+
 function PreAlertsPage() {
   const { page, pageSize, searchParams, setPage, update } = useListParams();
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(null);
+  const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
   const status = purchaseStatusSchema.safeParse(searchParams.get('status')).data ?? null;
   const purchases = useMyPurchases({ page, pageSize, ...(status ? { status } : {}) });
   const creating = searchParams.get(NEW_PARAM) === '1';
@@ -41,7 +55,26 @@ function PreAlertsPage() {
 
   function handleCreated() {
     update({ [NEW_PARAM]: null, status: null }, { resetPage: true, replace: true });
-    setNotice('Pre-alerta creada.');
+    setNotice({ status: 'success', message: 'Pre-alerta creada.' });
+  }
+
+  function openEdit(purchase: Purchase) {
+    setNotice(null);
+    setEditTarget({ purchase, open: true });
+  }
+
+  function closeEdit() {
+    setEditTarget((current) => current && { ...current, open: false });
+  }
+
+  function handleEdited() {
+    closeEdit();
+    setNotice({ status: 'success', message: 'Cambios guardados.' });
+  }
+
+  function handleNotPending() {
+    closeEdit();
+    setNotice({ status: 'warning', message: PURCHASE_NOT_PENDING_MESSAGE });
   }
 
   return (
@@ -83,7 +116,11 @@ function PreAlertsPage() {
       </Flex>
 
       {notice && (
-        <PreAlertsNotice status="success" message={notice} onDismiss={() => setNotice(null)} />
+        <PreAlertsNotice
+          status={notice.status}
+          message={notice.message}
+          onDismiss={() => setNotice(null)}
+        />
       )}
 
       <PurchaseStatusFilter
@@ -134,7 +171,7 @@ function PreAlertsPage() {
         onRetry={() => void purchases.refetch()}
       >
         <Stack gap={4}>
-          <PurchasesList purchases={items} />
+          <PurchasesList purchases={items} onEdit={openEdit} />
           {purchases.data && (
             <ListPagination
               buttonSize="lg"
@@ -149,6 +186,13 @@ function PreAlertsPage() {
       </ListStatus>
 
       <PurchaseFormDialog open={creating} onClose={closeCreate} onSaved={handleCreated} />
+      <PurchaseFormDialog
+        open={editTarget?.open ?? false}
+        purchase={editTarget?.purchase}
+        onClose={closeEdit}
+        onSaved={handleEdited}
+        onNotPending={handleNotPending}
+      />
     </Stack>
   );
 }

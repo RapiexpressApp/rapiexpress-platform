@@ -1,18 +1,23 @@
 import { Button, chakra, Flex, Grid, Input, NativeSelect, Text, Textarea } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CUSTOMS_CATEGORIES } from '@rapiexpress/api-client/field-schemas';
+import type { Purchase } from '@rapiexpress/api-client/purchases.schemas';
 import AuthField from '@rapiexpress/ui/auth-field';
 import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles';
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import {
   CREATE_PURCHASE_FAILED_MESSAGE,
   DUPLICATE_PURCHASE_MESSAGE,
   isDuplicatePurchaseError,
+  isPurchaseNotPendingError,
+  NO_CHANGES_MESSAGE,
+  UPDATE_PURCHASE_FAILED_MESSAGE,
 } from '../model/pre-alert-errors';
+import { toFormValues } from '../model/purchase-form-values';
 import { CATEGORY_LABEL } from '../model/purchase-labels';
-import { useCreatePurchase } from '../model/use-create-purchase';
+import { useSavePurchase } from '../model/use-save-purchase';
 import {
   type PurchaseFormInput,
   purchaseFormSchema,
@@ -21,38 +26,49 @@ import {
 import CategoryGuide from './CategoryGuide';
 
 interface PurchaseFormProps {
+  purchase?: Purchase;
   onSaved: () => void;
+  onNotPending?: () => void;
   onCancel: () => void;
 }
 
 const fieldStyles = { ...inputStyles, px: 3.5 };
 
-function PurchaseForm({ onSaved, onCancel }: PurchaseFormProps) {
-  const createPurchase = useCreatePurchase();
+const EMPTY_VALUES: PurchaseFormInput = {
+  store: '',
+  trackingNumber: '',
+  description: '',
+  declaredValueUsd: '',
+  estimatedWeightLb: '',
+  suggestedCategory: '' as PurchaseFormInput['suggestedCategory'],
+};
+
+function PurchaseForm({ purchase, onSaved, onNotPending, onCancel }: PurchaseFormProps) {
+  const isEdit = purchase !== undefined;
+  const savePurchase = useSavePurchase(purchase);
+  const [submittedWithoutChanges, setSubmittedWithoutChanges] = useState(false);
   const guideId = useId();
   const {
     register,
     handleSubmit,
     control,
     setError,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<PurchaseFormInput, unknown, PurchaseFormValues>({
     resolver: zodResolver(purchaseFormSchema),
-    defaultValues: {
-      store: '',
-      trackingNumber: '',
-      description: '',
-      declaredValueUsd: '',
-      estimatedWeightLb: '',
-      suggestedCategory: '' as PurchaseFormInput['suggestedCategory'],
-    },
+    defaultValues: purchase ? toFormValues(purchase) : EMPTY_VALUES,
     mode: 'onSubmit',
   });
   const category = useWatch({ control, name: 'suggestedCategory' });
 
   function onSubmit(values: PurchaseFormValues) {
-    if (createPurchase.isPending) return;
-    createPurchase.mutate(values, {
+    if (savePurchase.isPending) return;
+    if (!savePurchase.hasChanges(values)) {
+      setSubmittedWithoutChanges(true);
+      return;
+    }
+    setSubmittedWithoutChanges(false);
+    savePurchase.save(values, {
       onSuccess: onSaved,
       onError: (error) => {
         if (isDuplicatePurchaseError(error)) {
@@ -61,12 +77,18 @@ function PurchaseForm({ onSaved, onCancel }: PurchaseFormProps) {
             { type: 'server', message: DUPLICATE_PURCHASE_MESSAGE },
             { shouldFocus: true }
           );
+        } else if (isPurchaseNotPendingError(error)) {
+          onNotPending?.();
         }
       },
     });
   }
 
-  const genericError = createPurchase.isError && !isDuplicatePurchaseError(createPurchase.error);
+  const genericError =
+    savePurchase.isError &&
+    !isDuplicatePurchaseError(savePurchase.error) &&
+    !isPurchaseNotPendingError(savePurchase.error);
+  const noChangesError = submittedWithoutChanges && !isDirty;
 
   return (
     <chakra.form
@@ -155,9 +177,13 @@ function PurchaseForm({ onSaved, onCancel }: PurchaseFormProps) {
         <CategoryGuide id={guideId} selected={category} />
       </AuthField>
 
-      {genericError && (
+      {(genericError || noChangesError) && (
         <Text role="alert" fontSize="sm" color="red.500">
-          {CREATE_PURCHASE_FAILED_MESSAGE}
+          {noChangesError
+            ? NO_CHANGES_MESSAGE
+            : isEdit
+              ? UPDATE_PURCHASE_FAILED_MESSAGE
+              : CREATE_PURCHASE_FAILED_MESSAGE}
         </Text>
       )}
 
@@ -167,19 +193,19 @@ function PurchaseForm({ onSaved, onCancel }: PurchaseFormProps) {
           height={11}
           px={6}
           onClick={onCancel}
-          disabled={createPurchase.isPending}
+          disabled={savePurchase.isPending}
         >
           Volver
         </Button>
         <Button
           type="submit"
-          loading={createPurchase.isPending}
-          loadingText="Creando"
+          loading={savePurchase.isPending}
+          loadingText={isEdit ? 'Guardando' : 'Creando'}
           {...submitButtonProps}
           width={{ base: 'full', sm: 'auto' }}
           px={6}
         >
-          Crear pre-alerta
+          {isEdit ? 'Guardar cambios' : 'Crear pre-alerta'}
         </Button>
       </Flex>
     </chakra.form>
