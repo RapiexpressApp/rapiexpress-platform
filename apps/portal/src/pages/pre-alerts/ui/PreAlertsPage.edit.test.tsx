@@ -52,8 +52,8 @@ describe('PreAlertsPage edit', () => {
     expect(form.getByLabelText('Tienda')).toHaveValue('Amazon');
     expect(form.getByLabelText('Guía de seguimiento')).toHaveValue('TBA123456789');
     expect(form.getByLabelText('Descripción')).toHaveValue('Audífonos inalámbricos');
-    expect(form.getByLabelText('Valor declarado (USD)')).toHaveValue('120.5');
-    expect(form.getByLabelText('Peso estimado (lb)')).toHaveValue('1.5');
+    expect(form.getByLabelText('Valor declarado (USD)')).toHaveValue('120,50');
+    expect(form.getByLabelText('Peso estimado (lb)')).toHaveValue('1,5');
     expect(form.getByLabelText('Categoría sugerida')).toHaveValue('FOUR_BY_FOUR');
   });
 

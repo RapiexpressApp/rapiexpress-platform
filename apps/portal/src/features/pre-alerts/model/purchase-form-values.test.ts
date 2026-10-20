@@ -17,13 +17,22 @@ const unchanged = {
 };
 
 describe('toFormValues', () => {
+  it('uses the decimal comma the hints and the list show', () => {
+    expect(
+      toFormValues({ ...purchase, declaredValueUsd: 45.9, estimatedWeightLb: 2 })
+    ).toMatchObject({
+      declaredValueUsd: '45,90',
+      estimatedWeightLb: '2',
+    });
+  });
+
   it('turns the amounts into the strings the inputs show', () => {
     expect(toFormValues(purchase)).toEqual({
       store: 'Amazon',
       trackingNumber: 'TBA123456789',
       description: 'Audífonos inalámbricos',
-      declaredValueUsd: '120.5',
-      estimatedWeightLb: '1.5',
+      declaredValueUsd: '120,50',
+      estimatedWeightLb: '1,5',
       suggestedCategory: 'FOUR_BY_FOUR',
     });
   });

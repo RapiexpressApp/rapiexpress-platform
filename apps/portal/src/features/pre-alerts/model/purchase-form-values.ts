@@ -2,13 +2,17 @@ import type { Purchase, UpdatePurchasePayload } from '@rapiexpress/api-client/pu
 
 import type { PurchaseFormInput, PurchaseFormValues } from '../validation/purchase.validation';
 
+function toDecimalComma(value: string): string {
+  return value.replace('.', ',');
+}
+
 export function toFormValues(purchase: Purchase): PurchaseFormInput {
   return {
     store: purchase.store,
     trackingNumber: purchase.trackingNumber,
     description: purchase.description,
-    declaredValueUsd: String(purchase.declaredValueUsd),
-    estimatedWeightLb: String(purchase.estimatedWeightLb),
+    declaredValueUsd: toDecimalComma(purchase.declaredValueUsd.toFixed(2)),
+    estimatedWeightLb: toDecimalComma(String(purchase.estimatedWeightLb)),
     suggestedCategory: purchase.suggestedCategory,
   };
 }
