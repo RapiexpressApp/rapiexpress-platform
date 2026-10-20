@@ -78,6 +78,8 @@ describe('ReceptionPage when another scan wins the race', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('WH-000099')).toBeInTheDocument();
     expect(screen.getByText('En bodega')).toBeInTheDocument();
+    expect(screen.getByText('Paso 4 de 4 · Confirmar')).toBeInTheDocument();
+    expect(screen.queryByText(/Paso 2 de 4/)).toBeNull();
     expect(bodies).toHaveLength(1);
     expect(bodies[0]).not.toHaveProperty('confirmDuplicate');
   });

@@ -125,6 +125,18 @@ describe('receptionReducer', () => {
       expect(isDuplicatePending(state)).toBe(true);
     });
 
+    it('keeps the confirmation step when the race happens after confirming', () => {
+      const raced = [existingPackageFixture({ id: 'k9' })];
+      const state = run(
+        lookedUp(receptionLookupFixture({ matches: [match] })),
+        { type: 'details-submitted', input, values },
+        { type: 'duplicate-detected', packages: raced }
+      );
+
+      expect(isDuplicatePending(state)).toBe(true);
+      expect(getStepNumber(state)).toBe(4);
+    });
+
     it('requires a new confirmation after a second race', () => {
       const packages = [existingPackageFixture()];
       const state = run(

@@ -134,6 +134,7 @@ export function canChooseAnotherTarget(state: ReceptionState): boolean {
 export function getStepNumber(state: ReceptionState): number | null {
   if (state.phase === 'done') return null;
   if (state.phase === 'scan') return 1;
+  if (state.phase === 'confirm') return 4;
   if (isDuplicatePending(state) || state.phase === 'target') return 2;
-  return state.phase === 'details' ? 3 : 4;
+  return 3;
 }
