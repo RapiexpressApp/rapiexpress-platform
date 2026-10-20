@@ -24,6 +24,19 @@ describe('PrintLabel', () => {
     expect(label).not.toHaveTextContent('Sin asignar');
   });
 
+  it('keeps the warehouse number on one line however narrow the label is', () => {
+    const label = renderLabel({
+      warehouseNumber: 'WH-000042',
+      customerName: null,
+      lockerCode: null,
+    });
+
+    const number = Array.from(label.querySelectorAll('p')).find(
+      (paragraph) => paragraph.textContent === 'WH-000042'
+    );
+    expect(number && getComputedStyle(number).whiteSpace).toBe('nowrap');
+  });
+
   it('marks a package without a customer as unassigned', () => {
     const label = renderLabel({
       warehouseNumber: 'WH-000043',

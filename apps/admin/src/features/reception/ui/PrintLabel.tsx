@@ -31,10 +31,16 @@ function PrintLabel({ label }: PrintLabelProps) {
         color="black"
         bg="white"
       >
-        <Text fontFamily="mono" fontWeight="bold" fontSize="72px" lineHeight="1">
+        <Text
+          fontFamily="mono"
+          fontWeight="bold"
+          fontSize="clamp(28px, 14vw, 72px)"
+          lineHeight="1"
+          whiteSpace="nowrap"
+        >
           {label.warehouseNumber}
         </Text>
-        <Text fontWeight="semibold" fontSize="32px" lineHeight="1.2">
+        <Text fontWeight="semibold" fontSize="32px" lineHeight="1.2" overflowWrap="anywhere">
           {label.customerName ?? 'Sin asignar'}
         </Text>
         {label.lockerCode && (
