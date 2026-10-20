@@ -1,8 +1,10 @@
 import type { ListParams } from './pagination.ts';
+import type { MyPurchaseListParams } from './purchases.schemas.ts';
 
 const authRoot = ['auth'] as const;
 const usersRoot = ['users'] as const;
 const customersRoot = ['customers'] as const;
+const myPurchasesRoot = ['myPurchases'] as const;
 
 export const queryKeys = {
   auth: {
@@ -16,5 +18,10 @@ export const queryKeys = {
   customers: {
     all: customersRoot,
     list: (params: ListParams) => [...customersRoot, 'list', params] as const,
+  },
+  myPurchases: {
+    all: myPurchasesRoot,
+    list: (params: MyPurchaseListParams) => [...myPurchasesRoot, 'list', params] as const,
+    detail: (id: string) => [...myPurchasesRoot, 'detail', id] as const,
   },
 };
