@@ -15,6 +15,7 @@ import type { PackageNoticeContent } from '@/features/packages/model/package-not
 import { usePackage } from '@/features/packages/model/use-package';
 import { useRefreshPackages } from '@/features/packages/model/use-refresh-packages';
 import EditPackageAction from '@/features/packages/ui/EditPackageAction';
+import OpenIncidentAction from '@/features/packages/ui/OpenIncidentAction';
 import OpenIncidentFlag from '@/features/packages/ui/OpenIncidentFlag';
 import PackageCustomerSection from '@/features/packages/ui/PackageCustomerSection';
 import PackageDataSection from '@/features/packages/ui/PackageDataSection';
@@ -23,6 +24,7 @@ import PackageIncidentsSection from '@/features/packages/ui/PackageIncidentsSect
 import PackageNotice from '@/features/packages/ui/PackageNotice';
 import PackagePurchaseSection from '@/features/packages/ui/PackagePurchaseSection';
 import PackageStatusBadge from '@/features/packages/ui/PackageStatusBadge';
+import ResolveIncidentAction from '@/features/packages/ui/ResolveIncidentAction';
 import TransitionActions from '@/features/packages/ui/TransitionActions';
 import { PACKAGES_PATH } from '@/shared/model/paths';
 
@@ -64,6 +66,7 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
   }
 
   const fallbackFocus = () => headingRef.current;
+  const incidentsFocus = () => incidentsHeadingRef.current;
 
   function showIncidents() {
     incidentsHeadingRef.current?.focus();
@@ -128,6 +131,25 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
         openIncident={detail.openIncident}
         incidents={detail.incidents}
         headingRef={incidentsHeadingRef}
+        action={
+          detail.openIncident === null && (
+            <OpenIncidentAction
+              packageId={detail.id}
+              fallbackFocus={incidentsFocus}
+              onStale={handleStale}
+            />
+          )
+        }
+        resolveAction={
+          detail.openIncident && (
+            <ResolveIncidentAction
+              packageId={detail.id}
+              incident={detail.openIncident}
+              fallbackFocus={incidentsFocus}
+              onStale={handleStale}
+            />
+          )
+        }
       />
       <PackageHistorySection events={detail.events} />
     </Stack>

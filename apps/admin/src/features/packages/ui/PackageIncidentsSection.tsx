@@ -1,6 +1,6 @@
 import { Box, Stack, Text } from '@chakra-ui/react';
 import type { PackageIncident, PackageStaffDetail } from '@rapiexpress/api-client/packages.schemas';
-import type { Ref } from 'react';
+import type { ReactNode, Ref } from 'react';
 
 import { formatDateTime } from '@/shared/lib/format';
 import { INCIDENT_TYPE_LABEL } from '@/shared/model/package-labels';
@@ -11,13 +11,21 @@ interface PackageIncidentsSectionProps {
   openIncident: PackageStaffDetail['openIncident'];
   incidents: PackageIncident[];
   headingRef?: Ref<HTMLHeadingElement>;
+  action?: ReactNode;
+  resolveAction?: ReactNode;
 }
 
 function staffName({ name, lastName }: PackageIncident['openedBy']): string {
   return `${name} ${lastName}`;
 }
 
-function OpenIncident({ incident }: { incident: PackageIncident }) {
+function OpenIncident({
+  incident,
+  resolveAction,
+}: {
+  incident: PackageIncident;
+  resolveAction?: ReactNode;
+}) {
   return (
     <Box
       role="group"
@@ -36,6 +44,7 @@ function OpenIncident({ incident }: { incident: PackageIncident }) {
       <Text fontSize="sm" color="slate.600" fontVariantNumeric="tabular-nums">
         {`Abierta por ${staffName(incident.openedBy)} · ${formatDateTime(incident.openedAt)}`}
       </Text>
+      {resolveAction}
     </Box>
   );
 }
@@ -68,14 +77,16 @@ function PackageIncidentsSection({
   openIncident,
   incidents,
   headingRef,
+  action,
+  resolveAction,
 }: PackageIncidentsSectionProps) {
   const resolved = incidents.filter((incident) => incident.resolvedAt !== null);
 
   return (
-    <DetailSection title="Incidencias" headingRef={headingRef}>
+    <DetailSection title="Incidencias" headingRef={headingRef} action={action}>
       <Stack gap={4}>
         {openIncident ? (
-          <OpenIncident incident={openIncident} />
+          <OpenIncident incident={openIncident} resolveAction={resolveAction} />
         ) : (
           <Text color="slate.700">
             {resolved.length === 0
