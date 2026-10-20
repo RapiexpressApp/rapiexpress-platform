@@ -1,10 +1,15 @@
-import type { FeaturedShipmentConfig, FeaturedShipmentView, Shipment } from './types';
+import type { MyPackage } from '@rapiexpress/api-client/tracking.schemas';
 
-export function resolveFeaturedShipment(
-  shipments: Shipment[],
-  config: FeaturedShipmentConfig
-): FeaturedShipmentView | undefined {
-  const shipment = shipments.find((s) => s.id === config.shipmentId);
-  if (!shipment) return undefined;
-  return { shipment, etaLabel: config.etaLabel, steps: config.steps };
+function receivedTime({ receivedAt }: MyPackage): number {
+  const time = Date.parse(receivedAt);
+  return Number.isNaN(time) ? Number.NEGATIVE_INFINITY : time;
+}
+
+function newestFirst(packages: MyPackage[]): MyPackage[] {
+  return [...packages].sort((a, b) => receivedTime(b) - receivedTime(a));
+}
+
+export function pickFeaturedPackage(packages: MyPackage[]): MyPackage | undefined {
+  const pending = newestFirst(packages.filter((item) => item.status !== 'DELIVERED'));
+  return pending.find((item) => item.readyForPickup) ?? pending[0];
 }

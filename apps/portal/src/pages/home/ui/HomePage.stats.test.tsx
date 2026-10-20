@@ -44,7 +44,7 @@ describe('HomePage stat cards', () => {
     expect(await preAlerts.findByText('4')).toBeInTheDocument();
   });
 
-  it('counts from the total of one-item pages, one request per status', async () => {
+  it('counts from list totals with a single request per status', async () => {
     const requests: URL[] = [];
     renderHomePage(myPackagesBackendHandler(PACKAGES, (url) => requests.push(url)));
 
@@ -52,12 +52,15 @@ describe('HomePage stat cards', () => {
     await (await findCard('En agencia')).findByText('3');
 
     const counted = requests.filter((url) => url.searchParams.has('status'));
-    expect(counted.map((url) => url.searchParams.get('status')).sort()).toEqual([
-      'AGENCY',
-      'CUSTOMS',
-      'SHIPPED',
+    expect(
+      counted
+        .map((url) => [url.searchParams.get('status'), url.searchParams.get('pageSize')])
+        .sort()
+    ).toEqual([
+      ['AGENCY', '20'],
+      ['CUSTOMS', '1'],
+      ['SHIPPED', '1'],
     ]);
-    for (const url of counted) expect(url.searchParams.get('pageSize')).toBe('1');
   });
 
   it('describes the activity in the greeting', async () => {

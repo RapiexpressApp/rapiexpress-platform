@@ -1,8 +1,6 @@
 import { Stack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
-import { resolveFeaturedShipment } from '../model/featured';
-import { FEATURED_SHIPMENT, SHIPMENTS } from '../model/mock-data';
 import { describeActivity } from '../model/stats';
 import { useHomeStats } from '../model/use-home-stats';
 import FeaturedShipment from './FeaturedShipment';
@@ -10,8 +8,6 @@ import PendingPreAlerts from './PendingPreAlerts';
 import ProfileSection from './ProfileSection';
 import RecentShipments from './RecentShipments';
 import StatCards from './StatCards';
-
-const FEATURED = resolveFeaturedShipment(SHIPMENTS, FEATURED_SHIPMENT);
 
 function HomePage() {
   const { stats, retry } = useHomeStats();
@@ -24,7 +20,7 @@ function HomePage() {
     <Stack gap={{ base: 6, lg: 8 }}>
       <ProfileSection summary={describeActivity(stats.inTransit, stats.atAgency)} />
       <StatCards stats={stats} onRetry={retry} />
-      {FEATURED && <FeaturedShipment featured={FEATURED} />}
+      <FeaturedShipment />
       <RecentShipments />
       <PendingPreAlerts />
     </Stack>

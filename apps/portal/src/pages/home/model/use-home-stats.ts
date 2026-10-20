@@ -2,7 +2,7 @@ import type { MyPackageListParams } from '@rapiexpress/api-client/tracking.schem
 
 import { useMyPackages } from '@/features/shipments/model/use-my-packages';
 
-import { usePendingPreAlerts } from './home-queries';
+import { useAgencyPackages, usePendingPreAlerts } from './home-queries';
 import { combineStats, type HomeStats, type StatState } from './stats';
 
 const countParams = (status: NonNullable<MyPackageListParams['status']>): MyPackageListParams => ({
@@ -13,7 +13,6 @@ const countParams = (status: NonNullable<MyPackageListParams['status']>): MyPack
 
 const SHIPPED_COUNT = countParams('SHIPPED');
 const CUSTOMS_COUNT = countParams('CUSTOMS');
-const AGENCY_COUNT = countParams('AGENCY');
 
 interface CountQuery {
   isError: boolean;
@@ -33,7 +32,7 @@ function retryFailed(...queries: CountQuery[]) {
 export function useHomeStats() {
   const shipped = useMyPackages(SHIPPED_COUNT);
   const customs = useMyPackages(CUSTOMS_COUNT);
-  const agency = useMyPackages(AGENCY_COUNT);
+  const agency = useAgencyPackages();
   const preAlerts = usePendingPreAlerts();
 
   const stats: HomeStats = {

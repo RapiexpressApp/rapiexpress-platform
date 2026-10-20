@@ -5,7 +5,13 @@ import { describe, expect, it } from 'vitest';
 
 import { profileFixture } from '@/test/auth-handlers';
 import { renderHomePage } from '@/test/home-page';
-import { myPackageFixture, myPackagesListHandler } from '@/test/packages-handlers';
+import {
+  myPackageDetailFixture,
+  myPackageDetailHandler,
+  myPackageFixture,
+  myPackagesBackendHandler,
+  myPackagesListHandler,
+} from '@/test/packages-handlers';
 
 describe('HomePage', () => {
   it('greets the customer by first name and shows the real locker code', async () => {
@@ -97,5 +103,21 @@ describe('HomePage', () => {
 
     release();
     expect(await screen.findByText('Hola, Jane')).toBeInTheDocument();
+  });
+
+  it('keeps every other block working when the purchases endpoint fails', async () => {
+    renderHomePage(
+      http.get('*/api/me/purchases', () => new HttpResponse(null, { status: 500 })),
+      myPackagesBackendHandler([myPackageFixture({ status: 'SHIPPED' })]),
+      myPackageDetailHandler(myPackageDetailFixture({ status: 'SHIPPED' }))
+    );
+
+    expect(await screen.findByText('No pudimos cargar tus pre-alertas.')).toBeInTheDocument();
+    expect(await screen.findByText('Hola, Jane')).toBeInTheDocument();
+    expect(await screen.findByRole('list', { name: 'Envíos' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('link', { name: 'Ver detalle del envío' }, { timeout: 3000 })
+    ).toBeInTheDocument();
+    expect(await screen.findByText('Tienes 1 paquete en camino.')).toBeInTheDocument();
   });
 });

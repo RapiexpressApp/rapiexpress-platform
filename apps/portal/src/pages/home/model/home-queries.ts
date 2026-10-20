@@ -5,6 +5,7 @@ import { useMyPurchases } from '@/features/pre-alerts/model/use-my-purchases';
 import { useMyPackages } from '@/features/shipments/model/use-my-packages';
 
 const RECENT_PARAMS: MyPackageListParams = { page: 1, pageSize: 5 };
+const AGENCY_PARAMS: MyPackageListParams = { page: 1, pageSize: 20, status: 'AGENCY' };
 const PENDING_PRE_ALERTS_PARAMS: MyPurchaseListParams = {
   page: 1,
   pageSize: 3,
@@ -13,6 +14,10 @@ const PENDING_PRE_ALERTS_PARAMS: MyPurchaseListParams = {
 
 export function useRecentPackages() {
   return useMyPackages(RECENT_PARAMS);
+}
+
+export function useAgencyPackages() {
+  return useMyPackages(AGENCY_PARAMS);
 }
 
 export function usePendingPreAlerts() {
