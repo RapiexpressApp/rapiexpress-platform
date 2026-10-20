@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatDate, formatUsd, formatWeightLb } from './format';
+import { formatDate, formatDateTime, formatUsd, formatWeightKg, formatWeightLb } from './format';
 
 describe('formatUsd', () => {
   it('always shows two decimals with the Spanish decimal comma', () => {
@@ -32,5 +32,22 @@ describe('formatDate', () => {
 
   it('reads an instant just after midnight UTC as that UTC day', () => {
     expect(formatDate('2026-03-15T01:30:00.000Z')).toBe('15 mar 2026');
+  });
+});
+
+describe('formatWeightKg', () => {
+  it('keeps up to two decimals with the Spanish comma', () => {
+    expect(formatWeightKg(1)).toBe('1 kg');
+    expect(formatWeightKg(1.13)).toBe('1,13 kg');
+  });
+});
+
+describe('formatDateTime', () => {
+  it('shows the date and the time in Spanish', () => {
+    expect(formatDateTime('2026-03-15T14:05:00.000Z')).toBe('15 mar 2026, 14:05');
+  });
+
+  it('returns an empty string for an invalid date', () => {
+    expect(formatDateTime('not-a-date')).toBe('');
   });
 });
