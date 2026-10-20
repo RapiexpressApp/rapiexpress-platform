@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import type { PackageStaffDetail } from '@rapiexpress/api-client/packages.schemas';
+import type { ReactNode } from 'react';
 
 import { formatDate, formatUsd, formatWeightKg, formatWeightLb } from '@/shared/lib/format';
 import { CATEGORY_LABEL, PACKAGE_TYPE_LABEL } from '@/shared/model/package-labels';
@@ -9,11 +10,12 @@ import DetailSection from './DetailSection';
 
 interface PackageDataSectionProps {
   detail: PackageStaffDetail;
+  action?: ReactNode;
 }
 
-function PackageDataSection({ detail }: PackageDataSectionProps) {
+function PackageDataSection({ detail, action }: PackageDataSectionProps) {
   return (
-    <DetailSection title="Datos del paquete">
+    <DetailSection title="Datos del paquete" action={action}>
       <Box as="dl">
         <DataRow label="Guía">{detail.trackingNumber}</DataRow>
         <DataRow label="Tipo">{PACKAGE_TYPE_LABEL[detail.packageType]}</DataRow>

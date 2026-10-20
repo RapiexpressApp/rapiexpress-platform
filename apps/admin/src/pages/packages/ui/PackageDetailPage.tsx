@@ -3,19 +3,24 @@ import { uuidSchema } from '@rapiexpress/api-client/field-schemas';
 import type { PackageStaffDetail } from '@rapiexpress/api-client/packages.schemas';
 import { focusRing } from '@rapiexpress/ui/interaction';
 import { ArrowLeft, PackageOpen } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 
+import { isPackageEditable } from '@/features/packages/model/edit-package-values';
 import {
   isPackageNotFound,
   LOAD_PACKAGE_FAILED_MESSAGE,
 } from '@/features/packages/model/package-errors';
+import type { PackageNoticeContent } from '@/features/packages/model/package-notice';
 import { usePackage } from '@/features/packages/model/use-package';
+import { useRefreshPackages } from '@/features/packages/model/use-refresh-packages';
+import EditPackageAction from '@/features/packages/ui/EditPackageAction';
 import OpenIncidentFlag from '@/features/packages/ui/OpenIncidentFlag';
 import PackageCustomerSection from '@/features/packages/ui/PackageCustomerSection';
 import PackageDataSection from '@/features/packages/ui/PackageDataSection';
 import PackageHistorySection from '@/features/packages/ui/PackageHistorySection';
 import PackageIncidentsSection from '@/features/packages/ui/PackageIncidentsSection';
+import PackageNotice from '@/features/packages/ui/PackageNotice';
 import PackagePurchaseSection from '@/features/packages/ui/PackagePurchaseSection';
 import PackageStatusBadge from '@/features/packages/ui/PackageStatusBadge';
 import { PACKAGES_PATH } from '@/shared/model/paths';
@@ -47,12 +52,26 @@ function BackToPackages() {
 }
 
 function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [notice, setNotice] = useState<PackageNoticeContent | null>(null);
+  const refresh = useRefreshPackages();
+
+  function handleStale(next: PackageNoticeContent) {
+    setNotice(next);
+    void refresh();
+  }
+
+  const fallbackFocus = () => headingRef.current;
+
   return (
     <Stack gap={6}>
       <BackToPackages />
 
       <Stack as="header" gap={2}>
         <Heading
+          ref={headingRef}
+          tabIndex={-1}
+          outline="none"
           as="h1"
           size="2xl"
           letterSpacing="tight"
@@ -70,7 +89,26 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
         </Flex>
       </Stack>
 
-      <PackageDataSection detail={detail} />
+      {notice && (
+        <PackageNotice
+          notice={notice}
+          onDismiss={() => setNotice(null)}
+          onShowIncidents={() => {}}
+        />
+      )}
+
+      <PackageDataSection
+        detail={detail}
+        action={
+          isPackageEditable(detail.status) && (
+            <EditPackageAction
+              detail={detail}
+              fallbackFocus={fallbackFocus}
+              onStale={handleStale}
+            />
+          )
+        }
+      />
       <PackageCustomerSection customer={detail.customer} />
       <PackagePurchaseSection purchase={detail.purchase} />
       <PackageIncidentsSection openIncident={detail.openIncident} incidents={detail.incidents} />

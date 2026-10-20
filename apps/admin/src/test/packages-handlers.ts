@@ -6,7 +6,7 @@ import type {
   PackageStaffDetail,
   StaffUserSummary,
 } from '@rapiexpress/api-client/packages.schemas';
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse, type JsonBodyType } from 'msw';
 
 import {
   customerSummaryFixture,
@@ -130,3 +130,44 @@ export const packageNotFoundHandler = () =>
       { status: 404 }
     )
   );
+
+interface ActionOptions {
+  status?: number;
+  onRequest?: (body: Record<string, unknown>) => void;
+  gate?: Promise<void>;
+}
+
+export const packageActionHandler = (
+  method: 'patch' | 'post',
+  suffix: string,
+  response: JsonBodyType,
+  { status = 200, onRequest, gate }: ActionOptions = {}
+) =>
+  http[method](`*/api/packages/:id${suffix}`, async ({ request }) => {
+    const body: unknown = await request.json().catch(() => ({}));
+    onRequest?.(body as Record<string, unknown>);
+    await gate;
+    return HttpResponse.json(response, { status });
+  });
+
+export const packageErrorHandler = (
+  method: 'patch' | 'post',
+  suffix: string,
+  code: string,
+  extra: Record<string, unknown> = {},
+  status = 409
+) =>
+  packageActionHandler(
+    method,
+    suffix,
+    { statusCode: status, code, message: code, ...extra },
+    { status }
+  );
+
+export function createGate() {
+  let release: () => void = () => {};
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  return { gate, release };
+}
