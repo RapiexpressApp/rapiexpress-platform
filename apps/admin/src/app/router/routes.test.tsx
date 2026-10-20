@@ -1,18 +1,25 @@
 import { screen } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
+import userEvent from '@testing-library/user-event';
+import { http, HttpResponse, type RequestHandler } from 'msw';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AppRoutes } from '@/app/router/routes';
 import { logoutHandler, meHandler, refreshOkHandler } from '@/test/auth-handlers';
-import { packagesListHandler } from '@/test/packages-handlers';
+import {
+  PACKAGE_ID,
+  packageDetailHandler,
+  packageListItemFixture,
+  packagesListHandler,
+} from '@/test/packages-handlers';
 import { renderWithProviders } from '@/test/render';
 import { server } from '@/test/server';
 import { usersListHandler } from '@/test/users-handlers';
 
-function renderApp(role: string, route: string) {
+function renderApp(role: string, route: string, ...handlers: RequestHandler[]) {
   const customersRequested = vi.fn();
   const usersRequested = vi.fn();
   server.use(
+    ...handlers,
     refreshOkHandler(),
     meHandler(role),
     logoutHandler(),
@@ -130,5 +137,34 @@ describe('AppRoutes for the other staff roles', () => {
       'Tu cuenta no tiene acceso al panel.'
     );
     expect(screen.queryByRole('heading', { level: 1, name: 'Recepción' })).toBeNull();
+  });
+});
+
+describe('AppRoutes package detail', () => {
+  it.each(['ADMIN', 'OPERATIONS', 'WAREHOUSE'])('lets %s open a package', async (role) => {
+    renderApp(role, `/paquetes/${PACKAGE_ID}`, packageDetailHandler());
+
+    expect(await heading('WH-000042')).toBeInTheDocument();
+  });
+
+  it('opens the detail of the package picked in the list', async () => {
+    renderApp(
+      'WAREHOUSE',
+      '/paquetes',
+      packagesListHandler([packageListItemFixture()]),
+      packageDetailHandler()
+    );
+
+    await userEvent.click(await screen.findByRole('link', { name: 'WH-000042' }));
+
+    expect(await heading('WH-000042')).toBeInTheDocument();
+  });
+
+  it('keeps customer accounts out of a package', async () => {
+    renderApp('CUSTOMER', `/paquetes/${PACKAGE_ID}`);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Tu cuenta no tiene acceso al panel.'
+    );
   });
 });
