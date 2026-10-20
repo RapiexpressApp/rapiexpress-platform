@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 import { Link, NavLink } from 'react-router';
 
 import type { NavItem } from '@/shared/model/nav-item';
+import { NEW_PRE_ALERT_PATH } from '@/shared/model/paths';
 import BrandLink from '@/shared/ui/brand-link';
 
 interface SidebarProps {
@@ -43,7 +44,7 @@ function Sidebar({ items }: SidebarProps) {
         borderRadius="lg"
         css={pressable}
       >
-        <Link to="/pre-alerts">
+        <Link to={NEW_PRE_ALERT_PATH}>
           <Plus size={18} strokeWidth={2.25} aria-hidden="true" />
           Pre-alertar compra
         </Link>

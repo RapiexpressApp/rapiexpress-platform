@@ -19,3 +19,9 @@ export const CATEGORY_LABEL: Record<CustomsCategory, string> = {
   MIGRANT: 'G (migrante)',
   COMMERCIAL: 'C (comercial)',
 };
+
+export const CATEGORY_RULE: Record<CustomsCategory, string> = {
+  FOUR_BY_FOUR: 'Hasta USD 400 y 8,5 lb.',
+  MIGRANT: 'Para uso personal.',
+  COMMERCIAL: 'Hasta 100 kg y USD 5.000.',
+};

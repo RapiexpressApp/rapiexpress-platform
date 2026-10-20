@@ -3,6 +3,8 @@ import { focusRing, pressable } from '@rapiexpress/ui/interaction';
 import { PackageOpen, Plus } from 'lucide-react';
 import { Link } from 'react-router';
 
+import { NEW_PRE_ALERT_PATH } from '@/shared/model/paths';
+
 import { formatWeight } from '../model/shipment-format';
 import type { Shipment } from '../model/types';
 import StatusIndicator from './StatusIndicator';
@@ -51,7 +53,7 @@ function EmptyState() {
         borderRadius="lg"
         css={pressable}
       >
-        <Link to="/pre-alerts">
+        <Link to={NEW_PRE_ALERT_PATH}>
           <Plus size={18} strokeWidth={2.25} aria-hidden="true" />
           Pre-alertar mi primera compra
         </Link>
