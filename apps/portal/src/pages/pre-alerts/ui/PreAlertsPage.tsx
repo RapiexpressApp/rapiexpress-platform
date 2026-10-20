@@ -11,6 +11,7 @@ import {
   PURCHASE_NOT_PENDING_MESSAGE,
 } from '@/features/pre-alerts/model/pre-alert-errors';
 import { useMyPurchases } from '@/features/pre-alerts/model/use-my-purchases';
+import CancelPurchaseDialog from '@/features/pre-alerts/ui/CancelPurchaseDialog';
 import PurchaseFormDialog from '@/features/pre-alerts/ui/PurchaseFormDialog';
 import PurchasesList from '@/features/pre-alerts/ui/PurchasesList';
 import PurchaseStatusFilter from '@/features/pre-alerts/ui/PurchaseStatusFilter';
@@ -30,6 +31,7 @@ function PreAlertsPage() {
   const { page, pageSize, searchParams, setPage, update } = useListParams();
   const [notice, setNotice] = useState<Notice | null>(null);
   const editDialog = useDialogTarget<Purchase>();
+  const cancelDialog = useDialogTarget<Purchase>();
   const status = purchaseStatusSchema.safeParse(searchParams.get('status')).data ?? null;
   const purchases = useMyPurchases({ page, pageSize, ...(status ? { status } : {}) });
   const creating = searchParams.get(NEW_PARAM) === '1';
@@ -66,7 +68,18 @@ function PreAlertsPage() {
 
   function handleNotPending() {
     editDialog.hide();
+    cancelDialog.hide();
     setNotice({ status: 'warning', message: PURCHASE_NOT_PENDING_MESSAGE });
+  }
+
+  function openCancel(purchase: Purchase) {
+    setNotice(null);
+    cancelDialog.show(purchase);
+  }
+
+  function handleCancelled() {
+    cancelDialog.hide();
+    setNotice({ status: 'success', message: 'Pre-alerta cancelada.' });
   }
 
   return (
@@ -163,7 +176,7 @@ function PreAlertsPage() {
         onRetry={() => void purchases.refetch()}
       >
         <Stack gap={4}>
-          <PurchasesList purchases={items} onEdit={openEdit} />
+          <PurchasesList purchases={items} onEdit={openEdit} onCancel={openCancel} />
           {purchases.data && (
             <ListPagination
               buttonSize="lg"
@@ -183,6 +196,13 @@ function PreAlertsPage() {
         purchase={editDialog.target}
         onClose={editDialog.hide}
         onSaved={handleEdited}
+        onNotPending={handleNotPending}
+      />
+      <CancelPurchaseDialog
+        open={cancelDialog.open}
+        purchase={cancelDialog.target}
+        onClose={cancelDialog.hide}
+        onCancelled={handleCancelled}
         onNotPending={handleNotPending}
       />
     </Stack>

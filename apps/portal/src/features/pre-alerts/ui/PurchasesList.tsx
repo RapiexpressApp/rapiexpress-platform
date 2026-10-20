@@ -10,15 +10,14 @@ import PurchaseStatusIndicator from './PurchaseStatusIndicator';
 interface PurchasesListProps {
   purchases: Purchase[];
   onEdit: (purchase: Purchase) => void;
+  onCancel: (purchase: Purchase) => void;
 }
 
 function PurchaseActions({
   purchase,
   onEdit,
-}: {
-  purchase: Purchase;
-  onEdit: PurchasesListProps['onEdit'];
-}) {
+  onCancel,
+}: Pick<PurchasesListProps, 'onEdit' | 'onCancel'> & { purchase: Purchase }) {
   if (purchase.status !== 'PENDING_RECEPTION') return null;
 
   return (
@@ -40,11 +39,28 @@ function PurchaseActions({
       >
         Editar
       </Button>
+      <Button
+        variant="outline"
+        aria-label={`Cancelar pre-alerta ${purchase.trackingNumber}`}
+        minH={11}
+        px={4}
+        fontSize="sm"
+        fontWeight="medium"
+        borderRadius="lg"
+        borderColor="slate.300"
+        color="red.600"
+        touchAction="manipulation"
+        _hover={{ bg: 'slate.50' }}
+        _focusVisible={focusRing}
+        onClick={() => onCancel(purchase)}
+      >
+        Cancelar
+      </Button>
     </Flex>
   );
 }
 
-function PurchasesTable({ purchases, onEdit }: PurchasesListProps) {
+function PurchasesTable({ purchases, onEdit, onCancel }: PurchasesListProps) {
   return (
     <Box display={{ base: 'none', md: 'block' }} overflowX="auto">
       <Table.Root
@@ -120,7 +136,7 @@ function PurchasesTable({ purchases, onEdit }: PurchasesListProps) {
                 {formatDate(purchase.createdAt)}
               </Table.Cell>
               <Table.Cell pe={6}>
-                <PurchaseActions purchase={purchase} onEdit={onEdit} />
+                <PurchaseActions purchase={purchase} onEdit={onEdit} onCancel={onCancel} />
               </Table.Cell>
             </Table.Row>
           ))}
@@ -130,7 +146,7 @@ function PurchasesTable({ purchases, onEdit }: PurchasesListProps) {
   );
 }
 
-function PurchasesCards({ purchases, onEdit }: PurchasesListProps) {
+function PurchasesCards({ purchases, onEdit, onCancel }: PurchasesListProps) {
   return (
     <Stack
       as="ul"
@@ -171,7 +187,7 @@ function PurchasesCards({ purchases, onEdit }: PurchasesListProps) {
           </Box>
           {purchase.status === 'PENDING_RECEPTION' && (
             <Box mt={3}>
-              <PurchaseActions purchase={purchase} onEdit={onEdit} />
+              <PurchaseActions purchase={purchase} onEdit={onEdit} onCancel={onCancel} />
             </Box>
           )}
         </Box>
@@ -180,11 +196,11 @@ function PurchasesCards({ purchases, onEdit }: PurchasesListProps) {
   );
 }
 
-function PurchasesList({ purchases, onEdit }: PurchasesListProps) {
+function PurchasesList({ purchases, onEdit, onCancel }: PurchasesListProps) {
   return (
     <Box borderRadius="xl" borderWidth="1px" borderColor="slate.200" bg="white" overflow="hidden">
-      <PurchasesTable purchases={purchases} onEdit={onEdit} />
-      <PurchasesCards purchases={purchases} onEdit={onEdit} />
+      <PurchasesTable purchases={purchases} onEdit={onEdit} onCancel={onCancel} />
+      <PurchasesCards purchases={purchases} onEdit={onEdit} onCancel={onCancel} />
     </Box>
   );
 }
