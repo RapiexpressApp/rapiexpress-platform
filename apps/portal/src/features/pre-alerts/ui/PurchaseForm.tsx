@@ -7,6 +7,8 @@ import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles
 import { useEffect, useId, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
+import { CATEGORY_LABEL } from '@/shared/model/customs-category';
+
 import {
   CREATE_PURCHASE_FAILED_MESSAGE,
   DUPLICATE_PURCHASE_MESSAGE,
@@ -16,7 +18,6 @@ import {
   UPDATE_PURCHASE_FAILED_MESSAGE,
 } from '../model/pre-alert-errors';
 import { toFormValues } from '../model/purchase-form-values';
-import { CATEGORY_LABEL } from '../model/purchase-labels';
 import { useSavePurchase } from '../model/use-save-purchase';
 import {
   type PurchaseFormInput,

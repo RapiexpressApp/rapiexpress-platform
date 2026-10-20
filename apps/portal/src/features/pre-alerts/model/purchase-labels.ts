@@ -1,6 +1,6 @@
-import type { Purchase, PurchaseStatus } from '@rapiexpress/api-client/purchases.schemas';
+import type { PurchaseStatus } from '@rapiexpress/api-client/purchases.schemas';
 
-export type CustomsCategory = Purchase['suggestedCategory'];
+import type { CustomsCategory } from '@/shared/model/customs-category';
 
 export const PURCHASE_STATUS_LABEL: Record<PurchaseStatus, string> = {
   PENDING_RECEPTION: 'Por recibir',
@@ -12,12 +12,6 @@ export const PURCHASE_STATUS_FILTER_LABEL: Record<PurchaseStatus, string> = {
   PENDING_RECEPTION: 'Por recibir',
   RECEIVED: 'Recibidas',
   CANCELLED: 'Canceladas',
-};
-
-export const CATEGORY_LABEL: Record<CustomsCategory, string> = {
-  FOUR_BY_FOUR: '4x4',
-  MIGRANT: 'G (migrante)',
-  COMMERCIAL: 'C (comercial)',
 };
 
 export const CATEGORY_RULE: Record<CustomsCategory, string> = {
