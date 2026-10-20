@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { findPurchasesList, renderPreAlertsPage } from '@/test/pre-alerts-page';
 import { purchaseFixture, purchasesListHandler } from '@/test/purchases-handlers';
@@ -69,6 +69,21 @@ describe('PreAlertsPage cancel', () => {
 
     await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
     await waitFor(() => expect(trigger).toHaveFocus());
+  });
+
+  it('puts initial focus on the safe action', async () => {
+    // jsdom has no layout, so the focus trap sees no focusable element unless boxes exist.
+    vi.spyOn(HTMLElement.prototype, 'getClientRects').mockReturnValue([
+      new DOMRect(0, 0, 100, 40),
+    ] as unknown as DOMRectList);
+    server.use(purchasesListHandler([pending]));
+    renderPreAlertsPage();
+
+    const dialog = await openConfirmation();
+
+    await waitFor(() =>
+      expect(dialog.getByRole('button', { name: 'Mantener pre-alerta' })).toHaveFocus()
+    );
   });
 
   it('keeps the pre-alert when the customer backs out', async () => {
