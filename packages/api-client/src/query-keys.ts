@@ -1,3 +1,4 @@
+import type { PackageListParams } from './packages.schemas.ts';
 import type { ListParams } from './pagination.ts';
 import type { MyPurchaseListParams, StaffPurchaseListParams } from './purchases.schemas.ts';
 import type { MyPackageListParams } from './tracking.schemas.ts';
@@ -8,6 +9,7 @@ const customersRoot = ['customers'] as const;
 const myPurchasesRoot = ['myPurchases'] as const;
 const myPackagesRoot = ['myPackages'] as const;
 const purchasesRoot = ['purchases'] as const;
+const packagesRoot = ['packages'] as const;
 
 export const queryKeys = {
   auth: {
@@ -35,5 +37,11 @@ export const queryKeys = {
   purchases: {
     all: purchasesRoot,
     list: (params: StaffPurchaseListParams) => [...purchasesRoot, 'list', params] as const,
+  },
+  packages: {
+    all: packagesRoot,
+    list: (params: PackageListParams) => [...packagesRoot, 'list', params] as const,
+    detail: (id: string) => [...packagesRoot, 'detail', id] as const,
+    lookup: (trackingNumber: string) => [...packagesRoot, 'lookup', trackingNumber] as const,
   },
 };
