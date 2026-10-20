@@ -4,6 +4,11 @@ const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
 const MAX_PAGE = 10_000;
 
+interface UpdateOptions {
+  resetPage?: boolean;
+  replace?: boolean;
+}
+
 function parsePositiveInt(raw: string | null, fallback: number, max = Number.MAX_SAFE_INTEGER) {
   const value = Number(raw);
   return Number.isSafeInteger(value) && value >= 1 && value <= max ? value : fallback;
@@ -41,5 +46,20 @@ export function useListParams() {
     });
   }
 
-  return { page, pageSize, search, setSearch, setPage };
+  function update(changes: Record<string, string | null>, options: UpdateOptions = {}) {
+    setSearchParams(
+      (previous) => {
+        const next = new URLSearchParams(previous);
+        for (const [name, value] of Object.entries(changes)) {
+          if (value === null) next.delete(name);
+          else next.set(name, value);
+        }
+        if (options.resetPage) next.delete('page');
+        return next;
+      },
+      { replace: options.replace }
+    );
+  }
+
+  return { page, pageSize, search, searchParams, setSearch, setPage, update };
 }
