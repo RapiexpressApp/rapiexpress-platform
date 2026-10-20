@@ -4,6 +4,7 @@ import DashboardLayout from '@/app/layouts/DashboardLayout';
 import HomePage from '@/pages/home/ui/HomePage';
 import LoginPage from '@/pages/login/ui/LoginPage';
 import NotFoundPage from '@/pages/not-found/ui/NotFoundPage';
+import PreAlertsPage from '@/pages/pre-alerts/ui/PreAlertsPage';
 import RegisterPage from '@/pages/register/ui/RegisterPage';
 
 import GuestOnly from './GuestOnly';
@@ -20,6 +21,7 @@ export function AppRoutes() {
       <Route element={<RequireAuth />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<HomePage />} />
+          <Route path="/pre-alerts" element={<PreAlertsPage />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFoundPage />} />
