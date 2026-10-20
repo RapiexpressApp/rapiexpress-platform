@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { server } from '../test/server';
 import { createApiClient } from './client.ts';
 import { getApiErrorCode } from './http-error.ts';
-import { getExistingPackages } from './package-errors.ts';
+import { getExistingPackages, getInvalidTransition } from './package-errors.ts';
 import { createPackagesApi } from './packages.api.ts';
 import { setAccessToken } from './token-store.ts';
 
@@ -69,5 +69,72 @@ describe('getExistingPackages', () => {
 
     expect(getApiErrorCode(error)).toBe('DUPLICATE_TRACKING_NUMBER');
     expect(getExistingPackages(error)).toEqual([existing]);
+  });
+});
+
+const invalidTransitionBody = {
+  statusCode: 409,
+  error: 'Conflict',
+  code: 'INVALID_TRANSITION',
+  message: 'A package cannot move from SHIPPED to DELIVERED',
+  from: 'SHIPPED',
+  to: 'DELIVERED',
+  allowed: ['IN_CUSTOMS'],
+};
+
+describe('getInvalidTransition', () => {
+  it('reads the origin, the target and the allowed statuses', () => {
+    expect(getInvalidTransition(failure(invalidTransitionBody))).toEqual({
+      from: 'SHIPPED',
+      to: 'DELIVERED',
+      allowed: ['IN_CUSTOMS'],
+    });
+  });
+
+  it('accepts an empty list of allowed statuses', () => {
+    const final = { ...invalidTransitionBody, from: 'DELIVERED', allowed: [] };
+
+    expect(getInvalidTransition(failure(final))?.allowed).toEqual([]);
+  });
+
+  it('returns undefined for any other error code', () => {
+    const other = { ...invalidTransitionBody, code: 'PACKAGE_STATUS_CHANGED' };
+
+    expect(getInvalidTransition(failure(other))).toBeUndefined();
+  });
+
+  it('returns undefined when the body does not match the contract', () => {
+    expect(
+      getInvalidTransition(failure({ ...invalidTransitionBody, allowed: ['LOST'] }))
+    ).toBeUndefined();
+    expect(
+      getInvalidTransition(failure({ ...invalidTransitionBody, from: undefined }))
+    ).toBeUndefined();
+    expect(
+      getInvalidTransition(failure({ ...invalidTransitionBody, allowed: undefined }))
+    ).toBeUndefined();
+  });
+
+  it('returns undefined for non axios errors and missing bodies', () => {
+    expect(getInvalidTransition(new Error('nope'))).toBeUndefined();
+    expect(getInvalidTransition(invalidTransitionBody)).toBeUndefined();
+    expect(getInvalidTransition(failure(undefined))).toBeUndefined();
+  });
+
+  it('works on the error thrown by a rejected transition', async () => {
+    setAccessToken('tok');
+    server.use(
+      http.post('*/api/packages/:id/transitions', () =>
+        HttpResponse.json(invalidTransitionBody, { status: 409 })
+      )
+    );
+    const packagesApi = createPackagesApi(createApiClient({ baseURL: '/api' }));
+
+    const error = await packagesApi
+      .transition('k1', 'DELIVERED')
+      .catch((caught: unknown) => caught);
+
+    expect(getApiErrorCode(error)).toBe('INVALID_TRANSITION');
+    expect(getInvalidTransition(error)?.allowed).toEqual(['IN_CUSTOMS']);
   });
 });
