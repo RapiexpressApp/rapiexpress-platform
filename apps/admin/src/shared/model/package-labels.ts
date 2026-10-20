@@ -1,5 +1,10 @@
 import type { CUSTOMS_CATEGORIES } from '@rapiexpress/api-client/field-schemas';
-import type { PackageStatus, PackageType } from '@rapiexpress/api-client/packages.schemas';
+import type {
+  IncidentType,
+  PackageEvent,
+  PackageStatus,
+  PackageType,
+} from '@rapiexpress/api-client/packages.schemas';
 
 export type CustomsCategory = (typeof CUSTOMS_CATEGORIES)[number];
 
@@ -23,4 +28,17 @@ export const CATEGORY_LABEL: Record<CustomsCategory, string> = {
   FOUR_BY_FOUR: '4x4',
   MIGRANT: 'G (migrante)',
   COMMERCIAL: 'C (comercial)',
+};
+
+export const INCIDENT_TYPE_LABEL: Record<IncidentType, string> = {
+  DAMAGED: 'Dañado',
+  CUSTOMS_HOLD: 'Retenido en aduana',
+  LOST: 'Extraviado',
+  ABANDONED: 'Abandonado',
+  OTHER: 'Otro',
+};
+
+export const EVENT_SOURCE_LABEL: Record<PackageEvent['source'], string> = {
+  RECEPTION: 'Recepción',
+  MANUAL: 'Manual',
 };
