@@ -12,6 +12,7 @@ import FeaturedShipment from './FeaturedShipment';
 import GreetingHeader from './GreetingHeader';
 import HomeSkeleton from './HomeSkeleton';
 import LockerCard from './LockerCard';
+import PendingPreAlerts from './PendingPreAlerts';
 import RecentShipments from './RecentShipments';
 import StatCards from './StatCards';
 
@@ -46,6 +47,7 @@ function HomePage() {
       <StatCards stats={STATS} />
       {FEATURED && <FeaturedShipment featured={FEATURED} />}
       <RecentShipments />
+      <PendingPreAlerts />
     </Stack>
   );
 }
