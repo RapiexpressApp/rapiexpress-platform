@@ -1,6 +1,7 @@
 import { Button, Dialog, Portal } from '@chakra-ui/react';
 import type { Purchase } from '@rapiexpress/api-client/purchases.schemas';
 import { focusRing } from '@rapiexpress/ui/interaction';
+import { useState } from 'react';
 
 import PurchaseForm from './PurchaseForm';
 
@@ -19,14 +20,17 @@ function PurchaseFormDialog({
   onSaved,
   onNotPending,
 }: PurchaseFormDialogProps) {
+  const [busy, setBusy] = useState(false);
+
   return (
     <Dialog.Root
       lazyMount
       unmountOnExit
       open={open}
       onOpenChange={(event) => {
-        if (!event.open) onClose();
+        if (!event.open && !busy) onClose();
       }}
+      closeOnEscape={!busy}
       closeOnInteractOutside={false}
       placement="center"
       scrollBehavior="inside"
@@ -48,6 +52,7 @@ function PurchaseFormDialog({
                 purchase={purchase}
                 onSaved={onSaved}
                 onNotPending={onNotPending}
+                onBusyChange={setBusy}
                 onCancel={onClose}
               />
             </Dialog.Body>
@@ -55,6 +60,7 @@ function PurchaseFormDialog({
               <Button
                 aria-label="Cerrar"
                 variant="ghost"
+                disabled={busy}
                 position="absolute"
                 top={2}
                 right={2}

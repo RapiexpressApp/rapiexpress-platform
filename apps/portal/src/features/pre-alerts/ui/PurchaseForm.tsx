@@ -4,7 +4,7 @@ import { CUSTOMS_CATEGORIES } from '@rapiexpress/api-client/field-schemas';
 import type { Purchase } from '@rapiexpress/api-client/purchases.schemas';
 import AuthField from '@rapiexpress/ui/auth-field';
 import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles';
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import {
@@ -29,6 +29,7 @@ interface PurchaseFormProps {
   purchase?: Purchase;
   onSaved: () => void;
   onNotPending?: () => void;
+  onBusyChange: (busy: boolean) => void;
   onCancel: () => void;
 }
 
@@ -43,7 +44,13 @@ const EMPTY_VALUES: PurchaseFormInput = {
   suggestedCategory: '' as PurchaseFormInput['suggestedCategory'],
 };
 
-function PurchaseForm({ purchase, onSaved, onNotPending, onCancel }: PurchaseFormProps) {
+function PurchaseForm({
+  purchase,
+  onSaved,
+  onNotPending,
+  onBusyChange,
+  onCancel,
+}: PurchaseFormProps) {
   const isEdit = purchase !== undefined;
   const savePurchase = useSavePurchase(purchase);
   const [submittedWithoutChanges, setSubmittedWithoutChanges] = useState(false);
@@ -60,6 +67,12 @@ function PurchaseForm({ purchase, onSaved, onNotPending, onCancel }: PurchaseFor
     mode: 'onSubmit',
   });
   const category = useWatch({ control, name: 'suggestedCategory' });
+  const pending = savePurchase.isPending;
+
+  useEffect(() => {
+    onBusyChange(pending);
+    return () => onBusyChange(false);
+  }, [pending, onBusyChange]);
 
   function onSubmit(values: PurchaseFormValues) {
     if (savePurchase.isPending) return;

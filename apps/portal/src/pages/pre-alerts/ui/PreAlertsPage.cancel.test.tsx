@@ -216,6 +216,31 @@ describe('PreAlertsPage cancel', () => {
     expect(await screen.findByText('Pre-alerta cancelada.')).toBeInTheDocument();
   });
 
+  it('cannot be closed while cancelling and still confirms afterwards', async () => {
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      purchasesListHandler([pending]),
+      http.post('*/api/me/purchases/:id/cancel', async () => {
+        await gate;
+        return HttpResponse.json({ ...pending, status: 'CANCELLED' });
+      })
+    );
+    renderPreAlertsPage();
+    const dialog = await openConfirmation();
+
+    await confirm(dialog);
+    await waitFor(() => expect(dialog.getByRole('button', { name: /Cancelando/ })).toBeDisabled());
+    await userEvent.keyboard('{Escape}');
+    expect(dialog.getByRole('button', { name: 'Cerrar' })).toBeDisabled();
+
+    expect(screen.getByRole('alertdialog', { name: 'Cancelar pre-alerta' })).toBeInTheDocument();
+    release();
+    expect(await screen.findByText('Pre-alerta cancelada.')).toBeInTheDocument();
+  });
+
   it('blocks a double confirmation while the request is pending', async () => {
     let release: () => void = () => {};
     const gate = new Promise<void>((resolve) => {

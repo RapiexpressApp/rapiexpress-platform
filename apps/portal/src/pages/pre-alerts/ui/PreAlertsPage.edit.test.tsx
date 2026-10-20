@@ -263,6 +263,50 @@ describe('PreAlertsPage edit', () => {
     expect(list.getByText('Recibida')).toBeInTheDocument();
   });
 
+  it('cannot be closed while saving and still confirms afterwards', async () => {
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      purchasesListHandler([pending]),
+      http.patch('*/api/me/purchases/:id', async () => {
+        await gate;
+        return HttpResponse.json({ ...pending, store: 'eBay' });
+      })
+    );
+    renderPreAlertsPage();
+    const form = await openEdit();
+    await userEvent.clear(form.getByLabelText('Tienda'));
+    await userEvent.type(form.getByLabelText('Tienda'), 'eBay');
+
+    await save(form);
+    await waitFor(() => expect(form.getByRole('button', { name: /Guardando/ })).toBeDisabled());
+    await userEvent.keyboard('{Escape}');
+    expect(form.getByRole('button', { name: 'Cerrar' })).toBeDisabled();
+
+    expect(screen.getByRole('dialog', { name: 'Editar pre-alerta' })).toBeInTheDocument();
+    release();
+    expect(await screen.findByText('Cambios guardados.')).toBeInTheDocument();
+  });
+
+  it('can be closed again after a failed save', async () => {
+    server.use(
+      purchasesListHandler([pending]),
+      http.patch('*/api/me/purchases/:id', () => new HttpResponse(null, { status: 500 }))
+    );
+    renderPreAlertsPage();
+    const form = await openEdit();
+    await userEvent.clear(form.getByLabelText('Tienda'));
+    await userEvent.type(form.getByLabelText('Tienda'), 'eBay');
+    await save(form);
+    await form.findByRole('alert');
+
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
   it('shows one generic retry message for other errors and keeps the dialog open', async () => {
     server.use(
       purchasesListHandler([pending]),

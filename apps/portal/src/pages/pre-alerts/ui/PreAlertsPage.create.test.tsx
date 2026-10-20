@@ -255,6 +255,34 @@ describe('PreAlertsPage create dialog', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
+  it('cannot be closed while the request is pending and still confirms afterwards', async () => {
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      purchasesListHandler(),
+      http.post('*/api/me/purchases', async () => {
+        await gate;
+        return HttpResponse.json(purchaseFixture({ id: 'p2' }), { status: 201 });
+      })
+    );
+    renderPreAlertsPage();
+    const form = await openForm();
+    await fillForm(form);
+
+    await submit(form);
+    await waitFor(() => expect(form.getByRole('button', { name: /Creando/ })).toBeDisabled());
+    await userEvent.keyboard('{Escape}');
+    expect(form.getByRole('button', { name: 'Cerrar' })).toBeDisabled();
+    await userEvent.click(form.getByRole('button', { name: 'Cerrar' }));
+
+    expect(screen.getByRole('dialog', { name: 'Nueva pre-alerta' })).toBeInTheDocument();
+    release();
+    expect(await screen.findByText('Pre-alerta creada.')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
   it('blocks a double submit while the request is pending', async () => {
     let release: () => void = () => {};
     const gate = new Promise<void>((resolve) => {

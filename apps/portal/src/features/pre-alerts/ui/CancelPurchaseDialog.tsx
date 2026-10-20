@@ -1,7 +1,7 @@
 import { Button, Dialog, Flex, Portal, Text } from '@chakra-ui/react';
 import type { Purchase } from '@rapiexpress/api-client/purchases.schemas';
 import { focusRing } from '@rapiexpress/ui/interaction';
-import { type RefObject, useRef } from 'react';
+import { type RefObject, useEffect, useRef, useState } from 'react';
 
 import {
   CANCEL_PURCHASE_FAILED_MESSAGE,
@@ -20,6 +20,7 @@ interface CancelPurchaseDialogProps {
 interface CancelPurchasePanelProps extends Omit<CancelPurchaseDialogProps, 'open' | 'purchase'> {
   purchase: Purchase;
   keepRef: RefObject<HTMLButtonElement | null>;
+  onBusyChange: (busy: boolean) => void;
 }
 
 function CancelPurchasePanel({
@@ -28,8 +29,15 @@ function CancelPurchasePanel({
   onClose,
   onCancelled,
   onNotPending,
+  onBusyChange,
 }: CancelPurchasePanelProps) {
   const cancelPurchase = useCancelPurchase();
+  const pending = cancelPurchase.isPending;
+
+  useEffect(() => {
+    onBusyChange(pending);
+    return () => onBusyChange(false);
+  }, [pending, onBusyChange]);
 
   function handleConfirm() {
     if (cancelPurchase.isPending) return;
@@ -90,6 +98,7 @@ function CancelPurchaseDialog({
   onNotPending,
 }: CancelPurchaseDialogProps) {
   const keepRef = useRef<HTMLButtonElement>(null);
+  const [busy, setBusy] = useState(false);
 
   return (
     <Dialog.Root
@@ -98,8 +107,9 @@ function CancelPurchaseDialog({
       unmountOnExit
       open={open}
       onOpenChange={(event) => {
-        if (!event.open) onClose();
+        if (!event.open && !busy) onClose();
       }}
+      closeOnEscape={!busy}
       initialFocusEl={() => keepRef.current}
       closeOnInteractOutside={false}
       placement="center"
@@ -118,12 +128,14 @@ function CancelPurchaseDialog({
                 onClose={onClose}
                 onCancelled={onCancelled}
                 onNotPending={onNotPending}
+                onBusyChange={setBusy}
               />
             )}
             <Dialog.CloseTrigger asChild>
               <Button
                 aria-label="Cerrar"
                 variant="ghost"
+                disabled={busy}
                 position="absolute"
                 top={2}
                 right={2}
