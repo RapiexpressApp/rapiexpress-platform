@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router';
 
 const PAGE_SIZE = 10;
+const MAX_PAGE = 10_000;
 
 interface UpdateOptions {
   resetPage?: boolean;
@@ -9,7 +10,7 @@ interface UpdateOptions {
 
 function parsePositiveInt(raw: string | null, fallback: number): number {
   const value = Number(raw);
-  return Number.isInteger(value) && value >= 1 ? value : fallback;
+  return Number.isSafeInteger(value) && value >= 1 && value <= MAX_PAGE ? value : fallback;
 }
 
 export function useListParams() {

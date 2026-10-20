@@ -230,6 +230,21 @@ describe('PreAlertsPage status filter', () => {
 });
 
 describe('PreAlertsPage pagination', () => {
+  it.each(['1e21', '99999999999', '10001', '1.5', '-2', 'abc'])(
+    'falls back to the first page for the page %j',
+    async (rawPage) => {
+      const requests: URL[] = [];
+      server.use(
+        purchasesListHandler([purchaseFixture()], { onRequest: (url) => requests.push(url) })
+      );
+
+      renderPreAlertsPage(`/pre-alerts?page=${rawPage}`);
+      await findPurchasesList();
+
+      expect(requests[0]?.searchParams.get('page')).toBe('1');
+    }
+  );
+
   it('navigates pages through the URL', async () => {
     const requests: URL[] = [];
     server.use(
