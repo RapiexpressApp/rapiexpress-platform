@@ -45,7 +45,7 @@ function HomePage() {
       </Grid>
       <StatCards stats={STATS} />
       {FEATURED && <FeaturedShipment featured={FEATURED} />}
-      <RecentShipments shipments={SHIPMENTS} />
+      <RecentShipments />
     </Stack>
   );
 }

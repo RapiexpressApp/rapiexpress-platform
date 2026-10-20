@@ -2,17 +2,12 @@ import { screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 
-import { meHandler, profileFixture, refreshOkHandler } from '@/test/auth-handlers';
-import { renderWithProviders } from '@/test/render';
-import { server } from '@/test/server';
-
-import HomePage from './HomePage';
+import { profileFixture } from '@/test/auth-handlers';
+import { renderHomePage } from '@/test/home-page';
 
 describe('HomePage', () => {
   it('greets the customer by first name and shows the real locker code', async () => {
-    server.use(refreshOkHandler(), meHandler());
-
-    renderWithProviders(<HomePage />);
+    renderHomePage();
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Hola, Jane' })
@@ -24,14 +19,11 @@ describe('HomePage', () => {
   });
 
   it('greets with the first word of a compound given name', async () => {
-    server.use(
-      refreshOkHandler(),
+    renderHomePage(
       http.get('*/api/auth/me', () =>
         HttpResponse.json({ ...profileFixture, name: 'María José', lastName: 'Pérez' })
       )
     );
-
-    renderWithProviders(<HomePage />);
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Hola, María' })
@@ -40,9 +32,7 @@ describe('HomePage', () => {
   });
 
   it('keeps the static warehouse address lines', async () => {
-    server.use(refreshOkHandler(), meHandler());
-
-    renderWithProviders(<HomePage />);
+    renderHomePage();
 
     expect(await screen.findByText('8250 NW 27th St')).toBeInTheDocument();
   });
@@ -52,15 +42,12 @@ describe('HomePage', () => {
     const gate = new Promise<void>((resolve) => {
       release = resolve;
     });
-    server.use(
-      refreshOkHandler(),
+    renderHomePage(
       http.get('*/api/auth/me', async () => {
         await gate;
         return HttpResponse.json(profileFixture);
       })
     );
-
-    renderWithProviders(<HomePage />);
 
     expect(screen.getByRole('status', { name: 'Cargando perfil' })).toBeInTheDocument();
     expect(screen.queryByText(/Hola,/)).not.toBeInTheDocument();

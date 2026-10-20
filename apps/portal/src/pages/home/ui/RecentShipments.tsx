@@ -1,17 +1,13 @@
-import { Box, Button, Flex, Stack, Table, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { focusRing, pressable } from '@rapiexpress/ui/interaction';
 import { PackageOpen, Plus } from 'lucide-react';
 import { Link } from 'react-router';
 
-import { NEW_PRE_ALERT_PATH } from '@/shared/model/paths';
+import ShipmentsList from '@/features/shipments/ui/ShipmentsList';
+import { NEW_PRE_ALERT_PATH, SHIPMENTS_PATH } from '@/shared/model/paths';
 
-import { formatWeight } from '../model/shipment-format';
-import type { Shipment } from '../model/types';
-import StatusIndicator from './StatusIndicator';
-
-interface RecentShipmentsProps {
-  shipments: Shipment[];
-}
+import { useRecentPackages } from '../model/home-queries';
+import BlockStatus from './BlockStatus';
 
 function EmptyState() {
   return (
@@ -62,105 +58,13 @@ function EmptyState() {
   );
 }
 
-function ShipmentsTable({ shipments }: RecentShipmentsProps) {
-  return (
-    <Box display={{ base: 'none', md: 'block' }} overflowX="auto">
-      <Table.Root size="md" css={{ '& th, & td': { borderColor: 'slate.200' } }}>
-        <Table.Header>
-          <Table.Row bg="transparent">
-            <Table.ColumnHeader ps={6} fontWeight="medium" color="slate.600">
-              Paquete
-            </Table.ColumnHeader>
-            <Table.ColumnHeader fontWeight="medium" color="slate.600">
-              Guía
-            </Table.ColumnHeader>
-            <Table.ColumnHeader fontWeight="medium" color="slate.600">
-              Estado
-            </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="end" fontWeight="medium" color="slate.600">
-              Peso
-            </Table.ColumnHeader>
-            <Table.ColumnHeader pe={6} fontWeight="medium" color="slate.600">
-              Llegada
-            </Table.ColumnHeader>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {shipments.map((shipment) => (
-            <Table.Row key={shipment.id} bg="transparent" _hover={{ bg: 'slate.50' }}>
-              <Table.Cell ps={6} py={3.5}>
-                <Text fontWeight="medium" color="slate.900">
-                  {shipment.name}
-                </Text>
-                <Text fontSize="sm" color="slate.600">
-                  {shipment.store}
-                </Text>
-              </Table.Cell>
-              <Table.Cell fontVariantNumeric="tabular-nums" color="slate.700" whiteSpace="nowrap">
-                {shipment.tracking}
-              </Table.Cell>
-              <Table.Cell whiteSpace="nowrap">
-                <StatusIndicator status={shipment.status} />
-              </Table.Cell>
-              <Table.Cell
-                textAlign="end"
-                fontVariantNumeric="tabular-nums"
-                color="slate.700"
-                whiteSpace="nowrap"
-              >
-                {formatWeight(shipment.weightKg)}
-              </Table.Cell>
-              <Table.Cell pe={6} color="slate.700">
-                {shipment.arrival}
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
-    </Box>
-  );
-}
-
-function ShipmentsList({ shipments }: RecentShipmentsProps) {
-  return (
-    <Stack as="ul" display={{ base: 'flex', md: 'none' }} gap={0} listStyleType="none">
-      {shipments.map((shipment) => (
-        <Box as="li" key={shipment.id} px={5} py={4} borderTopWidth="1px" borderColor="slate.200">
-          <Text fontWeight="medium" color="slate.900">
-            {shipment.name}
-          </Text>
-          <Text fontSize="sm" color="slate.600">
-            {shipment.store} · {formatWeight(shipment.weightKg)}
-          </Text>
-          <Flex mt={2.5} wrap="wrap" justify="space-between" columnGap={4} rowGap={1}>
-            <StatusIndicator status={shipment.status} />
-            <Text fontSize="sm" color="slate.700">
-              {shipment.arrival}
-            </Text>
-          </Flex>
-          <Text mt={1.5} fontSize="xs" color="slate.500" fontVariantNumeric="tabular-nums">
-            Guía {shipment.tracking}
-          </Text>
-        </Box>
-      ))}
-    </Stack>
-  );
-}
-
-function RecentShipments({ shipments }: RecentShipmentsProps) {
-  const isEmpty = shipments.length === 0;
+function RecentShipments() {
+  const packages = useRecentPackages();
+  const items = packages.data?.items ?? [];
 
   return (
-    <Box
-      as="section"
-      aria-labelledby="recent-shipments-title"
-      borderRadius="xl"
-      borderWidth="1px"
-      borderColor="slate.200"
-      bg="white"
-      overflow="hidden"
-    >
-      <Flex align="center" justify="space-between" gap={4} px={{ base: 5, md: 6 }} py={4}>
+    <Box as="section" aria-labelledby="recent-shipments-title">
+      <Flex align="center" justify="space-between" gap={4} mb={2}>
         <Text
           as="h2"
           id="recent-shipments-title"
@@ -171,7 +75,7 @@ function RecentShipments({ shipments }: RecentShipmentsProps) {
         >
           Envíos recientes
         </Text>
-        {!isEmpty && (
+        {items.length > 0 && (
           <Flex
             asChild
             align="center"
@@ -187,21 +91,22 @@ function RecentShipments({ shipments }: RecentShipmentsProps) {
             _hover={{ bg: 'brand.50' }}
             _focusVisible={focusRing}
           >
-            <Link to="/shipments">Ver todos</Link>
+            <Link to={SHIPMENTS_PATH}>Ver todos</Link>
           </Flex>
         )}
       </Flex>
 
-      {isEmpty ? (
-        <Box borderTopWidth="1px" borderColor="slate.200">
-          <EmptyState />
-        </Box>
-      ) : (
-        <>
-          <ShipmentsTable shipments={shipments} />
-          <ShipmentsList shipments={shipments} />
-        </>
-      )}
+      <BlockStatus
+        isPending={packages.isPending}
+        isError={packages.isError}
+        isEmpty={items.length === 0}
+        loadingLabel="Cargando envíos recientes"
+        errorMessage="No pudimos cargar tus envíos recientes."
+        empty={<EmptyState />}
+        onRetry={() => void packages.refetch()}
+      >
+        <ShipmentsList packages={items} />
+      </BlockStatus>
     </Box>
   );
 }
