@@ -1,35 +1,42 @@
-import type { HomeStats, PreAlert, Shipment } from './types';
+export type StatState =
+  { status: 'pending' } | { status: 'error' } | { status: 'ready'; value: number };
 
-export function computeStats(shipments: Shipment[], preAlerts: PreAlert[]): HomeStats {
-  return {
-    inTransit: shipments.filter((s) => s.status === 'in_transit' || s.status === 'customs').length,
-    readyForPickup: shipments.filter((s) => s.status === 'ready').length,
-    preAlerts: preAlerts.length,
-  };
+export interface HomeStats {
+  inTransit: StatState;
+  atAgency: StatState;
+  preAlerts: StatState;
+}
+
+export function combineStats(a: StatState, b: StatState): StatState {
+  if (a.status === 'error' || b.status === 'error') return { status: 'error' };
+  if (a.status === 'pending' || b.status === 'pending') return { status: 'pending' };
+  return { status: 'ready', value: a.value + b.value };
 }
 
 function plural(count: number, singular: string, pluralForm: string) {
   return count === 1 ? singular : pluralForm;
 }
 
-export function describeActivity({ inTransit, readyForPickup }: HomeStats) {
+export function describeActivity(inTransit: StatState, atAgency: StatState): string {
+  if (inTransit.status !== 'ready' || atAgency.status !== 'ready') {
+    return 'Aquí tienes el resumen de tus paquetes.';
+  }
+
   const parts: string[] = [];
 
-  if (inTransit > 0) {
-    parts.push(`${inTransit} ${plural(inTransit, 'paquete', 'paquetes')} en camino`);
+  if (inTransit.value > 0) {
+    parts.push(`${inTransit.value} ${plural(inTransit.value, 'paquete', 'paquetes')} en camino`);
   }
 
-  if (readyForPickup > 0) {
-    const ready =
+  if (atAgency.value > 0) {
+    parts.push(
       parts.length > 0
-        ? plural(readyForPickup, 'listo', 'listos')
-        : plural(readyForPickup, 'paquete listo', 'paquetes listos');
-    parts.push(`${readyForPickup} ${ready} para retirar`);
+        ? `${atAgency.value} en tu agencia`
+        : `${atAgency.value} ${plural(atAgency.value, 'paquete', 'paquetes')} en tu agencia`
+    );
   }
 
-  if (parts.length === 0) {
-    return 'Por ahora no tienes paquetes en camino ni listos para retirar.';
-  }
+  if (parts.length === 0) return 'Por ahora no tienes paquetes en camino ni en tu agencia.';
 
   return `Tienes ${parts.join(' y ')}.`;
 }

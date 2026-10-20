@@ -1,22 +1,62 @@
-import { Box, Flex, Grid, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, Skeleton, Text } from '@chakra-ui/react';
 import { fadeUp } from '@rapiexpress/ui/motion';
 import { ClipboardList, type LucideIcon, PackageCheck, Truck } from 'lucide-react';
 
-import type { HomeStats } from '../model/types';
+import type { HomeStats, StatState } from '../model/stats';
 
 interface StatCardsProps {
   stats: HomeStats;
+  onRetry: Record<keyof HomeStats, () => void>;
 }
 
 interface StatCardProps {
   icon: LucideIcon;
   label: string;
-  value: number;
+  state: StatState;
   helper: string;
+  onRetry: () => void;
   hero?: boolean;
 }
 
-function StatCard({ icon: Icon, label, value, helper, hero = false }: StatCardProps) {
+function StatValue({
+  label,
+  state,
+  hero,
+}: Pick<StatCardProps, 'label' | 'state'> & { hero: boolean }) {
+  if (state.status === 'ready') {
+    return (
+      <Text
+        fontSize={hero ? { base: '4xl', md: '5xl' } : { base: '3xl', md: '4xl' }}
+        fontWeight="bold"
+        letterSpacing="-0.02em"
+        lineHeight="1"
+        fontVariantNumeric="tabular-nums"
+        color={hero ? 'brand.700' : 'slate.900'}
+      >
+        {state.value}
+      </Text>
+    );
+  }
+
+  if (state.status === 'pending') {
+    return (
+      <Skeleton
+        role="status"
+        aria-label={`Cargando ${label}`}
+        h={hero ? { base: 10, md: 12 } : { base: 8, md: 10 }}
+        w={16}
+      />
+    );
+  }
+
+  return (
+    <Text aria-hidden="true" fontSize={{ base: '3xl', md: '4xl' }} lineHeight="1" color="slate.400">
+      –
+    </Text>
+  );
+}
+
+function StatCard({ icon: Icon, label, state, helper, onRetry, hero = false }: StatCardProps) {
   return (
     <Flex
       as="li"
@@ -37,25 +77,36 @@ function StatCard({ icon: Icon, label, value, helper, hero = false }: StatCardPr
         </Text>
       </Flex>
       <Box>
-        <Text
-          fontSize={hero ? { base: '4xl', md: '5xl' } : { base: '3xl', md: '4xl' }}
-          fontWeight="bold"
-          letterSpacing="-0.02em"
-          lineHeight="1"
-          fontVariantNumeric="tabular-nums"
-          color={hero ? 'brand.700' : 'slate.900'}
-        >
-          {value}
-        </Text>
-        <Text mt={2} fontSize="sm" color="slate.600">
-          {helper}
-        </Text>
+        <StatValue label={label} state={state} hero={hero} />
+        {state.status === 'error' ? (
+          <Flex align="center" wrap="wrap" columnGap={3} mt={2}>
+            <Text role="alert" fontSize="sm" color="red.600">
+              No pudimos cargar este dato.
+            </Text>
+            <Button
+              variant="plain"
+              aria-label={`Reintentar ${label}`}
+              minH={11}
+              px={2}
+              fontSize="sm"
+              fontWeight="semibold"
+              color="brand.700"
+              onClick={onRetry}
+            >
+              Reintentar
+            </Button>
+          </Flex>
+        ) : (
+          <Text mt={2} fontSize="sm" color="slate.600">
+            {helper}
+          </Text>
+        )}
       </Box>
     </Flex>
   );
 }
 
-function StatCards({ stats }: StatCardsProps) {
+function StatCards({ stats, onRetry }: StatCardsProps) {
   return (
     <Box as="section" aria-label="Resumen de tus paquetes" css={fadeUp('140ms')}>
       <Grid
@@ -71,20 +122,23 @@ function StatCards({ stats }: StatCardsProps) {
           hero
           icon={Truck}
           label="En tránsito"
-          value={stats.inTransit}
-          helper="En camino a tu agencia"
+          state={stats.inTransit}
+          helper="Embarcados o en aduana"
+          onRetry={onRetry.inTransit}
         />
         <StatCard
           icon={PackageCheck}
-          label="Listos para retirar"
-          value={stats.readyForPickup}
-          helper="Esperándote en agencia"
+          label="En agencia"
+          state={stats.atAgency}
+          helper="Ya llegaron a tu agencia"
+          onRetry={onRetry.atAgency}
         />
         <StatCard
           icon={ClipboardList}
           label="Pre-alertas"
-          value={stats.preAlerts}
+          state={stats.preAlerts}
           helper="Esperando llegar a Miami"
+          onRetry={onRetry.preAlerts}
         />
       </Grid>
     </Box>

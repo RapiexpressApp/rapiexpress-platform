@@ -2,26 +2,28 @@ import { Stack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
 import { resolveFeaturedShipment } from '../model/featured';
-import { FEATURED_SHIPMENT, PRE_ALERTS, SHIPMENTS } from '../model/mock-data';
-import { computeStats, describeActivity } from '../model/stats';
+import { FEATURED_SHIPMENT, SHIPMENTS } from '../model/mock-data';
+import { describeActivity } from '../model/stats';
+import { useHomeStats } from '../model/use-home-stats';
 import FeaturedShipment from './FeaturedShipment';
 import PendingPreAlerts from './PendingPreAlerts';
 import ProfileSection from './ProfileSection';
 import RecentShipments from './RecentShipments';
 import StatCards from './StatCards';
 
-const STATS = computeStats(SHIPMENTS, PRE_ALERTS);
 const FEATURED = resolveFeaturedShipment(SHIPMENTS, FEATURED_SHIPMENT);
 
 function HomePage() {
+  const { stats, retry } = useHomeStats();
+
   useEffect(() => {
     document.title = 'Panel principal · Rapiexpress';
   }, []);
 
   return (
     <Stack gap={{ base: 6, lg: 8 }}>
-      <ProfileSection summary={describeActivity(STATS)} />
-      <StatCards stats={STATS} />
+      <ProfileSection summary={describeActivity(stats.inTransit, stats.atAgency)} />
+      <StatCards stats={stats} onRetry={retry} />
       {FEATURED && <FeaturedShipment featured={FEATURED} />}
       <RecentShipments />
       <PendingPreAlerts />

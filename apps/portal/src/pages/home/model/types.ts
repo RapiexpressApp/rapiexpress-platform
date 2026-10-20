@@ -43,9 +43,3 @@ export interface Locker extends WarehouseAddress {
   recipient: string;
   suite: string;
 }
-
-export interface HomeStats {
-  inTransit: number;
-  readyForPickup: number;
-  preAlerts: number;
-}
