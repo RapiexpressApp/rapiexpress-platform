@@ -119,18 +119,16 @@ describe('ReceptionPage when another scan wins the race', () => {
 
 describe('ReceptionPage when the purchase is no longer available', () => {
   it.each([
-    ['PURCHASE_NOT_PENDING', 409],
-    ['PURCHASE_NOT_FOUND', 404],
-  ])('explains %s and looks the guide up again', async (code, status) => {
+    ['PURCHASE_NOT_PENDING', 409, 'La pre-alerta ya fue recibida o cancelada.'],
+    ['PURCHASE_NOT_FOUND', 404, 'La pre-alerta ya no existe.'],
+  ])('explains %s and looks the guide up again', async (code, status, message) => {
     const lookups = lookupSequence(matched, receptionLookupFixture());
     const { handler } = receiveSequence({ status, body: { code } });
     renderReceptionPage(lookups.handler, handler);
 
     await reachConfirmation();
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(
-      'La compra ya no está pendiente de recepción.'
-    );
+    expect(await screen.findByRole('alert')).toHaveTextContent(message);
     expect(
       await screen.findByRole('heading', { name: 'No encontramos una pre-alerta para esta guía' })
     ).toBeInTheDocument();
@@ -301,7 +299,7 @@ describe('ReceptionPage on any other failure', () => {
     );
   });
 
-  it('treats a network failure as a generic failure', async () => {
+  it('blames the connection only for a real network failure', async () => {
     renderReceptionPage(
       lookupHandler(matched),
       http.post('*/api/packages', () => HttpResponse.error())
@@ -310,8 +308,22 @@ describe('ReceptionPage on any other failure', () => {
     await reachConfirmation();
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'No pudimos registrar la recepción.'
+      'No pudimos registrar la recepción. Revisa tu conexión e inténtalo de nuevo.'
     );
+  });
+
+  it.each([
+    [500, { message: 'boom' }],
+    [400, { statusCode: 400, message: ['weightLb must be positive'] }],
+  ])('does not blame the connection when the server answers %s', async (status, body) => {
+    const { handler } = receiveSequence({ status, body });
+    renderReceptionPage(lookupHandler(matched), handler);
+
+    await reachConfirmation();
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent('No pudimos registrar la recepción. Inténtalo de nuevo.');
+    expect(alert).not.toHaveTextContent('conexión');
   });
 
   it('does not leave an old failure behind when the next package is received', async () => {
