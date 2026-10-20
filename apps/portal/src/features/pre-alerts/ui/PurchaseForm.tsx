@@ -191,7 +191,7 @@ function PurchaseForm({
       </AuthField>
 
       {(genericError || submittedWithoutChanges) && (
-        <Text role="alert" fontSize="sm" color="red.500">
+        <Text role="alert" fontSize="sm" color="red.600">
           {submittedWithoutChanges
             ? NO_CHANGES_MESSAGE
             : isEdit

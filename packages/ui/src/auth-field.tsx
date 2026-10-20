@@ -14,7 +14,7 @@ function AuthField({ label, error, hint, children }: AuthFieldProps) {
       <Field.Label color="slate.700">{label}</Field.Label>
       {children}
       {error ? (
-        <Field.ErrorText color="red.500">{error}</Field.ErrorText>
+        <Field.ErrorText color="red.600">{error}</Field.ErrorText>
       ) : (
         hint && <Field.HelperText color="slate.500">{hint}</Field.HelperText>
       )}

@@ -116,6 +116,25 @@ describe('PreAlertsPage create dialog', () => {
     expect(posts).toBe(0);
   });
 
+  it('renders field and form errors with the darker red used for small text', async () => {
+    server.use(
+      purchasesListHandler(),
+      http.post('*/api/me/purchases', () => new HttpResponse(null, { status: 500 }))
+    );
+    renderPreAlertsPage();
+    const form = await openForm();
+    await submit(form);
+
+    const fieldError = await form.findByText('Ingresa la tienda.');
+    expect(getComputedStyle(fieldError).color).toBe('var(--chakra-colors-red-600)');
+
+    await fillForm(form);
+    await submit(form);
+
+    const formError = await form.findByRole('alert');
+    expect(getComputedStyle(formError).color).toBe('var(--chakra-colors-red-600)');
+  });
+
   it('rejects a non-numeric amount before the request', async () => {
     let posts = 0;
     server.use(

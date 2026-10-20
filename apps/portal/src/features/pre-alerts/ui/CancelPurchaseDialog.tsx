@@ -62,7 +62,7 @@ function CancelPurchasePanel({
       </Dialog.Description>
 
       {genericError && (
-        <Text role="alert" fontSize="sm" color="red.500">
+        <Text role="alert" fontSize="sm" color="red.600">
           {CANCEL_PURCHASE_FAILED_MESSAGE}
         </Text>
       )}
