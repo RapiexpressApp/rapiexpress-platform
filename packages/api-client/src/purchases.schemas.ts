@@ -1,10 +1,12 @@
 import * as z from 'zod';
 
+import { customerSummarySchema } from './customers.schemas.ts';
 import {
   amountSchema,
   customsCategorySchema,
   trackingNumberSchema,
   trimmedTextSchema,
+  uuidSchema,
 } from './field-schemas.ts';
 import { paginatedSchema } from './pagination.ts';
 
@@ -32,6 +34,10 @@ export const createPurchasePayloadSchema = z.object({
   suggestedCategory: customsCategorySchema,
 });
 
+export const createPurchaseForCustomerPayloadSchema = createPurchasePayloadSchema.extend({
+  customerId: uuidSchema,
+});
+
 export const updatePurchaseFieldsSchema = createPurchasePayloadSchema.partial();
 
 export const updatePurchasePayloadSchema = updatePurchaseFieldsSchema.refine(
@@ -55,14 +61,27 @@ export const purchaseSchema = z.object({
 
 export const purchaseListSchema = paginatedSchema(purchaseSchema);
 
+export const staffPurchaseSchema = purchaseSchema.extend({ customer: customerSummarySchema });
+
+export const staffPurchaseListSchema = paginatedSchema(staffPurchaseSchema);
+
 export interface MyPurchaseListParams {
   page: number;
   pageSize: number;
   status?: PurchaseStatus;
 }
 
+export interface StaffPurchaseListParams extends MyPurchaseListParams {
+  search?: string;
+}
+
 export type PurchaseStatus = z.infer<typeof purchaseStatusSchema>;
 export type CreatePurchasePayload = z.input<typeof createPurchasePayloadSchema>;
+export type CreatePurchaseForCustomerPayload = z.input<
+  typeof createPurchaseForCustomerPayloadSchema
+>;
 export type UpdatePurchasePayload = z.input<typeof updatePurchasePayloadSchema>;
 export type Purchase = z.infer<typeof purchaseSchema>;
 export type PurchaseList = z.infer<typeof purchaseListSchema>;
+export type StaffPurchase = z.infer<typeof staffPurchaseSchema>;
+export type StaffPurchaseList = z.infer<typeof staffPurchaseListSchema>;

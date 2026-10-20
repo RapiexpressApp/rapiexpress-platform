@@ -4,12 +4,13 @@ import { z, ZodError } from 'zod';
 
 import { server } from '../test/server';
 import { createApiClient } from './client.ts';
-import { createMyPurchasesApi } from './purchases.api.ts';
+import { createMyPurchasesApi, createPurchasesApi } from './purchases.api.ts';
 import { createPurchasePayloadSchema, updatePurchasePayloadSchema } from './purchases.schemas.ts';
 import { queryKeys } from './query-keys.ts';
 import { setAccessToken } from './token-store.ts';
 
 const myPurchasesApi = createMyPurchasesApi(createApiClient({ baseURL: '/api' }));
+const purchasesApi = createPurchasesApi(createApiClient({ baseURL: '/api' }));
 
 const purchase = {
   id: 'p1',
@@ -294,5 +295,124 @@ describe('my purchases query keys', () => {
     expect(queryKeys.myPurchases.list(params)).toEqual(['myPurchases', 'list', params]);
     expect(queryKeys.myPurchases.detail('p1')).toEqual(['myPurchases', 'detail', 'p1']);
     expect(queryKeys.myPurchases.detail('p1').slice(0, 1)).toEqual(queryKeys.myPurchases.all);
+  });
+});
+
+const customer = { id: 'c1', name: 'Jane', lastName: 'Doe', lockerCode: 'MI-00001' };
+
+describe('purchasesApi.list', () => {
+  it('requests the page with search and status and parses the customer summary', async () => {
+    setAccessToken('tok');
+    let url: URL | undefined;
+    server.use(
+      http.get('*/api/purchases', ({ request }) => {
+        url = new URL(request.url);
+        return HttpResponse.json({
+          items: [{ ...purchase, customer }],
+          page: 1,
+          pageSize: 20,
+          total: 1,
+        });
+      })
+    );
+
+    const result = await purchasesApi.list({
+      page: 1,
+      pageSize: 20,
+      search: ' MI-00001 ',
+      status: 'RECEIVED',
+    });
+
+    expect(Object.fromEntries(url?.searchParams ?? [])).toEqual({
+      page: '1',
+      pageSize: '20',
+      search: 'MI-00001',
+      status: 'RECEIVED',
+    });
+    expect(result.items[0]).toEqual({ ...purchase, customer });
+  });
+
+  it('omits an empty search and an unset status', async () => {
+    setAccessToken('tok');
+    let url: URL | undefined;
+    server.use(
+      http.get('*/api/purchases', ({ request }) => {
+        url = new URL(request.url);
+        return HttpResponse.json({ items: [], page: 1, pageSize: 20, total: 0 });
+      })
+    );
+
+    await purchasesApi.list({ page: 1, pageSize: 20, search: '  ' });
+
+    expect(Object.fromEntries(url?.searchParams ?? [])).toEqual({ page: '1', pageSize: '20' });
+  });
+
+  it('accepts a customer without a locker code', async () => {
+    setAccessToken('tok');
+    server.use(
+      http.get('*/api/purchases', () =>
+        HttpResponse.json({
+          items: [{ ...purchase, customer: { ...customer, lockerCode: null } }],
+          page: 1,
+          pageSize: 20,
+          total: 1,
+        })
+      )
+    );
+
+    const result = await purchasesApi.list({ page: 1, pageSize: 20 });
+
+    expect(result.items[0]?.customer.lockerCode).toBeNull();
+  });
+
+  it('rejects an item without the customer summary', async () => {
+    setAccessToken('tok');
+    server.use(
+      http.get('*/api/purchases', () =>
+        HttpResponse.json({ items: [purchase], page: 1, pageSize: 20, total: 1 })
+      )
+    );
+
+    await expect(purchasesApi.list({ page: 1, pageSize: 20 })).rejects.toBeInstanceOf(ZodError);
+  });
+});
+
+describe('purchasesApi.create', () => {
+  const customerId = '5f1c6e43-8f0e-4a39-a5d3-0d6f2f5a7f10';
+
+  it('posts the purchase on behalf of the customer and returns it', async () => {
+    setAccessToken('tok');
+    let body: unknown;
+    server.use(
+      http.post('*/api/purchases', async ({ request }) => {
+        body = await request.json();
+        return HttpResponse.json(purchase, { status: 201 });
+      })
+    );
+
+    const result = await purchasesApi.create({
+      customerId,
+      ...payload,
+      trackingNumber: '1z999aa1-0123456784',
+    });
+
+    expect(body).toEqual({ customerId, ...payload });
+    expect(result.id).toBe('p1');
+  });
+
+  it('rejects a payload without a valid customer id before hitting the network', async () => {
+    await expect(
+      purchasesApi.create({ customerId: 'not-a-uuid', ...payload })
+    ).rejects.toBeInstanceOf(ZodError);
+  });
+});
+
+describe('purchases query keys', () => {
+  it('scopes list keys under the purchases root', () => {
+    const params = { page: 1, pageSize: 20, search: 'MI', status: 'PENDING_RECEPTION' as const };
+
+    expect(queryKeys.purchases.all).toEqual(['purchases']);
+    expect(queryKeys.purchases.list(params)).toEqual(['purchases', 'list', params]);
+    expect(queryKeys.purchases.list(params).slice(0, 1)).toEqual(queryKeys.purchases.all);
   });
 });

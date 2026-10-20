@@ -1,5 +1,8 @@
 import type { ApiClient } from './client.ts';
+import { toListQuery } from './pagination.ts';
 import {
+  type CreatePurchaseForCustomerPayload,
+  createPurchaseForCustomerPayloadSchema,
   type CreatePurchasePayload,
   createPurchasePayloadSchema,
   type MyPurchaseListParams,
@@ -7,6 +10,9 @@ import {
   type PurchaseList,
   purchaseListSchema,
   purchaseSchema,
+  type StaffPurchaseList,
+  type StaffPurchaseListParams,
+  staffPurchaseListSchema,
   type UpdatePurchasePayload,
   updatePurchasePayloadSchema,
 } from './purchases.schemas.ts';
@@ -45,3 +51,22 @@ export function createMyPurchasesApi({ apiClient }: ApiClient) {
 }
 
 export type MyPurchasesApi = ReturnType<typeof createMyPurchasesApi>;
+
+export function createPurchasesApi({ apiClient }: ApiClient) {
+  return {
+    async list({ status, ...params }: StaffPurchaseListParams): Promise<StaffPurchaseList> {
+      const { data } = await apiClient.get('/purchases', {
+        params: { ...toListQuery(params), ...(status ? { status } : {}) },
+      });
+      return staffPurchaseListSchema.parse(data);
+    },
+
+    async create(payload: CreatePurchaseForCustomerPayload): Promise<Purchase> {
+      const body = createPurchaseForCustomerPayloadSchema.parse(payload);
+      const { data } = await apiClient.post('/purchases', body);
+      return purchaseSchema.parse(data);
+    },
+  };
+}
+
+export type PurchasesApi = ReturnType<typeof createPurchasesApi>;
