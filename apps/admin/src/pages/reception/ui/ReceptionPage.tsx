@@ -1,6 +1,7 @@
 import { Heading, Stack, Text } from '@chakra-ui/react';
 import { useEffect, useReducer } from 'react';
 
+import { classifyReceiveError } from '@/features/reception/model/reception-errors';
 import {
   canChooseAnotherTarget,
   getStepNumber,
@@ -13,6 +14,7 @@ import { useReceivePackage } from '@/features/reception/model/use-receive-packag
 import { useReceptionLookup } from '@/features/reception/model/use-reception-lookup';
 import DuplicateWarning from '@/features/reception/ui/DuplicateWarning';
 import ReceptionForm from '@/features/reception/ui/ReceptionForm';
+import ReceptionNotice from '@/features/reception/ui/ReceptionNotice';
 import ReceptionSuccess from '@/features/reception/ui/ReceptionSuccess';
 import ReceptionSummary from '@/features/reception/ui/ReceptionSummary';
 import ScanStep from '@/features/reception/ui/ScanStep';
@@ -63,8 +65,31 @@ function ReceptionPage() {
         values: state.values,
         confirmDuplicate: state.duplicate?.confirmed,
       }),
-      { onSuccess: (received) => dispatch({ type: 'received', received }) }
+      {
+        onSuccess: (received) => dispatch({ type: 'received', received }),
+        onError: handleReceiveFailure,
+      }
     );
+  }
+
+  function handleReceiveFailure(error: unknown) {
+    const failure = classifyReceiveError(error);
+    if (failure.kind === 'generic') return;
+
+    receive.reset();
+    if (failure.kind === 'duplicate') {
+      dispatch({ type: 'duplicate-detected', packages: failure.packages });
+    } else if (failure.kind === 'customer-inactive') {
+      dispatch({ type: 'customer-rejected', message: failure.message });
+    } else {
+      dispatch({ type: 'relookup-requested', message: failure.message });
+      if (state.trackingNumber) runLookup(state.trackingNumber);
+    }
+  }
+
+  function handleEdit() {
+    receive.reset();
+    dispatch({ type: 'details-reopened' });
   }
 
   const step = getStepNumber(state);
@@ -81,6 +106,13 @@ function ReceptionPage() {
           </Text>
         )}
       </Stack>
+
+      {state.notice && (
+        <ReceptionNotice
+          message={state.notice}
+          onDismiss={() => dispatch({ type: 'notice-dismissed' })}
+        />
+      )}
 
       {renderStep()}
     </Stack>
@@ -132,8 +164,9 @@ function ReceptionPage() {
           values={state.values}
           duplicateConfirmed={state.duplicate?.confirmed === true}
           pending={receive.isPending}
+          errorMessage={receive.isError ? classifyReceiveError(receive.error).message : undefined}
           onConfirm={handleConfirm}
-          onEdit={() => dispatch({ type: 'details-reopened' })}
+          onEdit={handleEdit}
         />
       );
     }
