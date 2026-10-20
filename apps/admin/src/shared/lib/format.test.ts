@@ -29,4 +29,8 @@ describe('formatDate', () => {
   it('returns an empty string for an invalid date', () => {
     expect(formatDate('not-a-date')).toBe('');
   });
+
+  it('reads an instant just after midnight UTC as that UTC day', () => {
+    expect(formatDate('2026-03-15T01:30:00.000Z')).toBe('15 mar 2026');
+  });
 });
