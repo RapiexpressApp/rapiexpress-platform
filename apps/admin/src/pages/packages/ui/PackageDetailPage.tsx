@@ -14,6 +14,7 @@ import {
 import type { PackageNoticeContent } from '@/features/packages/model/package-notice';
 import { usePackage } from '@/features/packages/model/use-package';
 import { useRefreshPackages } from '@/features/packages/model/use-refresh-packages';
+import AssignCustomerAction from '@/features/packages/ui/AssignCustomerAction';
 import EditPackageAction from '@/features/packages/ui/EditPackageAction';
 import OpenIncidentAction from '@/features/packages/ui/OpenIncidentAction';
 import OpenIncidentFlag from '@/features/packages/ui/OpenIncidentFlag';
@@ -125,7 +126,19 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
           )
         }
       />
-      <PackageCustomerSection customer={detail.customer} />
+      <PackageCustomerSection
+        customer={detail.customer}
+        action={
+          detail.customer === null && (
+            <AssignCustomerAction
+              packageId={detail.id}
+              warehouseNumber={detail.warehouseNumber}
+              fallbackFocus={fallbackFocus}
+              onStale={handleStale}
+            />
+          )
+        }
+      />
       <PackagePurchaseSection purchase={detail.purchase} />
       <PackageIncidentsSection
         openIncident={detail.openIncident}

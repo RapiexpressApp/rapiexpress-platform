@@ -51,3 +51,12 @@ export function useResolveIncident(id: string) {
     onSuccess: refresh,
   });
 }
+
+export function useAssignCustomer(id: string) {
+  const refresh = useRefreshPackages();
+
+  return useMutation({
+    mutationFn: (customerId: string) => packagesApi.assignCustomer(id, customerId),
+    onSuccess: refresh,
+  });
+}
