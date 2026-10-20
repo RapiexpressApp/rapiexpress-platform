@@ -135,6 +135,30 @@ describe('PreAlertsPage create dialog', () => {
     expect(getComputedStyle(formError).color).toBe('var(--chakra-colors-red-600)');
   });
 
+  it('focuses the first invalid field after a failed submit', async () => {
+    server.use(purchasesListHandler());
+    renderPreAlertsPage();
+    const form = await openForm();
+
+    await submit(form);
+
+    await form.findByText('Ingresa la tienda.');
+    await waitFor(() => expect(form.getByLabelText('Tienda')).toHaveFocus());
+  });
+
+  it('focuses a later invalid field when the earlier ones are valid', async () => {
+    server.use(purchasesListHandler());
+    renderPreAlertsPage();
+    const form = await openForm();
+    await fillForm(form);
+    await userEvent.clear(form.getByLabelText('Peso estimado (lb)'));
+
+    await submit(form);
+
+    await form.findByText('El peso estimado es obligatorio.');
+    await waitFor(() => expect(form.getByLabelText('Peso estimado (lb)')).toHaveFocus());
+  });
+
   it('rejects a non-numeric amount before the request', async () => {
     let posts = 0;
     server.use(
