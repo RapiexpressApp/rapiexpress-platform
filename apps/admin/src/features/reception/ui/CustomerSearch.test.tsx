@@ -207,6 +207,23 @@ describe('CustomerSearch', () => {
     expect(screen.getByText('Escribe al menos 2 caracteres para buscar.')).toBeInTheDocument();
   });
 
+  it('lets a long name wrap instead of overflowing the container', async () => {
+    server.use(
+      customerSearchHandler([
+        customerSummaryFixture({ name: 'Rosa María', lastName: 'Pérez de la Fuente Rodríguez' }),
+      ])
+    );
+    const { input } = renderSearch();
+
+    await userEvent.type(input, 'Rosa');
+
+    const option = await screen.findByRole('button', { name: /Rosa María/ });
+    expect(option).toHaveStyle({ whiteSpace: 'normal' });
+    expect(screen.getByText('Rosa María Pérez de la Fuente Rodríguez')).toHaveStyle({
+      overflowWrap: 'anywhere',
+    });
+  });
+
   it('takes the focus on mount only when asked to', () => {
     const { input } = renderSearch(true);
 

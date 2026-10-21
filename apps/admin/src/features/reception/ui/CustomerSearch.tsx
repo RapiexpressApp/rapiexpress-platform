@@ -78,12 +78,20 @@ function CustomerSearch({ autoFocus = false, onChoose }: CustomerSearchProps) {
                   justifyContent="space-between"
                   gap={3}
                   textAlign="start"
+                  whiteSpace="normal"
                   onClick={() => onChoose(customer)}
                 >
-                  <Text as="span" fontWeight="semibold" color="slate.900">
+                  <Text
+                    as="span"
+                    flex="1"
+                    minW={0}
+                    fontWeight="semibold"
+                    color="slate.900"
+                    overflowWrap="anywhere"
+                  >
                     {customer.name} {customer.lastName}
                   </Text>
-                  <Flex as="span" fontFamily="mono" fontSize="sm" color="slate.700">
+                  <Flex as="span" flexShrink={0} fontFamily="mono" fontSize="sm" color="slate.700">
                     {customer.lockerCode ?? 'Sin casillero'}
                   </Flex>
                 </Button>
