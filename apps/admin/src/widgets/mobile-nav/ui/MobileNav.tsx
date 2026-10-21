@@ -19,9 +19,9 @@ function MobileNav({ items }: MobileNavProps) {
       borderColor="slate.200"
       px={2}
     >
-      <Flex as="ul" listStyleType="none" gap={1}>
+      <Flex as="ul" listStyleType="none" gap={1} overflowX="auto">
         {items.map((item) => (
-          <li key={item.to}>
+          <Box as="li" key={item.to} flexShrink={0}>
             <Flex
               asChild
               align="center"
@@ -31,6 +31,7 @@ function MobileNav({ items }: MobileNavProps) {
               borderRadius="lg"
               fontSize="sm"
               fontWeight="medium"
+              whiteSpace="nowrap"
               color="slate.600"
               _currentPage={{ bg: 'brand.50', color: 'brand.700', fontWeight: 'semibold' }}
               _focusVisible={focusRing}
@@ -40,7 +41,7 @@ function MobileNav({ items }: MobileNavProps) {
                 {item.label}
               </NavLink>
             </Flex>
-          </li>
+          </Box>
         ))}
       </Flex>
     </Box>
