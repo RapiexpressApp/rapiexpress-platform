@@ -109,7 +109,7 @@ function LinkPurchasePanel({
           as="ul"
           gap={2}
           p={1}
-          maxH="20rem"
+          maxH="min(18rem, 32dvh)"
           overflowY="auto"
           listStyleType="none"
           aria-label="Pre-alertas por recibir"
