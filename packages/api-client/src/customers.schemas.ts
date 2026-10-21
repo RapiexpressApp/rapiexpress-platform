@@ -18,6 +18,14 @@ export const customerListItemSchema = z.object({
 
 export const customerListSchema = paginatedSchema(customerListItemSchema);
 
+export const customerSummarySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  lastName: z.string(),
+  lockerCode: z.string().nullable(),
+});
+
 export type CustomerKind = z.infer<typeof customerKindSchema>;
 export type CustomerListItem = z.infer<typeof customerListItemSchema>;
 export type CustomerList = z.infer<typeof customerListSchema>;
+export type CustomerSummary = z.infer<typeof customerSummarySchema>;
