@@ -1,12 +1,12 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { CUSTOMS_CATEGORIES } from '@rapiexpress/api-client/field-schemas';
 
-import { CATEGORY_LABEL, type CustomsCategory } from '@/shared/model/package-labels';
+import { CATEGORY_LABEL } from '@/shared/model/package-labels';
 import { CATEGORY_RULE } from '@/shared/model/purchase-labels';
 
 interface CategoryGuideProps {
   id: string;
-  selected: CustomsCategory | '';
+  selected: string;
 }
 
 function CategoryGuide({ id, selected }: CategoryGuideProps) {

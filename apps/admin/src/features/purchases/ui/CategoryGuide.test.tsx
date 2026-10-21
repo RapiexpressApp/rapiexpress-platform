@@ -5,7 +5,7 @@ import { renderWithProviders } from '@/test/render';
 
 import CategoryGuide from './CategoryGuide';
 
-function renderGuide(selected: Parameters<typeof CategoryGuide>[0]['selected'] = '') {
+function renderGuide(selected = '') {
   renderWithProviders(<CategoryGuide id="category-guide" selected={selected} />, {
     withSession: false,
   });

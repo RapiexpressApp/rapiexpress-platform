@@ -1,16 +1,60 @@
 import { Button, Flex, Stack, Text } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import type { CustomerSummary } from '@rapiexpress/api-client/customers.schemas';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { formatCustomer } from '@/features/reception/model/reception-format';
 import CustomerSearch from '@/features/reception/ui/CustomerSearch';
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
+
+import { CREATE_FAILED_MESSAGE } from '../model/purchase-errors';
+import { useCreatePurchase } from '../model/use-create-purchase';
+import {
+  type PurchaseFormInput,
+  purchaseFormSchema,
+  type PurchaseFormValues,
+} from '../validation/purchase-form.validation';
+import PurchaseFormFields from './PurchaseFormFields';
 
 interface CreatePurchasePanelProps {
+  onCreated: () => void;
   onCancel: () => void;
 }
 
-function CreatePurchasePanel({ onCancel }: CreatePurchasePanelProps) {
+const EMPTY_VALUES: PurchaseFormInput = {
+  customerId: '',
+  store: '',
+  trackingNumber: '',
+  description: '',
+  declaredValueUsd: '',
+  estimatedWeightLb: '',
+  suggestedCategory: '',
+};
+
+function CreatePurchasePanel({ onCreated, onCancel }: CreatePurchasePanelProps) {
+  const create = useCreatePurchase();
   const [customer, setCustomer] = useState<CustomerSummary | null>(null);
+  const form = useForm<PurchaseFormInput, unknown, PurchaseFormValues>({
+    resolver: zodResolver(purchaseFormSchema),
+    defaultValues: EMPTY_VALUES,
+    mode: 'onSubmit',
+  });
+  useDialogBusy(create.isPending);
+
+  function handleChoose(chosen: CustomerSummary) {
+    create.reset();
+    form.setValue('customerId', chosen.id);
+    setCustomer(chosen);
+  }
+
+  function handleChangeCustomer() {
+    form.setValue('customerId', '');
+    setCustomer(null);
+  }
+
+  function handleSubmit(values: PurchaseFormValues) {
+    create.mutate(values, { onSuccess: onCreated });
+  }
 
   if (!customer) {
     return (
@@ -18,7 +62,7 @@ function CreatePurchasePanel({ onCancel }: CreatePurchasePanelProps) {
         <Text fontSize="sm" fontWeight="semibold" color="slate.600">
           Paso 1 de 2 · Cliente
         </Text>
-        <CustomerSearch autoFocus onChoose={setCustomer} />
+        <CustomerSearch autoFocus onChoose={handleChoose} />
         <Flex justify="flex-end">
           <Button variant="outline" height={11} px={6} onClick={onCancel}>
             Cancelar
@@ -29,19 +73,15 @@ function CreatePurchasePanel({ onCancel }: CreatePurchasePanelProps) {
   }
 
   return (
-    <Stack gap={4}>
-      <Text fontSize="sm" fontWeight="semibold" color="slate.600">
-        Paso 2 de 2 · Datos de la compra
-      </Text>
-      <Flex align="center" justify="space-between" gap={3} wrap="wrap">
-        <Text fontWeight="semibold" color="slate.900">
-          {formatCustomer(customer)}
-        </Text>
-        <Button variant="outline" height={11} px={4} onClick={() => setCustomer(null)}>
-          Cambiar cliente
-        </Button>
-      </Flex>
-    </Stack>
+    <PurchaseFormFields
+      customer={customer}
+      form={form}
+      pending={create.isPending}
+      message={create.isError ? CREATE_FAILED_MESSAGE : null}
+      onSubmit={handleSubmit}
+      onChangeCustomer={handleChangeCustomer}
+      onCancel={onCancel}
+    />
   );
 }
 
