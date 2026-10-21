@@ -25,3 +25,9 @@ export const DEFAULT_ROUTE: Record<PanelRole, string> = {
   OPERATIONS: '/clientes',
   WAREHOUSE: '/recepcion',
 };
+
+const PURCHASE_ROLES: readonly string[] = ['ADMIN', 'OPERATIONS'];
+
+export function canLinkPurchase(role: string): boolean {
+  return PURCHASE_ROLES.includes(role);
+}
