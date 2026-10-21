@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import CustomerSearch from '@/features/reception/ui/CustomerSearch';
 import { useDialogBusy } from '@/shared/lib/dialog-busy';
 
-import { CREATE_FAILED_MESSAGE } from '../model/purchase-errors';
+import { classifyCreateError } from '../model/purchase-errors';
 import { useCreatePurchase } from '../model/use-create-purchase';
 import {
   type PurchaseFormInput,
@@ -53,8 +53,24 @@ function CreatePurchasePanel({ onCreated, onCancel }: CreatePurchasePanelProps) 
   }
 
   function handleSubmit(values: PurchaseFormValues) {
-    create.mutate(values, { onSuccess: onCreated });
+    create.mutate(values, {
+      onSuccess: onCreated,
+      onError: (error) => {
+        const failure = classifyCreateError(error);
+        if (failure.kind === 'duplicate') {
+          form.setError(
+            'trackingNumber',
+            { type: 'server', message: failure.message },
+            { shouldFocus: true }
+          );
+        } else if (failure.kind === 'customer-inactive') {
+          handleChangeCustomer();
+        }
+      },
+    });
   }
+
+  const failure = create.isError ? classifyCreateError(create.error) : null;
 
   if (!customer) {
     return (
@@ -62,6 +78,11 @@ function CreatePurchasePanel({ onCreated, onCancel }: CreatePurchasePanelProps) 
         <Text fontSize="sm" fontWeight="semibold" color="slate.600">
           Paso 1 de 2 · Cliente
         </Text>
+        {failure?.kind === 'customer-inactive' && (
+          <Text role="alert" fontSize="sm" color="red.600">
+            {failure.message}
+          </Text>
+        )}
         <CustomerSearch autoFocus onChoose={handleChoose} />
         <Flex justify="flex-end">
           <Button variant="outline" height={11} px={6} onClick={onCancel}>
@@ -77,7 +98,7 @@ function CreatePurchasePanel({ onCreated, onCancel }: CreatePurchasePanelProps) 
       customer={customer}
       form={form}
       pending={create.isPending}
-      message={create.isError ? CREATE_FAILED_MESSAGE : null}
+      message={failure?.kind === 'message' ? failure.message : null}
       onSubmit={handleSubmit}
       onChangeCustomer={handleChangeCustomer}
       onCancel={onCancel}
