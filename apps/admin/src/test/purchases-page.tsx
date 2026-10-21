@@ -61,7 +61,9 @@ export async function fillPurchaseForm(
 ) {
   const values = { ...DEFAULT_ENTRIES, ...entries };
   const type = async (name: string, text: string) => {
-    if (text) await userEvent.type(dialog.getByRole('textbox', { name }), text);
+    if (!text) return;
+    await userEvent.click(dialog.getByRole('textbox', { name }));
+    await userEvent.paste(text);
   };
   await type('Tienda', values.store);
   await type('Guía de seguimiento', values.guide);
