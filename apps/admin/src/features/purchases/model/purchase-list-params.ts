@@ -4,6 +4,8 @@ import {
   type StaffPurchaseListParams,
 } from '@rapiexpress/api-client/purchases.schemas';
 
+export const MAX_SEARCH_LENGTH = 100;
+
 interface ListPosition {
   page: number;
   pageSize: number;
@@ -21,7 +23,7 @@ export function buildPurchaseListParams(
   return {
     page,
     pageSize,
-    ...(search && { search }),
+    ...(search && { search: search.slice(0, MAX_SEARCH_LENGTH) }),
     ...(status && { status }),
   };
 }

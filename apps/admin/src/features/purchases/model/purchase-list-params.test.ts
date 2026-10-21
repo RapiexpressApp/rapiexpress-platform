@@ -29,4 +29,19 @@ describe('buildPurchaseListParams', () => {
       buildPurchaseListParams({ page: 3, pageSize: 20, search: 'MI-00001' }, 'RECEIVED')
     ).toEqual({ page: 3, pageSize: 20, search: 'MI-00001', status: 'RECEIVED' });
   });
+
+  it('cuts the search at the 100 characters the backend accepts', () => {
+    const params = buildPurchaseListParams(
+      { page: 1, pageSize: 20, search: 'a'.repeat(150) },
+      null
+    );
+
+    expect(params.search).toBe('a'.repeat(100));
+  });
+
+  it('keeps a search of exactly 100 characters', () => {
+    const search = 'b'.repeat(100);
+
+    expect(buildPurchaseListParams({ page: 1, pageSize: 20, search }, null).search).toBe(search);
+  });
 });
