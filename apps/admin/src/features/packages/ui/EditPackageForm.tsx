@@ -7,10 +7,10 @@ import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
 import { useSingleFlight } from '@/shared/lib/use-single-flight';
 import { CATEGORY_LABEL, PACKAGE_TYPE_LABEL } from '@/shared/model/package-labels';
 
-import { useDialogBusy } from '../model/dialog-busy';
 import {
   findClearedFields,
   getPackageChanges,

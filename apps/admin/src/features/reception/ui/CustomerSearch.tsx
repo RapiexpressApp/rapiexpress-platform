@@ -16,10 +16,11 @@ const SEARCH_DEBOUNCE_MS = 300;
 const MAX_SEARCH_LENGTH = 100;
 
 interface CustomerSearchProps {
+  autoFocus?: boolean;
   onChoose: (customer: CustomerSummary) => void;
 }
 
-function CustomerSearch({ onChoose }: CustomerSearchProps) {
+function CustomerSearch({ autoFocus = false, onChoose }: CustomerSearchProps) {
   const [draft, setDraft] = useState('');
   const debounced = useDebouncedValue(draft, SEARCH_DEBOUNCE_MS);
   const results = useReceptionCustomerSearch(debounced);
@@ -32,6 +33,7 @@ function CustomerSearch({ onChoose }: CustomerSearchProps) {
       <AuthField label="Buscar cliente" hint="Por nombre, apellido o casillero.">
         <Input
           type="search"
+          autoFocus={autoFocus}
           autoComplete="off"
           spellCheck={false}
           maxLength={MAX_SEARCH_LENGTH}
@@ -76,12 +78,20 @@ function CustomerSearch({ onChoose }: CustomerSearchProps) {
                   justifyContent="space-between"
                   gap={3}
                   textAlign="start"
+                  whiteSpace="normal"
                   onClick={() => onChoose(customer)}
                 >
-                  <Text as="span" fontWeight="semibold" color="slate.900">
+                  <Text
+                    as="span"
+                    flex="1"
+                    minW={0}
+                    fontWeight="semibold"
+                    color="slate.900"
+                    overflowWrap="anywhere"
+                  >
                     {customer.name} {customer.lastName}
                   </Text>
-                  <Flex as="span" fontFamily="mono" fontSize="sm" color="slate.700">
+                  <Flex as="span" flexShrink={0} fontFamily="mono" fontSize="sm" color="slate.700">
                     {customer.lockerCode ?? 'Sin casillero'}
                   </Flex>
                 </Button>

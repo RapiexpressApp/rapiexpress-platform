@@ -1,4 +1,4 @@
-import type { StaffPurchase } from '@rapiexpress/api-client/purchases.schemas';
+import type { Purchase, StaffPurchase } from '@rapiexpress/api-client/purchases.schemas';
 import { http, HttpResponse } from 'msw';
 
 import { customerSummaryFixture, PURCHASE_ID, TRACKING_NUMBER } from './reception-handlers';
@@ -32,4 +32,34 @@ export const purchasesListHandler = (
       pageSize: Number(url.searchParams.get('pageSize') ?? 20),
       total: meta.total ?? items.length,
     });
+  });
+
+export const purchaseFixture = (overrides: Partial<Purchase> = {}): Purchase => {
+  const { customer: _customer, ...purchase } = staffPurchaseFixture();
+  return { ...purchase, ...overrides };
+};
+
+interface CreateOptions {
+  onRequest?: (body: Record<string, unknown>) => void;
+  gate?: Promise<void>;
+}
+
+export const createPurchaseHandler = (
+  purchase: Purchase = purchaseFixture(),
+  { onRequest, gate }: CreateOptions = {}
+) =>
+  http.post('*/api/purchases', async ({ request }) => {
+    onRequest?.((await request.json()) as Record<string, unknown>);
+    await gate;
+    return HttpResponse.json(purchase, { status: 201 });
+  });
+
+export const createPurchaseErrorHandler = (
+  status: number,
+  body: Record<string, unknown>,
+  { onRequest }: CreateOptions = {}
+) =>
+  http.post('*/api/purchases', async ({ request }) => {
+    onRequest?.((await request.json()) as Record<string, unknown>);
+    return HttpResponse.json(body, { status });
   });

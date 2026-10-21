@@ -3,10 +3,10 @@ import type { PackageStaffDetail, PackageStatus } from '@rapiexpress/api-client/
 import { ArrowRight } from 'lucide-react';
 import { useId } from 'react';
 
+import { useActionDialog } from '@/shared/lib/use-action-dialog';
 import { PACKAGE_STATUS_LABEL } from '@/shared/model/package-labels';
 
 import type { PackageNoticeContent } from '../model/package-notice';
-import { useActionDialog } from '../model/use-action-dialog';
 import TransitionDialog from './TransitionDialog';
 
 interface TransitionActionsProps {

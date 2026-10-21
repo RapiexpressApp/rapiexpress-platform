@@ -5,9 +5,9 @@ import { useState } from 'react';
 
 import { formatCustomer } from '@/features/reception/model/reception-format';
 import CustomerSearch from '@/features/reception/ui/CustomerSearch';
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
 import { useSingleFlight } from '@/shared/lib/use-single-flight';
 
-import { useDialogBusy } from '../model/dialog-busy';
 import { classifyAssignError } from '../model/package-action-errors';
 import type { PackageNoticeContent } from '../model/package-notice';
 import { useAssignCustomer } from '../model/use-package-mutations';

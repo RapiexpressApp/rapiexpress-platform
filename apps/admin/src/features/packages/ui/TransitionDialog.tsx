@@ -2,15 +2,15 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import type { PackageStaffDetail, PackageStatus } from '@rapiexpress/api-client/packages.schemas';
 import { useRef } from 'react';
 
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
 import { useSingleFlight } from '@/shared/lib/use-single-flight';
 import { PACKAGE_STATUS_LABEL } from '@/shared/model/package-labels';
+import ActionDialog from '@/shared/ui/ActionDialog';
 import { toaster } from '@/shared/ui/toaster';
 
-import { useDialogBusy } from '../model/dialog-busy';
 import { classifyTransitionError } from '../model/package-action-errors';
 import type { PackageNoticeContent } from '../model/package-notice';
 import { useTransitionPackage } from '../model/use-package-mutations';
-import ActionDialog from './ActionDialog';
 
 interface TransitionDialogProps {
   open: boolean;

@@ -178,4 +178,28 @@ describe('ListSearchInput', () => {
     await new Promise((resolve) => setTimeout(resolve, 400));
     expect(onSearch).not.toHaveBeenCalled();
   });
+
+  it('limits the length of the search only when asked to', () => {
+    renderWithProviders(
+      <ListSearchInput
+        label="Buscar"
+        placeholder="Buscar"
+        value=""
+        maxLength={100}
+        onSearch={vi.fn()}
+      />,
+      { withSession: false }
+    );
+
+    expect(screen.getByRole('searchbox', { name: 'Buscar' })).toHaveAttribute('maxlength', '100');
+  });
+
+  it('has no length limit by default', () => {
+    renderWithProviders(
+      <ListSearchInput label="Buscar" placeholder="Buscar" value="" onSearch={vi.fn()} />,
+      { withSession: false }
+    );
+
+    expect(screen.getByRole('searchbox', { name: 'Buscar' })).not.toHaveAttribute('maxlength');
+  });
 });

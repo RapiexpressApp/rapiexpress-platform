@@ -13,9 +13,11 @@ import { server } from '@/test/server';
 
 import CustomerSearch from './CustomerSearch';
 
-function renderSearch() {
+function renderSearch(autoFocus?: boolean) {
   const onChoose = vi.fn();
-  renderWithProviders(<CustomerSearch onChoose={onChoose} />, { withSession: false });
+  renderWithProviders(<CustomerSearch autoFocus={autoFocus} onChoose={onChoose} />, {
+    withSession: false,
+  });
   return { onChoose, input: screen.getByRole('searchbox', { name: 'Buscar cliente' }) };
 }
 
@@ -203,6 +205,35 @@ describe('CustomerSearch', () => {
 
     await waitFor(() => expect(screen.queryByRole('button', { name: /Jane Doe/ })).toBeNull());
     expect(screen.getByText('Escribe al menos 2 caracteres para buscar.')).toBeInTheDocument();
+  });
+
+  it('lets a long name wrap instead of overflowing the container', async () => {
+    server.use(
+      customerSearchHandler([
+        customerSummaryFixture({ name: 'Rosa María', lastName: 'Pérez de la Fuente Rodríguez' }),
+      ])
+    );
+    const { input } = renderSearch();
+
+    await userEvent.type(input, 'Rosa');
+
+    const option = await screen.findByRole('button', { name: /Rosa María/ });
+    expect(option).toHaveStyle({ whiteSpace: 'normal' });
+    expect(screen.getByText('Rosa María Pérez de la Fuente Rodríguez')).toHaveStyle({
+      overflowWrap: 'anywhere',
+    });
+  });
+
+  it('takes the focus on mount only when asked to', () => {
+    const { input } = renderSearch(true);
+
+    expect(input).toHaveFocus();
+  });
+
+  it('leaves the focus alone by default', () => {
+    const { input } = renderSearch();
+
+    expect(input).not.toHaveFocus();
   });
 
   it('limits the search to the 100 characters the backend accepts', () => {

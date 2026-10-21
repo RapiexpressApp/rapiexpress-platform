@@ -42,8 +42,9 @@ describe('Topbar', () => {
       })
     );
     renderTopbar();
+    expect(await screen.findByText('Ana Rojas')).toBeInTheDocument();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Cerrar sesión' }));
 
     expect(await screen.findByText('login page')).toBeInTheDocument();
     expect(logout).toHaveBeenCalledTimes(1);
@@ -57,8 +58,9 @@ describe('Topbar', () => {
       http.post('*/api/auth/logout', () => new HttpResponse(null, { status: 500 }))
     );
     renderTopbar();
+    expect(await screen.findByText('Ana Rojas')).toBeInTheDocument();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Cerrar sesión' }));
 
     expect(await screen.findByText('login page')).toBeInTheDocument();
     expect(getAccessToken()).toBeNull();

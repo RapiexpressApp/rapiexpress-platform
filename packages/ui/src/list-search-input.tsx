@@ -11,9 +11,10 @@ interface ListSearchInputProps {
   onSearch: (value: string) => void;
   placeholder: string;
   label: string;
+  maxLength?: number;
 }
 
-function ListSearchInput({ value, onSearch, placeholder, label }: ListSearchInputProps) {
+function ListSearchInput({ value, onSearch, placeholder, label, maxLength }: ListSearchInputProps) {
   const [draft, setDraft] = useState(value);
   const debounced = useDebouncedValue(draft, SEARCH_DEBOUNCE_MS);
 
@@ -26,6 +27,7 @@ function ListSearchInput({ value, onSearch, placeholder, label }: ListSearchInpu
       type="search"
       aria-label={label}
       placeholder={placeholder}
+      maxLength={maxLength}
       value={draft}
       onChange={(event) => setDraft(event.target.value)}
       css={{ ...inputStyles, px: 3.5, maxW: 'sm' }}

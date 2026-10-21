@@ -2,12 +2,12 @@ import { Button } from '@chakra-ui/react';
 import type { PackageIncident } from '@rapiexpress/api-client/packages.schemas';
 import { CircleCheck } from 'lucide-react';
 
+import { useActionDialog } from '@/shared/lib/use-action-dialog';
 import { INCIDENT_TYPE_LABEL } from '@/shared/model/package-labels';
+import ActionDialog from '@/shared/ui/ActionDialog';
 import { toaster } from '@/shared/ui/toaster';
 
 import type { PackageNoticeContent } from '../model/package-notice';
-import { useActionDialog } from '../model/use-action-dialog';
-import ActionDialog from './ActionDialog';
 import ResolveIncidentForm from './ResolveIncidentForm';
 
 interface ResolveIncidentActionProps {

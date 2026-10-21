@@ -4,9 +4,9 @@ import AuthField from '@rapiexpress/ui/auth-field';
 import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles';
 import { useForm } from 'react-hook-form';
 
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
 import { useSingleFlight } from '@/shared/lib/use-single-flight';
 
-import { useDialogBusy } from '../model/dialog-busy';
 import { classifyResolveError } from '../model/package-action-errors';
 import type { PackageNoticeContent } from '../model/package-notice';
 import { useResolveIncident } from '../model/use-package-mutations';
