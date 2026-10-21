@@ -4,6 +4,8 @@ import { fadeUp } from '@rapiexpress/ui/motion';
 import { Plus, Search } from 'lucide-react';
 import { Link } from 'react-router';
 
+import { NEW_PRE_ALERT_PATH } from '@/shared/model/paths';
+
 interface GreetingHeaderProps {
   firstName: string;
   summary: string;
@@ -37,7 +39,7 @@ function GreetingHeader({ firstName, summary }: GreetingHeaderProps) {
           borderRadius="lg"
           css={pressable}
         >
-          <Link to="/pre-alerts">
+          <Link to={NEW_PRE_ALERT_PATH}>
             <Plus size={18} strokeWidth={2.25} aria-hidden="true" />
             Pre-alertar una compra
           </Link>

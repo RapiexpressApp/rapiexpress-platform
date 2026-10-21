@@ -14,6 +14,10 @@
     "./interaction": "./src/interaction.ts",
     "./motion": "./src/motion.ts",
     "./password-input": "./src/password-input.tsx",
+    "./list-pagination": "./src/list-pagination.tsx",
+    "./list-search-input": "./src/list-search-input.tsx",
+    "./list-status": "./src/list-status.tsx",
+    "./use-debounced-value": "./src/use-debounced-value.ts",
     "./assets/logo.webp": "./src/assets/logo.webp"
   },
   "scripts": {

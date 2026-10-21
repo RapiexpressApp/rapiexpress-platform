@@ -1,4 +1,7 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react';
+import ListPagination from '@rapiexpress/ui/list-pagination';
+import ListSearchInput from '@rapiexpress/ui/list-search-input';
+import ListStatus from '@rapiexpress/ui/list-status';
 import { useEffect } from 'react';
 
 import { useUsers } from '@/features/users/model/use-users';
@@ -6,9 +9,6 @@ import { LOAD_USERS_FAILED_MESSAGE } from '@/features/users/model/user-errors';
 import CreateUserDialog from '@/features/users/ui/CreateUserDialog';
 import UsersTable from '@/features/users/ui/UsersTable';
 import { useListParams } from '@/shared/lib/use-list-params';
-import ListPagination from '@/shared/ui/ListPagination';
-import ListSearchInput from '@/shared/ui/ListSearchInput';
-import ListStatus from '@/shared/ui/ListStatus';
 
 function UsersPage() {
   const { page, pageSize, search, setSearch, setPage } = useListParams();

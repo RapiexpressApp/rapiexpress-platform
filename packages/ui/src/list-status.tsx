@@ -7,6 +7,8 @@ interface ListStatusProps {
   isEmpty: boolean;
   errorMessage: string;
   emptyMessage: string;
+  emptyAction?: ReactNode;
+  buttonSize?: 'sm' | 'lg';
   onRetry: () => void;
   children: ReactNode;
 }
@@ -19,6 +21,8 @@ function ListStatus({
   isEmpty,
   errorMessage,
   emptyMessage,
+  emptyAction,
+  buttonSize = 'sm',
   onRetry,
   children,
 }: ListStatusProps) {
@@ -36,7 +40,7 @@ function ListStatus({
     return (
       <Flex role="alert" direction="column" align="center" gap={3} py={12}>
         <Text color="slate.700">{errorMessage}</Text>
-        <Button size="sm" variant="outline" onClick={onRetry}>
+        <Button size={buttonSize} variant="outline" onClick={onRetry}>
           Reintentar
         </Button>
       </Flex>
@@ -45,8 +49,9 @@ function ListStatus({
 
   if (isEmpty) {
     return (
-      <Flex justify="center" py={12}>
+      <Flex direction="column" align="center" gap={4} py={12} textAlign="center">
         <Text color="slate.600">{emptyMessage}</Text>
+        {emptyAction}
       </Flex>
     );
   }
