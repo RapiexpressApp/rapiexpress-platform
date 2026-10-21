@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_ROUTE, isPanelRole, PANEL_ROLES } from './roles';
+import { canLinkPurchase, DEFAULT_ROUTE, isPanelRole, PANEL_ROLES } from './roles';
 
 describe('panel roles', () => {
   it('admits admin, operations and warehouse staff to the panel', () => {
@@ -18,5 +18,15 @@ describe('panel roles', () => {
       OPERATIONS: '/clientes',
       WAREHOUSE: '/recepcion',
     });
+  });
+});
+
+describe('canLinkPurchase', () => {
+  it.each(['ADMIN', 'OPERATIONS'])('lets %s list purchases to link one', (role) => {
+    expect(canLinkPurchase(role)).toBe(true);
+  });
+
+  it.each(['WAREHOUSE', 'CUSTOMER', ''])('keeps %j out, since it cannot list purchases', (role) => {
+    expect(canLinkPurchase(role)).toBe(false);
   });
 });
