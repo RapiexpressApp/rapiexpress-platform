@@ -3,8 +3,8 @@ import type { Purchase } from '@rapiexpress/api-client/purchases.schemas';
 import { focusRing } from '@rapiexpress/ui/interaction';
 
 import { formatDate, formatUsd, formatWeightLb } from '@/shared/lib/format';
+import { CATEGORY_LABEL } from '@/shared/model/customs-category';
 
-import { CATEGORY_LABEL } from '../model/purchase-labels';
 import PurchaseStatusIndicator from './PurchaseStatusIndicator';
 
 interface PurchasesListProps {

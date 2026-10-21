@@ -1,20 +1,20 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
+import type { MyPackageDetail } from '@rapiexpress/api-client/tracking.schemas';
 import { focusRing } from '@rapiexpress/ui/interaction';
-import { ArrowRight, Headphones } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 
-import { formatWeight } from '../model/shipment-format';
-import type { FeaturedShipmentView } from '../model/types';
-import ShipmentTimeline from './ShipmentTimeline';
-import StatusIndicator from './StatusIndicator';
+import { buildShipmentTimeline } from '@/features/shipments/model/shipment-timeline';
+import PackageStatusIndicator from '@/features/shipments/ui/PackageStatusIndicator';
+import ReadyForPickupBadge from '@/features/shipments/ui/ReadyForPickupBadge';
+import ShipmentTimeline from '@/features/shipments/ui/ShipmentTimeline';
+import { formatDate, formatWeightLb } from '@/shared/lib/format';
+import { shipmentPath } from '@/shared/model/paths';
 
-interface FeaturedShipmentProps {
-  featured: FeaturedShipmentView;
-}
+import { useFeaturedShipment } from '../model/use-featured-shipment';
+import BlockStatus from './BlockStatus';
 
-function FeaturedShipment({ featured }: FeaturedShipmentProps) {
-  const { shipment, etaLabel, steps } = featured;
-
+function FeaturedCard({ detail }: { detail: MyPackageDetail }) {
   return (
     <Flex
       as="section"
@@ -28,38 +28,37 @@ function FeaturedShipment({ featured }: FeaturedShipmentProps) {
       bg="white"
     >
       <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" gap={4}>
-        <Flex gap={4} minW={0}>
-          <Flex
-            aria-hidden="true"
-            align="center"
-            justify="center"
-            flexShrink={0}
-            boxSize={11}
-            borderRadius="lg"
-            bg="brand.50"
-            color="brand.600"
-          >
-            <Headphones size={22} />
-          </Flex>
-          <Box minW={0}>
+        <Box minW={0}>
+          {detail.readyForPickup ? (
+            <ReadyForPickupBadge />
+          ) : (
             <Text fontSize="sm" color="slate.600">
-              Próximo en llegar
+              Tu envío más reciente
             </Text>
-            <Text
-              as="h2"
-              id="featured-shipment-title"
-              fontSize="xl"
-              fontWeight="semibold"
-              letterSpacing="tight"
-              color="slate.900"
-            >
-              {shipment.name}
-            </Text>
-            <Text mt={0.5} fontSize="sm" color="slate.600" overflowWrap="anywhere">
-              {shipment.store} · {formatWeight(shipment.weightKg)} · Guía {shipment.tracking}
-            </Text>
-          </Box>
-        </Flex>
+          )}
+          <Text
+            as="h2"
+            id="featured-shipment-title"
+            mt={detail.readyForPickup ? 2 : 0}
+            fontSize="xl"
+            fontWeight="semibold"
+            letterSpacing="tight"
+            color="slate.900"
+            overflowWrap="anywhere"
+          >
+            {detail.description ?? detail.warehouseNumber}
+          </Text>
+          <Text
+            mt={0.5}
+            fontSize="sm"
+            color="slate.600"
+            fontVariantNumeric="tabular-nums"
+            overflowWrap="anywhere"
+          >
+            {detail.warehouseNumber} · {formatWeightLb(detail.weightLb)} · Guía{' '}
+            {detail.trackingNumber}
+          </Text>
+        </Box>
 
         <Flex
           direction="column"
@@ -67,14 +66,14 @@ function FeaturedShipment({ featured }: FeaturedShipmentProps) {
           alignItems={{ base: 'flex-start', md: 'flex-end' }}
           flexShrink={0}
         >
-          <StatusIndicator status={shipment.status} />
-          <Text fontSize="md" fontWeight="semibold" color="slate.900">
-            {etaLabel}
+          <PackageStatusIndicator status={detail.status} />
+          <Text fontSize="sm" color="slate.600" fontVariantNumeric="tabular-nums">
+            Recibido {formatDate(detail.receivedAt)}
           </Text>
         </Flex>
       </Flex>
 
-      <ShipmentTimeline steps={steps} />
+      <ShipmentTimeline steps={buildShipmentTimeline(detail.status, detail.timeline)} />
 
       <Flex pt={4} borderTopWidth="1px" borderColor="slate.200">
         <Flex
@@ -93,13 +92,34 @@ function FeaturedShipment({ featured }: FeaturedShipmentProps) {
           _hover={{ bg: 'brand.50' }}
           _focusVisible={focusRing}
         >
-          <Link to="/shipments">
+          <Link to={shipmentPath(detail.id)}>
             Ver detalle del envío
             <ArrowRight size={16} strokeWidth={2.25} aria-hidden="true" />
           </Link>
         </Flex>
       </Flex>
     </Flex>
+  );
+}
+
+function FeaturedShipment() {
+  const featured = useFeaturedShipment();
+
+  if (featured.kind === 'none') return null;
+  if (featured.kind === 'ready') return <FeaturedCard detail={featured.detail} />;
+
+  return (
+    <BlockStatus
+      isPending={featured.kind === 'pending'}
+      isError={featured.kind === 'error'}
+      isEmpty={false}
+      loadingLabel="Cargando envío destacado"
+      errorMessage="No pudimos cargar tu envío destacado."
+      empty={null}
+      onRetry={featured.retry}
+    >
+      {null}
+    </BlockStatus>
   );
 }
 

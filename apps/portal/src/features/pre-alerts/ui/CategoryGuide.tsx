@@ -1,7 +1,9 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { CUSTOMS_CATEGORIES } from '@rapiexpress/api-client/field-schemas';
 
-import { CATEGORY_LABEL, CATEGORY_RULE, type CustomsCategory } from '../model/purchase-labels';
+import { CATEGORY_LABEL, type CustomsCategory } from '@/shared/model/customs-category';
+
+import { CATEGORY_RULE } from '../model/purchase-labels';
 
 interface CategoryGuideProps {
   id: string;

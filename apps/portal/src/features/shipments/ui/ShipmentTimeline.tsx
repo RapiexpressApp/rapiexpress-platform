@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { Check } from 'lucide-react';
 
-import type { StepState, TimelineStep } from '../model/types';
+import type { StepState, TimelineStepView } from '../model/shipment-timeline';
 
 const STATE_DESCRIPTION: Record<StepState, string> = {
   done: 'completado',
@@ -72,12 +72,17 @@ function StepMarker({ state }: { state: StepState }) {
 }
 
 interface ShipmentTimelineProps {
-  steps: TimelineStep[];
+  steps: TimelineStepView[];
 }
 
 function ShipmentTimeline({ steps }: ShipmentTimelineProps) {
   return (
-    <Flex as="ol" direction={{ base: 'column', md: 'row' }} listStyleType="none">
+    <Flex
+      as="ol"
+      aria-label="Seguimiento del envío"
+      direction={{ base: 'column', md: 'row' }}
+      listStyleType="none"
+    >
       {steps.map((step, index) => {
         const isLast = index === steps.length - 1;
 

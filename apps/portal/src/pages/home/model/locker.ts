@@ -1,5 +1,5 @@
-import { WAREHOUSE_ADDRESS } from './mock-data';
 import type { Locker } from './types';
+import { WAREHOUSE_ADDRESS } from './warehouse-address';
 
 interface LockerOwner {
   recipient: string;

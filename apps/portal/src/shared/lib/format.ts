@@ -17,3 +17,7 @@ export function formatUsd(value: number): string {
 export function formatWeightLb(value: number): string {
   return `${weightFormatter.format(value)} lb`;
 }
+
+export function formatWeightKg(value: number): string {
+  return `${weightFormatter.format(value)} kg`;
+}
