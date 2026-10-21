@@ -10,3 +10,7 @@ export function getApiErrorCode(error: unknown): string | undefined {
   if (typeof body !== 'object' || body === null || !('code' in body)) return undefined;
   return typeof body.code === 'string' ? body.code : undefined;
 }
+
+export function isNetworkError(error: unknown): boolean {
+  return isAxiosError(error) && error.response === undefined;
+}

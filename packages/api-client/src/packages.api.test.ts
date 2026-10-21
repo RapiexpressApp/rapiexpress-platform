@@ -576,6 +576,60 @@ describe('packagesApi.assignCustomer', () => {
   });
 });
 
+describe('packagesApi.searchReceptionCustomers', () => {
+  it('sends the trimmed search and parses the customer summaries', async () => {
+    setAccessToken('tok');
+    let url: URL | undefined;
+    server.use(
+      http.get('*/api/packages/reception/customers', ({ request }) => {
+        url = new URL(request.url);
+        return HttpResponse.json([customer, { ...customer, id: 'c2', lockerCode: null }]);
+      })
+    );
+
+    const result = await packagesApi.searchReceptionCustomers('  Jane Doe ');
+
+    expect(Object.fromEntries(url?.searchParams ?? [])).toEqual({ search: 'Jane Doe' });
+    expect(result).toEqual([customer, { ...customer, id: 'c2', lockerCode: null }]);
+  });
+
+  it('returns an empty list when nothing matches', async () => {
+    setAccessToken('tok');
+    server.use(http.get('*/api/packages/reception/customers', () => HttpResponse.json([])));
+
+    await expect(packagesApi.searchReceptionCustomers('zz')).resolves.toEqual([]);
+  });
+
+  it.each(['', ' ', 'a', ' a '])(
+    'rejects the search %j before hitting the network',
+    async (search) => {
+      await expect(packagesApi.searchReceptionCustomers(search)).rejects.toBeInstanceOf(ZodError);
+    }
+  );
+
+  it('accepts 2 and 100 characters and rejects 101', async () => {
+    setAccessToken('tok');
+    server.use(http.get('*/api/packages/reception/customers', () => HttpResponse.json([])));
+
+    await expect(packagesApi.searchReceptionCustomers('MI')).resolves.toEqual([]);
+    await expect(packagesApi.searchReceptionCustomers('a'.repeat(100))).resolves.toEqual([]);
+    await expect(packagesApi.searchReceptionCustomers('a'.repeat(101))).rejects.toBeInstanceOf(
+      ZodError
+    );
+  });
+
+  it('rejects a response that does not match the contract', async () => {
+    setAccessToken('tok');
+    server.use(
+      http.get('*/api/packages/reception/customers', () =>
+        HttpResponse.json([{ id: 'c1', name: 'Jane' }])
+      )
+    );
+
+    await expect(packagesApi.searchReceptionCustomers('Jane')).rejects.toBeInstanceOf(ZodError);
+  });
+});
+
 describe('packagesApi.linkPurchase', () => {
   it('posts the purchase id and returns the package detail', async () => {
     setAccessToken('tok');
@@ -713,5 +767,16 @@ describe('packages query keys', () => {
       '1Z999AA10123456784',
     ]);
     expect(queryKeys.packages.detail('k1').slice(0, 1)).toEqual(queryKeys.packages.all);
+  });
+
+  it('scopes the reception customer search under the packages root', () => {
+    expect(queryKeys.packages.receptionCustomers('Jane')).toEqual([
+      'packages',
+      'receptionCustomers',
+      'Jane',
+    ]);
+    expect(queryKeys.packages.receptionCustomers('Jane').slice(0, 1)).toEqual(
+      queryKeys.packages.all
+    );
   });
 });
