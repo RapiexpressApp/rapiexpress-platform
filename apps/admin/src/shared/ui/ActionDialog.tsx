@@ -2,7 +2,7 @@ import { Button, Dialog, Portal } from '@chakra-ui/react';
 import { focusRing } from '@rapiexpress/ui/interaction';
 import { type ReactNode, useState } from 'react';
 
-import { DialogBusyContext } from '../model/dialog-busy';
+import { DialogBusyContext } from '@/shared/lib/dialog-busy';
 
 interface ActionDialogProps {
   open: boolean;

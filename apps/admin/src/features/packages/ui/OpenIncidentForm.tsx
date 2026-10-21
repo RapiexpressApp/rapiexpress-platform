@@ -10,10 +10,10 @@ import AuthField from '@rapiexpress/ui/auth-field';
 import { inputStyles, submitButtonProps } from '@rapiexpress/ui/auth-form-styles';
 import { useForm } from 'react-hook-form';
 
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
 import { useSingleFlight } from '@/shared/lib/use-single-flight';
 import { INCIDENT_TYPE_LABEL } from '@/shared/model/package-labels';
 
-import { useDialogBusy } from '../model/dialog-busy';
 import { classifyOpenIncidentError } from '../model/package-action-errors';
 import type { PackageNoticeContent } from '../model/package-notice';
 import { useOpenIncident } from '../model/use-package-mutations';

@@ -1,11 +1,11 @@
 import { Button } from '@chakra-ui/react';
 import { UserPlus } from 'lucide-react';
 
+import { useActionDialog } from '@/shared/lib/use-action-dialog';
+import ActionDialog from '@/shared/ui/ActionDialog';
 import { toaster } from '@/shared/ui/toaster';
 
 import type { PackageNoticeContent } from '../model/package-notice';
-import { useActionDialog } from '../model/use-action-dialog';
-import ActionDialog from './ActionDialog';
 import AssignCustomerPanel from './AssignCustomerPanel';
 
 interface AssignCustomerActionProps {

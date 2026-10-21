@@ -6,9 +6,9 @@ import ListSearchInput from '@rapiexpress/ui/list-search-input';
 import ListStatus from '@rapiexpress/ui/list-status';
 import { useState } from 'react';
 
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
 import { useSingleFlight } from '@/shared/lib/use-single-flight';
 
-import { useDialogBusy } from '../model/dialog-busy';
 import { classifyLinkError } from '../model/package-action-errors';
 import type { PackageNoticeContent } from '../model/package-notice';
 import { purchasesOfCustomer } from '../model/pending-purchases';

@@ -2,11 +2,11 @@ import { Button } from '@chakra-ui/react';
 import type { CustomerSummary } from '@rapiexpress/api-client/customers.schemas';
 import { Link2 } from 'lucide-react';
 
+import { useActionDialog } from '@/shared/lib/use-action-dialog';
+import ActionDialog from '@/shared/ui/ActionDialog';
 import { toaster } from '@/shared/ui/toaster';
 
 import type { PackageNoticeContent } from '../model/package-notice';
-import { useActionDialog } from '../model/use-action-dialog';
-import ActionDialog from './ActionDialog';
 import LinkPurchasePanel from './LinkPurchasePanel';
 
 interface LinkPurchaseActionProps {

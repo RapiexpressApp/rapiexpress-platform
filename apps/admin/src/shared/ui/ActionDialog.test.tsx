@@ -2,9 +2,9 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+import { useDialogBusy } from '@/shared/lib/dialog-busy';
 import { renderWithProviders } from '@/test/render';
 
-import { useDialogBusy } from '../model/dialog-busy';
 import ActionDialog from './ActionDialog';
 
 function Content({ busy }: { busy: boolean }) {
