@@ -1,4 +1,4 @@
-import { Button, Heading, Stack } from '@chakra-ui/react';
+import { Button, Flex, Heading, Stack } from '@chakra-ui/react';
 import ListPagination from '@rapiexpress/ui/list-pagination';
 import ListSearchInput from '@rapiexpress/ui/list-search-input';
 import ListStatus from '@rapiexpress/ui/list-status';
@@ -10,6 +10,7 @@ import {
   parsePurchaseStatus,
 } from '@/features/purchases/model/purchase-list-params';
 import { usePurchases } from '@/features/purchases/model/use-purchases';
+import CreatePurchaseAction from '@/features/purchases/ui/CreatePurchaseAction';
 import PurchasesList from '@/features/purchases/ui/PurchasesList';
 import PurchaseStatusFilter from '@/features/purchases/ui/PurchaseStatusFilter';
 import { useListParams } from '@/shared/lib/use-list-params';
@@ -39,9 +40,12 @@ function PurchasesPage() {
 
   return (
     <Stack gap={6}>
-      <Heading as="h1" size="xl" color="slate.900">
-        Pre-alertas
-      </Heading>
+      <Flex align="center" justify="space-between" gap={4} wrap="wrap">
+        <Heading as="h1" size="xl" color="slate.900">
+          Pre-alertas
+        </Heading>
+        <CreatePurchaseAction />
+      </Flex>
 
       <Stack gap={3}>
         <ListSearchInput
