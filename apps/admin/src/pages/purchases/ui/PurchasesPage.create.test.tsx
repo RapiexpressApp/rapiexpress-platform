@@ -1,5 +1,5 @@
 import { queryKeys } from '@rapiexpress/api-client/query-keys';
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it, vi } from 'vitest';
@@ -228,5 +228,41 @@ describe('new pre-alert, creating', () => {
 
     await waitFor(() => expect(bodies).toHaveLength(1));
     expect(bodies[0]).toMatchObject({ store: 'Amazon', suggestedCategory: 'MIGRANT' });
+  });
+});
+
+describe('new pre-alert, double submits', () => {
+  it('sends one request when the form is submitted twice in the same tick', async () => {
+    const bodies: unknown[] = [];
+    const { gate, release } = createGate();
+    renderPage(createPurchaseHandler(undefined, { onRequest: (body) => bodies.push(body), gate }));
+    const dialog = await openForm();
+    await fillPurchaseForm(dialog);
+    const form = dialog.getByRole('form', { name: 'Datos de la pre-alerta' });
+
+    act(() => {
+      fireEvent.submit(form);
+      fireEvent.submit(form);
+    });
+    await waitFor(() => expect(bodies.length).toBeGreaterThan(0));
+    release();
+
+    expect(await screen.findByText('Pre-alerta creada.')).toBeInTheDocument();
+    expect(bodies).toHaveLength(1);
+  });
+
+  it('sends one request when the button is double clicked', async () => {
+    const bodies: unknown[] = [];
+    const { gate, release } = createGate();
+    renderPage(createPurchaseHandler(undefined, { onRequest: (body) => bodies.push(body), gate }));
+    const dialog = await openForm();
+    await fillPurchaseForm(dialog);
+
+    await userEvent.dblClick(dialog.getByRole('button', { name: 'Crear pre-alerta' }));
+    await waitFor(() => expect(bodies.length).toBeGreaterThan(0));
+    release();
+
+    expect(await screen.findByText('Pre-alerta creada.')).toBeInTheDocument();
+    expect(bodies).toHaveLength(1);
   });
 });

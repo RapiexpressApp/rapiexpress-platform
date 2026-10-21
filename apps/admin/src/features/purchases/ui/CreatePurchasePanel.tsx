@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import CustomerSearch from '@/features/reception/ui/CustomerSearch';
 import { useDialogBusy } from '@/shared/lib/dialog-busy';
+import { useSingleFlight } from '@/shared/lib/use-single-flight';
 
 import { classifyCreateError } from '../model/purchase-errors';
 import { useCreatePurchase } from '../model/use-create-purchase';
@@ -32,7 +33,7 @@ const EMPTY_VALUES: PurchaseFormInput = {
 };
 
 function CreatePurchasePanel({ onCreated, onCancel }: CreatePurchasePanelProps) {
-  const create = useCreatePurchase();
+  const create = useSingleFlight(useCreatePurchase());
   const [customer, setCustomer] = useState<CustomerSummary | null>(null);
   const form = useForm<PurchaseFormInput, unknown, PurchaseFormValues>({
     resolver: zodResolver(purchaseFormSchema),
@@ -53,7 +54,7 @@ function CreatePurchasePanel({ onCreated, onCancel }: CreatePurchasePanelProps) 
   }
 
   function handleSubmit(values: PurchaseFormValues) {
-    create.mutate(values, {
+    create.submit(values, {
       onSuccess: onCreated,
       onError: (error) => {
         const failure = classifyCreateError(error);
