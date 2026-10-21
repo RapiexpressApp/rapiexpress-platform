@@ -6,6 +6,7 @@ import LoginPage from '@/pages/login/ui/LoginPage';
 import NotFoundPage from '@/pages/not-found/ui/NotFoundPage';
 import PackageDetailPage from '@/pages/packages/ui/PackageDetailPage';
 import PackagesPage from '@/pages/packages/ui/PackagesPage';
+import PurchasesPage from '@/pages/purchases/ui/PurchasesPage';
 import ReceptionPage from '@/pages/reception/ui/ReceptionPage';
 import UsersPage from '@/pages/users/ui/UsersPage';
 
@@ -26,6 +27,7 @@ export function AppRoutes() {
           </Route>
           <Route element={<RequireRole allow={['ADMIN', 'OPERATIONS']} />}>
             <Route path="/clientes" element={<CustomersPage />} />
+            <Route path="/prealertas" element={<PurchasesPage />} />
           </Route>
           <Route path="/recepcion" element={<ReceptionPage />} />
           <Route path="/paquetes" element={<PackagesPage />} />

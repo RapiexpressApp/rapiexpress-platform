@@ -11,6 +11,7 @@ import {
   packageListItemFixture,
   packagesListHandler,
 } from '@/test/packages-handlers';
+import { purchasesListHandler } from '@/test/purchases-handlers';
 import { renderWithProviders } from '@/test/render';
 import { server } from '@/test/server';
 import { usersListHandler } from '@/test/users-handlers';
@@ -18,12 +19,14 @@ import { usersListHandler } from '@/test/users-handlers';
 function renderApp(role: string, route: string, ...handlers: RequestHandler[]) {
   const customersRequested = vi.fn();
   const usersRequested = vi.fn();
+  const purchasesRequested = vi.fn();
   server.use(
     ...handlers,
     refreshOkHandler(),
     meHandler(role),
     logoutHandler(),
     packagesListHandler([]),
+    purchasesListHandler([], { onRequest: purchasesRequested }),
     http.get('*/api/customers', () => {
       customersRequested();
       return HttpResponse.json({ items: [], page: 1, pageSize: 20, total: 0 });
@@ -31,7 +34,7 @@ function renderApp(role: string, route: string, ...handlers: RequestHandler[]) {
     usersListHandler([], { onRequest: usersRequested })
   );
   renderWithProviders(<AppRoutes />, { route });
-  return { customersRequested, usersRequested };
+  return { customersRequested, usersRequested, purchasesRequested };
 }
 
 const heading = (name: string) => screen.findByRole('heading', { level: 1, name });
@@ -50,6 +53,7 @@ describe('AppRoutes for warehouse staff', () => {
     const sidebar = screen.getByRole('navigation', { name: 'Navegación móvil' });
     expect(sidebar).toHaveTextContent('Recepción');
     expect(sidebar).toHaveTextContent('Paquetes');
+    expect(sidebar).not.toHaveTextContent('Pre-alertas');
     expect(sidebar).not.toHaveTextContent('Usuarios');
     expect(sidebar).not.toHaveTextContent('Clientes');
   });
@@ -66,6 +70,14 @@ describe('AppRoutes for warehouse staff', () => {
     expect(await heading('Recepción')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Usuarios' })).toBeNull();
     expect(usersRequested).not.toHaveBeenCalled();
+  });
+
+  it('keeps warehouse staff out of the pre-alerts page', async () => {
+    const { purchasesRequested } = renderApp('WAREHOUSE', '/prealertas');
+
+    expect(await heading('Recepción')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Pre-alertas' })).toBeNull();
+    expect(purchasesRequested).not.toHaveBeenCalled();
   });
 
   it('keeps warehouse staff out of the customers page', async () => {
@@ -90,23 +102,31 @@ describe('AppRoutes for the other staff roles', () => {
     expect(await heading('Paquetes')).toBeInTheDocument();
   });
 
-  it('shows admins reception, packages, users and customers', async () => {
+  it.each(['ADMIN', 'OPERATIONS'])('lets %s open the pre-alerts page', async (role) => {
+    renderApp(role, '/prealertas');
+
+    expect(await heading('Pre-alertas')).toBeInTheDocument();
+  });
+
+  it('shows admins reception, packages, pre-alerts, users and customers', async () => {
     renderApp('ADMIN', '/recepcion');
 
     await heading('Recepción');
     const sidebar = screen.getByRole('navigation', { name: 'Navegación móvil' });
     expect(sidebar).toHaveTextContent('Recepción');
     expect(sidebar).toHaveTextContent('Paquetes');
+    expect(sidebar).toHaveTextContent('Pre-alertas');
     expect(sidebar).toHaveTextContent('Usuarios');
     expect(sidebar).toHaveTextContent('Clientes');
   });
 
-  it('shows operations reception, packages and customers but not users', async () => {
+  it('shows operations reception, packages, pre-alerts and customers but not users', async () => {
     renderApp('OPERATIONS', '/recepcion');
 
     await heading('Recepción');
     const sidebar = screen.getByRole('navigation', { name: 'Navegación móvil' });
     expect(sidebar).toHaveTextContent('Paquetes');
+    expect(sidebar).toHaveTextContent('Pre-alertas');
     expect(sidebar).toHaveTextContent('Clientes');
     expect(sidebar).not.toHaveTextContent('Usuarios');
   });
