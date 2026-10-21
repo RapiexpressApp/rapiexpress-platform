@@ -16,10 +16,11 @@ const SEARCH_DEBOUNCE_MS = 300;
 const MAX_SEARCH_LENGTH = 100;
 
 interface CustomerSearchProps {
+  autoFocus?: boolean;
   onChoose: (customer: CustomerSummary) => void;
 }
 
-function CustomerSearch({ onChoose }: CustomerSearchProps) {
+function CustomerSearch({ autoFocus = false, onChoose }: CustomerSearchProps) {
   const [draft, setDraft] = useState('');
   const debounced = useDebouncedValue(draft, SEARCH_DEBOUNCE_MS);
   const results = useReceptionCustomerSearch(debounced);
@@ -32,6 +33,7 @@ function CustomerSearch({ onChoose }: CustomerSearchProps) {
       <AuthField label="Buscar cliente" hint="Por nombre, apellido o casillero.">
         <Input
           type="search"
+          autoFocus={autoFocus}
           autoComplete="off"
           spellCheck={false}
           maxLength={MAX_SEARCH_LENGTH}
