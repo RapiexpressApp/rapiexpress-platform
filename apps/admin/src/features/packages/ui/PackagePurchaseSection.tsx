@@ -1,5 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
 import type { PackageStaffDetail } from '@rapiexpress/api-client/packages.schemas';
+import type { ReactNode } from 'react';
 
 import { formatDate, formatUsd, formatWeightLb } from '@/shared/lib/format';
 import { CATEGORY_LABEL } from '@/shared/model/package-labels';
@@ -9,11 +10,12 @@ import DetailSection from './DetailSection';
 
 interface PackagePurchaseSectionProps {
   purchase: PackageStaffDetail['purchase'];
+  action?: ReactNode;
 }
 
-function PackagePurchaseSection({ purchase }: PackagePurchaseSectionProps) {
+function PackagePurchaseSection({ purchase, action }: PackagePurchaseSectionProps) {
   return (
-    <DetailSection title="Compra vinculada">
+    <DetailSection title="Compra vinculada" action={action}>
       {purchase ? (
         <Box as="dl">
           <DataRow label="Tienda">{purchase.store}</DataRow>

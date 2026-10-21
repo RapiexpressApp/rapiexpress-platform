@@ -9,6 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { packagesApi } from '@/shared/api/api';
 
 import { useRefreshPackages } from './use-refresh-packages';
+import { useRefreshPurchases } from './use-refresh-purchases';
 
 export function useUpdatePackage(id: string) {
   const refresh = useRefreshPackages();
@@ -58,5 +59,15 @@ export function useAssignCustomer(id: string) {
   return useMutation({
     mutationFn: (customerId: string) => packagesApi.assignCustomer(id, customerId),
     onSuccess: refresh,
+  });
+}
+
+export function useLinkPurchase(id: string) {
+  const refreshPackages = useRefreshPackages();
+  const refreshPurchases = useRefreshPurchases();
+
+  return useMutation({
+    mutationFn: (purchaseId: string) => packagesApi.linkPurchase(id, purchaseId),
+    onSuccess: () => Promise.all([refreshPackages(), refreshPurchases()]),
   });
 }

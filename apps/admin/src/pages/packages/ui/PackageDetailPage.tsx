@@ -6,6 +6,7 @@ import { ArrowLeft, PackageOpen } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 
+import { useMe } from '@/features/auth/model/use-me';
 import { isPackageEditable } from '@/features/packages/model/edit-package-values';
 import {
   isPackageNotFound,
@@ -16,6 +17,7 @@ import { usePackage } from '@/features/packages/model/use-package';
 import { useRefreshPackages } from '@/features/packages/model/use-refresh-packages';
 import AssignCustomerAction from '@/features/packages/ui/AssignCustomerAction';
 import EditPackageAction from '@/features/packages/ui/EditPackageAction';
+import LinkPurchaseAction from '@/features/packages/ui/LinkPurchaseAction';
 import OpenIncidentAction from '@/features/packages/ui/OpenIncidentAction';
 import OpenIncidentFlag from '@/features/packages/ui/OpenIncidentFlag';
 import PackageCustomerSection from '@/features/packages/ui/PackageCustomerSection';
@@ -28,6 +30,7 @@ import PackageStatusBadge from '@/features/packages/ui/PackageStatusBadge';
 import ResolveIncidentAction from '@/features/packages/ui/ResolveIncidentAction';
 import TransitionActions from '@/features/packages/ui/TransitionActions';
 import { PACKAGES_PATH } from '@/shared/model/paths';
+import { canLinkPurchase } from '@/shared/model/roles';
 
 function BackToPackages() {
   return (
@@ -60,6 +63,8 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
   const incidentsHeadingRef = useRef<HTMLHeadingElement>(null);
   const [notice, setNotice] = useState<PackageNoticeContent | null>(null);
   const refresh = useRefreshPackages();
+  const { data: profile } = useMe();
+  const canLink = profile !== undefined && canLinkPurchase(profile.role);
 
   function handleStale(next: PackageNoticeContent) {
     setNotice(next);
@@ -139,7 +144,22 @@ function PackageDetail({ detail }: { detail: PackageStaffDetail }) {
           )
         }
       />
-      <PackagePurchaseSection purchase={detail.purchase} />
+      <PackagePurchaseSection
+        purchase={detail.purchase}
+        action={
+          canLink &&
+          detail.purchaseId === null &&
+          detail.purchase === null && (
+            <LinkPurchaseAction
+              packageId={detail.id}
+              warehouseNumber={detail.warehouseNumber}
+              customer={detail.customer}
+              fallbackFocus={fallbackFocus}
+              onStale={handleStale}
+            />
+          )
+        }
+      />
       <PackageIncidentsSection
         openIncident={detail.openIncident}
         incidents={detail.incidents}
