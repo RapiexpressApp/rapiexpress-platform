@@ -68,8 +68,15 @@ function PurchasesTable({ purchases }: PurchasesListProps) {
               <Table.Cell ps={5} fontWeight="semibold" color="slate.900">
                 {purchase.store}
               </Table.Cell>
-              <Table.Cell {...NUMERIC}>{purchase.trackingNumber}</Table.Cell>
-              <Table.Cell>
+              <Table.Cell
+                maxW="12rem"
+                color="slate.700"
+                fontVariantNumeric="tabular-nums"
+                overflowWrap="anywhere"
+              >
+                {purchase.trackingNumber}
+              </Table.Cell>
+              <Table.Cell minW="9rem">
                 <CustomerLines customer={purchase.customer} />
               </Table.Cell>
               <Table.Cell minW="14rem" maxW="22rem" color="slate.700" overflowWrap="anywhere">

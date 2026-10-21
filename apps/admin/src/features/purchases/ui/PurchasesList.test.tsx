@@ -93,4 +93,10 @@ describe('PurchasesList table', () => {
     expect(row.getByText('Recibida')).toBeInTheDocument();
     expect(row.getByText('10 mar 2026')).toBeInTheDocument();
   });
+
+  it('lets a long guide wrap instead of stretching the table', () => {
+    renderList(staffPurchaseFixture({ trackingNumber: 'T'.repeat(64) }));
+
+    expect(getTable().getByText('T'.repeat(64))).toHaveStyle({ overflowWrap: 'anywhere' });
+  });
 });
