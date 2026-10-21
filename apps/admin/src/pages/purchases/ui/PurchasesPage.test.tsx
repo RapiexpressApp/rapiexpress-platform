@@ -95,6 +95,15 @@ describe('PurchasesPage search and status', () => {
     ).toBeInTheDocument();
   });
 
+  it('limits the search to the 100 characters the backend accepts', async () => {
+    renderPurchasesPage('/prealertas', purchasesListHandler());
+
+    expect(await screen.findByRole('searchbox', { name: 'Buscar pre-alertas' })).toHaveAttribute(
+      'maxlength',
+      '100'
+    );
+  });
+
   it('sends the chosen status and resets the page', async () => {
     const requests: URL[] = [];
     renderPurchasesPage(

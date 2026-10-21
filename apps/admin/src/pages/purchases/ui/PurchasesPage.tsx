@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { LOAD_PURCHASES_FAILED_MESSAGE } from '@/features/purchases/model/purchase-errors';
 import {
   buildPurchaseListParams,
+  MAX_SEARCH_LENGTH,
   parsePurchaseStatus,
 } from '@/features/purchases/model/purchase-list-params';
 import { usePurchases } from '@/features/purchases/model/use-purchases';
@@ -52,6 +53,7 @@ function PurchasesPage() {
           key={searchInput.key}
           label="Buscar pre-alertas"
           placeholder="Buscar por guía, cliente o casillero"
+          maxLength={MAX_SEARCH_LENGTH}
           value={search}
           onSearch={setSearch}
         />
