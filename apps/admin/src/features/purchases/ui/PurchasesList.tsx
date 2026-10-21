@@ -27,7 +27,7 @@ function PurchasesTable({ purchases }: PurchasesListProps) {
   return (
     <Box display={{ base: 'none', md: 'block' }} overflowX="auto">
       <Table.Root
-        size="md"
+        size="sm"
         aria-label="Pre-alertas"
         css={{ '& th, & td': { borderColor: 'slate.200' } }}
       >
@@ -69,17 +69,18 @@ function PurchasesTable({ purchases }: PurchasesListProps) {
                 {purchase.store}
               </Table.Cell>
               <Table.Cell
-                maxW="12rem"
+                minW="13rem"
+                maxW="16rem"
                 color="slate.700"
                 fontVariantNumeric="tabular-nums"
                 overflowWrap="anywhere"
               >
                 {purchase.trackingNumber}
               </Table.Cell>
-              <Table.Cell minW="9rem">
+              <Table.Cell minW="8rem">
                 <CustomerLines customer={purchase.customer} />
               </Table.Cell>
-              <Table.Cell minW="14rem" maxW="22rem" color="slate.700" overflowWrap="anywhere">
+              <Table.Cell minW="10rem" maxW="20rem" color="slate.700" overflowWrap="anywhere">
                 {purchase.description}
               </Table.Cell>
               <Table.Cell textAlign="end" {...NUMERIC}>
